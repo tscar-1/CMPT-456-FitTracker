@@ -5,34 +5,155 @@ import java.awt.event.*;
 public class FitnessApp extends JFrame {
 
     private JTabbedPane tabs;
-    private JPanel loginPanel, exercisePanel, mealPanel;
+    private JPanel startPanel, loginPanel, registerPanel, mainmenuPanel, fitnessPanel, trackerPanel, profilePanel;
     private JButton loginButton, registerButton;
     private JTextField usernameField, passwordField;
-    private JRadioButton exerciseRadio, mealRadio;
-    private ButtonGroup preferenceGroup;
+    //private JRadioButton exerciseRadio, mealRadio;
+    //private ButtonGroup preferenceGroup;
+
+    //GUI Structure:
+    //startPanel allows user to choose login or register
+    //loginPanel & registerPanel self explanatory. Successful login/register brings user to mainmenuPanel
+    //mainmenuPanel lets user choose fitnessPanel, trackerPanel, and profilePanel
+        //fitnessPanel
+        //trackerPanel
+        //profilePanel - fetches user data. Edit button allows user to edit info
+        //logoutButton - self explanatory
 
     public FitnessApp() {
         super("Fitness App");
         setLayout(new BorderLayout());
 
         // Initialize empty panels
-        exercisePanel = new JPanel();
-        mealPanel = new JPanel();
+        fitnessPanel = new JPanel();
+        trackerPanel = new JPanel();
+        profilePanel = new JPanel();
 
         // Create tabbed pane
         tabs = new JTabbedPane();
-        tabs.add("Exercises", exercisePanel);
-        tabs.add("Meals", mealPanel);
+        tabs.add("Fitness", fitnessePanel);
         tabs.setVisible(false); // initially hide tabs
 
-        add(loginPanel = createLoginPanel(), BorderLayout.CENTER);
+        add(startPanel = createStartPanel(), BorderLayout.CENTER);
 
         setVisible(true);
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    private JPanel createStartPanel() {
+        JPanel panel = new JPanel();
+
+        loginButton = new JButton("Login");
+        loginButton.addActionListener(e -> {
+            return createLoginPanel();
+        });
+        panel.add(loginButton);
+
+        registerButton = new JButton("Register");
+        registerButton.addActionListener(e -> {
+            return createRegisterPanel();
+        });
+        panel.add(registerButton);
+
+        return panel;
+    }
+
     private JPanel createLoginPanel() {
+        JPanel panel = new JPanel();
+
+        panel.add(new JLabel("Username:"));
+        usernameField = new JTextField(15);
+        panel.add(usernameField);
+
+        panel.add(new JLabel("Password:"));
+        passwordField = new JPasswordField(15);
+        panel.add(passwordField);
+
+        loginButton = new JButton("Login");
+        loginButton.addActionListener(e -> {
+            /*
+            if (username == database.users.getUsername("username") {
+                if (password == database.users.getPassword("password") {
+                    login
+                }
+            }
+            else {
+                error
+            }
+            */
+        });
+        panel.add(loginButton);
+
+        return panel;
+    }
+
+    private JPanel createRegisterPanel() {
+        JPanel panel = new JPanel();
+
+        panel.add(new JLabel("Username:"));
+        usernameField = new JTextField(15);
+        panel.add(usernameField);
+
+        panel.add(newJLabel("Email:"));
+        emailField = new JTextField(15);
+        panel.add(emailField);
+
+        panel.add(newJLabel("First Name:"));
+        firstnameField = new JTextField(15);
+        panel.add(firstnameField);
+
+        panel.add(newJLabel("Last Name:"));
+        lastnameField = new JTextField(15);
+        panel.add(lastnameField);
+
+        panel.add(new JLabel("Password:"));
+        passwordField = new JPasswordField(15);
+        panel.add(passwordField);
+
+        registerButton = new JButton("Register");
+        registerButton.addActionListener(e -> {
+            /*
+            if (username != database.users.getUsername("username") {
+                if (password contains num, char, special char) {
+                    register
+                }
+            }
+            else {
+                error
+            }
+            */
+        });
+        panel.add(registerButton);
+
+        return panel;
+    }
+
+    private JPanel createMainmenuPanel() {
+        JPanel panel = new JPanel();
+
+        exerciseButton = new JButton("Exercises");
+        exerciseButton.addActionListener(e -> {
+            return createExercisePanel();
+        });
+
+        mealButton = new JButton("Meals");
+        mealButton.addActionListener(e -> {
+            return createMealPanel();
+        });
+
+        progressButton = new JButton("Progress");
+        progressButton.addActionListener(e -> {
+            return createProgressPanel();
+        });
+
+        profileButton = new JButton("Profile");
+        profileButton.addActionListener(e -> {
+            return createProfilePanel();
+        });
+    }
+
+    private JPanel OLDcreateLoginPanel() {
         JPanel panel = new JPanel();
 
         panel.add(new JLabel("Username:"));
