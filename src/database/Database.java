@@ -22,16 +22,48 @@ import java.io.IOException;
       } catch (IOException e) {
         e.printStackTrace();
       }
-  }
+    }
 
-  public Workout loadWorkout(String filepath) {
-    Gson gson = new Gson();
+    public static void saveMeal(String filepath, Meal meal) {
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      String json = gson.toJson(meal);
 
-    try ( BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            return gson.fromJson(reader, Blockchain.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+      try ( BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        writer.write(json);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    public static void saveExercise(String filepath, Exercise exercise) {
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      String json = gson.toJson(exercise);
+
+      try ( BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        writer.write(json);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    public static void saveWorkout(String filepath, Food food) {
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      String json = gson.toJson(food);
+
+      try ( BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        writer.write(json);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    public Workout loadWorkout(String filepath) {
+      Gson gson = new Gson();
+
+      try ( BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        return gson.fromJson(reader, Blockchain.class);
+      } catch (IOException e) {
+        e.printStackTrace();
+        return null;
+      }
   }
-}
