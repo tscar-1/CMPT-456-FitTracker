@@ -1,0 +1,94 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class FitnessApp extends JFrame {
+
+    private JTabbedPane tabs;
+    private JPanel loginPanel, exercisePanel, mealPanel;
+    private JButton loginButton, registerButton;
+    private JTextField usernameField, passwordField;
+    private JRadioButton exerciseRadio, mealRadio;
+    private ButtonGroup preferenceGroup;
+
+    public FitnessApp() {
+        super("Fitness App");
+        setLayout(new BorderLayout());
+
+        // Initialize empty panels
+        exercisePanel = new JPanel();
+        mealPanel = new JPanel();
+
+        // Create tabbed pane
+        tabs = new JTabbedPane();
+        tabs.add("Exercises", exercisePanel);
+        tabs.add("Meals", mealPanel);
+        tabs.setVisible(false); // initially hide tabs
+
+        add(loginPanel = createLoginPanel(), BorderLayout.CENTER);
+
+        setVisible(true);
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private JPanel createLoginPanel() {
+        JPanel panel = new JPanel();
+
+        panel.add(new JLabel("Username:"));
+        usernameField = new JTextField(15);
+        panel.add(usernameField);
+
+        panel.add(new JLabel("Password:"));
+        passwordField = new JPasswordField(15);
+        panel.add(passwordField);
+
+        exerciseRadio = new JRadioButton("Show Exercises", true);
+        panel.add(exerciseRadio);
+
+        mealRadio = new JRadioButton("Show Meals");
+        panel.add(mealRadio);
+
+        preferenceGroup = new ButtonGroup();
+        preferenceGroup.add(exerciseRadio);
+        preferenceGroup.add(mealRadio);
+
+        loginButton = new JButton("Login");
+        loginButton.addActionListener(e -> {
+            // Implement login logic
+            // On success, populate chosen panel and show tabs
+            if (exerciseRadio.isSelected()) {
+                exercisePanel.add(new JLabel("Exercises:"));
+                exercisePanel.add(new JList<>(new String[]{"Running", "Swimming", "Cycling", "Yoga", "Weightlifting"}));
+            } else {
+                mealPanel.add(new JLabel("Meals:"));
+                mealPanel.add(new JList<>(new String[]{"Breakfast", "Lunch", "Dinner", "Snacks"}));
+            }
+            tabs.setVisible(true);
+            panel.setVisible(false);
+        });
+        panel.add(loginButton);
+
+        registerButton = new JButton("Register");
+        registerButton.addActionListener(e -> {
+            // Implement register logic
+            // On success, populate chosen panel and show tabs
+            if (exerciseRadio.isSelected()) {
+                exercisePanel.add(new JLabel("Exercises:"));
+                exercisePanel.add(new JList<>(new String[]{"Running", "Swimming", "Cycling", "Yoga", "Weightlifting"}));
+            } else {
+                mealPanel.add(new JLabel("Meals:"));
+                mealPanel.add(new JList<>(new String[]{"Breakfast", "Lunch", "Dinner", "Snacks"}));
+            }
+            tabs.setVisible(true);
+            panel.setVisible(false);
+        });
+        panel.add(registerButton);
+
+        return panel;
+    }
+
+    public static void main(String[] args) {
+        new FitnessApp();
+    }
+}
