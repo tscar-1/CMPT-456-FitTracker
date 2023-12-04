@@ -15,8 +15,8 @@ public class FitnessApp extends JFrame {
     //startPanel allows user to choose login or register
     //loginPanel & registerPanel self explanatory. Successful login/register brings user to mainmenuPanel
     //mainmenuPanel lets user choose fitnessPanel, trackerPanel, and profilePanel
-        //fitnessPanel
-        //trackerPanel
+        //fitnessPanel - further separated into exercises & meals
+        //trackerPanel - 
         //profilePanel - fetches user data. Edit button allows user to edit info
         //logoutButton - self explanatory
 
@@ -32,6 +32,7 @@ public class FitnessApp extends JFrame {
         // Create tabbed pane
         tabs = new JTabbedPane();
         tabs.add("Fitness", fitnessePanel);
+        tabs.add("Tracker", trackerPanel();
         tabs.setVisible(false); // initially hide tabs
 
         add(startPanel = createStartPanel(), BorderLayout.CENTER);
@@ -132,19 +133,14 @@ public class FitnessApp extends JFrame {
     private JPanel createMainmenuPanel() {
         JPanel panel = new JPanel();
 
-        exerciseButton = new JButton("Exercises");
-        exerciseButton.addActionListener(e -> {
-            return createExercisePanel();
+        fitnessButton = new JButton("Fitness");
+        fitnessButton.addActionListener(e -> {
+            return createFitnessPanel();
         });
 
-        mealButton = new JButton("Meals");
-        mealButton.addActionListener(e -> {
-            return createMealPanel();
-        });
-
-        progressButton = new JButton("Progress");
-        progressButton.addActionListener(e -> {
-            return createProgressPanel();
+        trackerButton = new JButton("Tracker");
+        trackerButton.addActionListener(e -> {
+            return createTrackerPanel();
         });
 
         profileButton = new JButton("Profile");
