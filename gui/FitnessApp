@@ -4,6 +4,7 @@ import java.awt.event.*;
 import core.*;
 import database.*;
 import utils.*;
+import visualization.*;
 
 public class FitnessApp extends JFrame {
 
