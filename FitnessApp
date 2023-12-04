@@ -147,6 +147,12 @@ public class FitnessApp extends JFrame {
         profileButton.addActionListener(e -> {
             return createProfilePanel();
         });
+
+        logoutButton = new JButton("Logout");
+        loginButton.addActionListener(e -> {
+            //clear current user info
+            //return to startPanel
+        });
     }
 
     private JPanel OLDcreateLoginPanel() {
