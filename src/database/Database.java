@@ -1,4 +1,4 @@
-core database;
+package database;
 
 import core.Workout;
 import core.Meal;
