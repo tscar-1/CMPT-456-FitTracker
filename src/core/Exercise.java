@@ -60,6 +60,15 @@ public class Exercise {
     this.image = ImageIO.read(new File("images/" + image + ".png"));
   }
 
+  public void addExercise(Exercise exercise, String username) {
+    workout.add(exercise);
+    database.saveExercise(username + "_exercise_" + this.name + ".json", this);
+  }
+
+  public void removeExercise(Exercise exercise, String username) {
+    workout.remove(exercise);
+  }
+
   @Override
   public String toString() {
         return "Exercise{" +
