@@ -10,6 +10,7 @@ public class Exercise {
   private String muscleGroup;
   private Image image;
 
+  //Constructor
   public Exercise(String name, String recordType, String muscleType, String muscleGroup, Image image) {
     this.name = name;
     this.recordType = recordType;
@@ -18,6 +19,7 @@ public class Exercise {
     this.image = image;
   }
 
+  //Getters and setters
   public String getName() {
     return name;
   }
