@@ -394,6 +394,7 @@ public class MainWindow {
 	    window.setMinimumSize(new Dimension(1000, 900));
 	    window.setMaximumSize(new Dimension(1000, 900));
 	    window.setShape(null);
+	    window.setIconImage(new ImageIcon("D:\\Documents\\NetBeansProjects\\FitTracker\\src\\assets\\FitTrackerLogoSmall.png").getImage());
 	    var windowContentPane = window.getContentPane();
 	    windowContentPane.setLayout(null);
 
@@ -772,53 +773,53 @@ public class MainWindow {
 		panel1.add(mainMenuLogo, "cell 0 0,align center center,grow 0 0");
 
 		//---- mainMenuExercisesButton ----
-		mainMenuExercisesButton.setText("Exercises");
+		mainMenuExercisesButton.setText("EXERCISES");
 		mainMenuExercisesButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuExercisesButton.setFont(mainMenuExercisesButton.getFont().deriveFont(mainMenuExercisesButton.getFont().getStyle() | Font.BOLD, mainMenuExercisesButton.getFont().getSize() + 5f));
 		mainMenuExercisesButton.setForeground(Color.white);
-		panel1.add(mainMenuExercisesButton, "cell 1 0,alignx center,growx 0,width 120:120:120");
+		panel1.add(mainMenuExercisesButton, "cell 1 0,alignx center,growx 0,width 140:140:140");
 
 		//---- mainMenuWorkoutsButton ----
-		mainMenuWorkoutsButton.setText("Workouts");
+		mainMenuWorkoutsButton.setText("WORKOUTS");
 		mainMenuWorkoutsButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuWorkoutsButton.setFont(mainMenuWorkoutsButton.getFont().deriveFont(mainMenuWorkoutsButton.getFont().getStyle() | Font.BOLD, mainMenuWorkoutsButton.getFont().getSize() + 5f));
 		mainMenuWorkoutsButton.setForeground(Color.white);
-		panel1.add(mainMenuWorkoutsButton, "cell 2 0,alignx center,growx 0,width 120:120:120");
+		panel1.add(mainMenuWorkoutsButton, "cell 2 0,alignx center,growx 0,width 140:140:140");
 
 		//---- mainMenuFoodsButton ----
-		mainMenuFoodsButton.setText("Foods");
+		mainMenuFoodsButton.setText("FOODS");
 		mainMenuFoodsButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuFoodsButton.setFont(mainMenuFoodsButton.getFont().deriveFont(mainMenuFoodsButton.getFont().getStyle() | Font.BOLD, mainMenuFoodsButton.getFont().getSize() + 5f));
 		mainMenuFoodsButton.setForeground(Color.white);
-		panel1.add(mainMenuFoodsButton, "cell 3 0,alignx center,growx 0,width 120:120:120");
+		panel1.add(mainMenuFoodsButton, "cell 3 0,alignx center,growx 0,width 140:140:140");
 
 		//---- mainMenuMealsButton ----
-		mainMenuMealsButton.setText("Meals");
+		mainMenuMealsButton.setText("MEALS");
 		mainMenuMealsButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuMealsButton.setFont(mainMenuMealsButton.getFont().deriveFont(mainMenuMealsButton.getFont().getStyle() | Font.BOLD, mainMenuMealsButton.getFont().getSize() + 5f));
 		mainMenuMealsButton.setForeground(Color.white);
-		panel1.add(mainMenuMealsButton, "cell 4 0,alignx center,growx 0,width 120:120:120");
+		panel1.add(mainMenuMealsButton, "cell 4 0,alignx center,growx 0,width 140:140:140");
 
 		//---- mainMenuTrackerButton ----
-		mainMenuTrackerButton.setText("Tracker");
+		mainMenuTrackerButton.setText("PROGRESS");
 		mainMenuTrackerButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuTrackerButton.setFont(mainMenuTrackerButton.getFont().deriveFont(mainMenuTrackerButton.getFont().getStyle() | Font.BOLD, mainMenuTrackerButton.getFont().getSize() + 5f));
 		mainMenuTrackerButton.setForeground(Color.white);
-		panel1.add(mainMenuTrackerButton, "cell 5 0,alignx center,growx 0,width 120:120:120");
+		panel1.add(mainMenuTrackerButton, "cell 5 0,alignx center,growx 0,width 140:140:140");
 
 		//---- mainMenuProfileButton ----
-		mainMenuProfileButton.setText("Profile");
+		mainMenuProfileButton.setText("PROFILE");
 		mainMenuProfileButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuProfileButton.setFont(mainMenuProfileButton.getFont().deriveFont(mainMenuProfileButton.getFont().getStyle() | Font.BOLD, mainMenuProfileButton.getFont().getSize() + 5f));
 		mainMenuProfileButton.setForeground(Color.white);
-		panel1.add(mainMenuProfileButton, "cell 6 0,alignx center,growx 0,width 120:120:120");
+		panel1.add(mainMenuProfileButton, "cell 6 0,alignx center,growx 0,width 140:140:140");
 	    }
 
 	    //======== panel2 ========
 	    {
 		panel2.setBackground(new Color(0x1e2428));
 		panel2.setLayout(new MigLayout(
-		    "hidemode 3",
+		    "fill,hidemode 3",
 		    // columns
 		    "[fill]" +
 		    "[fill]",
