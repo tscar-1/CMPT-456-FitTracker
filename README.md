@@ -14,7 +14,7 @@ FitTracker is a comprehensive Java application designed to help users monitor an
 ## Features
 
 - **Track Exercise**: Log your daily exercises singularly or as part of a workout, including type, duration, reps, sets, and more.
-- **Meal Logging**: Keep a detailed record of your daily meals, including calorie intake and nutritional information.
+- **Meal Logging**: Keep a detailed record of your daily food consumption, including calorie intake and nutritional information.
 - **Progress Monitoring**: Visualize your health and fitness journey with easy-to-read charts, graphs, and summaries.
 - **User-Friendly Interface**: Easy navigation and input methods to ensure a seamless user experience.
 
