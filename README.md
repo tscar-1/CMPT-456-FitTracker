@@ -25,6 +25,6 @@ FitTracker requires Gson (https://github.com/google/gson), FlatLaf Themes (https
 
 All dependencies are can be downloaded at the links above or pulled from this repo's src/lib folder.
 
-### Setting up Dependencies
+## Setting up Dependencies
 
 Download the dependency jar files and in the NetBeans Projects pane, right click on the FitTracker 'Libraries' folder and click 'Add JAR/Folder', and then add the respective JAR files.
