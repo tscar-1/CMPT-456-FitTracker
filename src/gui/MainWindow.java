@@ -173,10 +173,10 @@ public class MainWindow {
         }
 
         if (!userExists && usernameValid && !emailExists && emailValid && passwordValid) {
+            notificationShow("Registration Successful", "Actions.Red");
             User newUser = new User(username, email, fName, lName, password);
             users.add(newUser);
             registerBack(null);
-            notificationShow("REGISTRATION SUCCESSFUL", "Actions.Red");
         }
     }
 
