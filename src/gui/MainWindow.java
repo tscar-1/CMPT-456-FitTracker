@@ -54,7 +54,7 @@ public class MainWindow {
     }
 
     private void startRegister(ActionEvent e) {
-        notificationShow("Click", "Actions.Red");
+        notificationShow("TEST", "Actions.Red");
         window.getContentPane().remove(startPanel);
         registerPanel.setBounds(new Rectangle(new Point(124, 48), registerPanel.getPreferredSize()));
         window.getContentPane().add(registerPanel);
@@ -104,7 +104,7 @@ public class MainWindow {
         }
         
         /*if (loggedInUser == user && loggedInUser.getPassword().equals(password)) {
-            
+            notificationShow("Login Successful", "Actions.Red");
         }*/
         
         mainWindowLogoutButton.setVisible(true);
@@ -176,6 +176,7 @@ public class MainWindow {
             User newUser = new User(username, email, fName, lName, password);
             users.add(newUser);
             registerBack(null);
+            notificationShow("REGISTRATION SUCCESSFUL", "Actions.Red");
         }
     }
 
@@ -266,9 +267,11 @@ public class MainWindow {
         };
         notificationPanel.setOpaque(false); // Make JPanel non-opaque to allow custom painting
         notificationPanel.setLayout(new BoxLayout(notificationPanel, BoxLayout.PAGE_AXIS)); // Use BoxLayout for vertical alignment
-        notificationPanel.add(Box.createVerticalGlue()); // Glue at the top for spacing
-        notificationPanel.add(messageLabel); // Add label, which will be centered vertically
-        notificationPanel.add(Box.createVerticalGlue()); // Glue at the bottom for spacing
+
+        // Offset from top, this is the space above the message label
+        int offset = 15; // Adjust this value as needed for your offset
+        notificationPanel.add(Box.createRigidArea(new Dimension(0, offset)));
+        notificationPanel.add(messageLabel); // Add label, which will be pushed down by the offset
 
         notificationPanel.setBackground(UIManager.getColor(color));
 
@@ -291,7 +294,7 @@ public class MainWindow {
                 } else {
                     ((javax.swing.Timer) e.getSource()).stop();
                     // Delay before slide-down
-                    new javax.swing.Timer(1000, ev -> {
+                    new javax.swing.Timer(2000, ev -> {
                         javax.swing.Timer slideDownTimer = new javax.swing.Timer(5, new ActionListener() {
                             int yPosDown = window.getHeight() - panelHeight;
 
