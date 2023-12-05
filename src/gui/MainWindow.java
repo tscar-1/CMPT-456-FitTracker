@@ -37,7 +37,23 @@ public class MainWindow {
     }
 
     private void logout(ActionEvent e) {
+        currentUser = new User();
+        loginPasswordField.setText("");
+        loginUsernameField.setText("");
+        mainWindowLogoutButton.setVisible(false);
 
+        Component[] components = window.getContentPane().getComponents();
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainWindowLogoutButton.getParent()) {
+                window.getContentPane().remove(comp);
+            }
+        }
+
+        startPanel.setBounds(new Rectangle(new Point(124, 48), startPanel.getPreferredSize()));
+        window.getContentPane().add(startPanel);
+        startPanel.setVisible(true);
+        window.revalidate();
+        window.repaint();
     }
 
     private void exit(ActionEvent e) {
@@ -54,7 +70,6 @@ public class MainWindow {
     }
 
     private void startRegister(ActionEvent e) {
-        notificationShow("TEST", "Actions.Red");
         window.getContentPane().remove(startPanel);
         registerPanel.setBounds(new Rectangle(new Point(124, 48), registerPanel.getPreferredSize()));
         window.getContentPane().add(registerPanel);
@@ -103,11 +118,18 @@ public class MainWindow {
             return;
         }
         
-        /*if (loggedInUser == user && loggedInUser.getPassword().equals(password)) {
+        if (loggedInUser.getUsername().equals(username) && loggedInUser.getPassword().equals(password)) {
             notificationShow("Login Successful", "Actions.Red");
-        }*/
+            currentUser = loggedInUser;
+            mainWindowLogoutButton.setVisible(true);
+            window.getContentPane().remove(loginPanel);
+            mainMenuPanel.setBounds(new Rectangle(new Point(0, 0), mainMenuPanel.getPreferredSize()));
+            window.getContentPane().add(mainMenuPanel);
+            mainMenuPanel.setVisible(true);
+            window.revalidate();
+            window.repaint();
+        }
         
-        mainWindowLogoutButton.setVisible(true);
     }
 
     private void registerBack(ActionEvent e) {
@@ -352,6 +374,15 @@ public class MainWindow {
 	registerPasswordLabel = new JLabel();
 	registerPasswordField = new JPasswordField();
 	mainMenuPanel = new JPanel();
+	panel1 = new JPanel();
+	mainMenuLogo = new JLabel();
+	mainMenuExercisesButton = new JButton();
+	mainMenuWorkoutsButton = new JButton();
+	mainMenuFoodsButton = new JButton();
+	mainMenuMealsButton = new JButton();
+	mainMenuTrackerButton = new JButton();
+	mainMenuProfileButton = new JButton();
+	panel2 = new JPanel();
 
 	//======== window ========
 	{
@@ -360,6 +391,9 @@ public class MainWindow {
 	    window.setTitle("FitTracker");
 	    window.setVisible(true);
 	    window.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	    window.setMinimumSize(new Dimension(1000, 900));
+	    window.setMaximumSize(new Dimension(1000, 900));
+	    window.setShape(null);
 	    var windowContentPane = window.getContentPane();
 	    windowContentPane.setLayout(null);
 
@@ -469,6 +503,12 @@ public class MainWindow {
 	    //---- loginUsernameField ----
 	    loginUsernameField.setFont(loginUsernameField.getFont().deriveFont(loginUsernameField.getFont().getStyle() | Font.BOLD, loginUsernameField.getFont().getSize() + 10f));
 	    loginUsernameField.setForeground(Color.white);
+	    loginUsernameField.addFocusListener(new FocusAdapter() {
+		@Override
+		public void focusGained(FocusEvent e) {
+		    registerTextFieldFocusGained(e);
+		}
+	    });
 
 	    //---- loginLoginButton ----
 	    loginLoginButton.setText("LOGIN");
@@ -701,18 +741,110 @@ public class MainWindow {
 
 	//======== mainMenuPanel ========
 	{
-	    mainMenuPanel.setPreferredSize(new Dimension(1000, 750));
+	    mainMenuPanel.setPreferredSize(new Dimension(1000, 700));
 	    mainMenuPanel.setVisible(false);
+	    mainMenuPanel.setMinimumSize(new Dimension(1000, 700));
+	    mainMenuPanel.setMaximumSize(new Dimension(1000, 700));
+
+	    //======== panel1 ========
+	    {
+		panel1.setBackground(new Color(0x1e2428));
+		panel1.setBorder(null);
+		panel1.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[center]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[]"));
+
+		//---- mainMenuLogo ----
+		mainMenuLogo.setHorizontalAlignment(SwingConstants.CENTER);
+		mainMenuLogo.setIcon(new ImageIcon("D:\\Documents\\NetBeansProjects\\FitTracker\\src\\assets\\FitTrackerLogoSmall.png"));
+		mainMenuLogo.setMaximumSize(new Dimension(50, 50));
+		mainMenuLogo.setMinimumSize(new Dimension(85, 66));
+		mainMenuLogo.setPreferredSize(new Dimension(70, 66));
+		panel1.add(mainMenuLogo, "cell 0 0,align center center,grow 0 0");
+
+		//---- mainMenuExercisesButton ----
+		mainMenuExercisesButton.setText("Exercises");
+		mainMenuExercisesButton.setHorizontalAlignment(SwingConstants.CENTER);
+		mainMenuExercisesButton.setFont(mainMenuExercisesButton.getFont().deriveFont(mainMenuExercisesButton.getFont().getStyle() | Font.BOLD, mainMenuExercisesButton.getFont().getSize() + 5f));
+		mainMenuExercisesButton.setForeground(Color.white);
+		panel1.add(mainMenuExercisesButton, "cell 1 0,alignx center,growx 0,width 120:120:120");
+
+		//---- mainMenuWorkoutsButton ----
+		mainMenuWorkoutsButton.setText("Workouts");
+		mainMenuWorkoutsButton.setHorizontalAlignment(SwingConstants.CENTER);
+		mainMenuWorkoutsButton.setFont(mainMenuWorkoutsButton.getFont().deriveFont(mainMenuWorkoutsButton.getFont().getStyle() | Font.BOLD, mainMenuWorkoutsButton.getFont().getSize() + 5f));
+		mainMenuWorkoutsButton.setForeground(Color.white);
+		panel1.add(mainMenuWorkoutsButton, "cell 2 0,alignx center,growx 0,width 120:120:120");
+
+		//---- mainMenuFoodsButton ----
+		mainMenuFoodsButton.setText("Foods");
+		mainMenuFoodsButton.setHorizontalAlignment(SwingConstants.CENTER);
+		mainMenuFoodsButton.setFont(mainMenuFoodsButton.getFont().deriveFont(mainMenuFoodsButton.getFont().getStyle() | Font.BOLD, mainMenuFoodsButton.getFont().getSize() + 5f));
+		mainMenuFoodsButton.setForeground(Color.white);
+		panel1.add(mainMenuFoodsButton, "cell 3 0,alignx center,growx 0,width 120:120:120");
+
+		//---- mainMenuMealsButton ----
+		mainMenuMealsButton.setText("Meals");
+		mainMenuMealsButton.setHorizontalAlignment(SwingConstants.CENTER);
+		mainMenuMealsButton.setFont(mainMenuMealsButton.getFont().deriveFont(mainMenuMealsButton.getFont().getStyle() | Font.BOLD, mainMenuMealsButton.getFont().getSize() + 5f));
+		mainMenuMealsButton.setForeground(Color.white);
+		panel1.add(mainMenuMealsButton, "cell 4 0,alignx center,growx 0,width 120:120:120");
+
+		//---- mainMenuTrackerButton ----
+		mainMenuTrackerButton.setText("Tracker");
+		mainMenuTrackerButton.setHorizontalAlignment(SwingConstants.CENTER);
+		mainMenuTrackerButton.setFont(mainMenuTrackerButton.getFont().deriveFont(mainMenuTrackerButton.getFont().getStyle() | Font.BOLD, mainMenuTrackerButton.getFont().getSize() + 5f));
+		mainMenuTrackerButton.setForeground(Color.white);
+		panel1.add(mainMenuTrackerButton, "cell 5 0,alignx center,growx 0,width 120:120:120");
+
+		//---- mainMenuProfileButton ----
+		mainMenuProfileButton.setText("Profile");
+		mainMenuProfileButton.setHorizontalAlignment(SwingConstants.CENTER);
+		mainMenuProfileButton.setFont(mainMenuProfileButton.getFont().deriveFont(mainMenuProfileButton.getFont().getStyle() | Font.BOLD, mainMenuProfileButton.getFont().getSize() + 5f));
+		mainMenuProfileButton.setForeground(Color.white);
+		panel1.add(mainMenuProfileButton, "cell 6 0,alignx center,growx 0,width 120:120:120");
+	    }
+
+	    //======== panel2 ========
+	    {
+		panel2.setBackground(new Color(0x1e2428));
+		panel2.setLayout(new MigLayout(
+		    "hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[]" +
+		    "[]" +
+		    "[]"));
+	    }
 
 	    GroupLayout mainMenuPanelLayout = new GroupLayout(mainMenuPanel);
 	    mainMenuPanel.setLayout(mainMenuPanelLayout);
 	    mainMenuPanelLayout.setHorizontalGroup(
 		mainMenuPanelLayout.createParallelGroup()
-		    .addGap(0, 1000, Short.MAX_VALUE)
+		    .addComponent(panel1, GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
+		    .addGroup(mainMenuPanelLayout.createSequentialGroup()
+			.addContainerGap()
+			.addComponent(panel2, GroupLayout.DEFAULT_SIZE, 988, Short.MAX_VALUE)
+			.addContainerGap())
 	    );
 	    mainMenuPanelLayout.setVerticalGroup(
 		mainMenuPanelLayout.createParallelGroup()
-		    .addGap(0, 750, Short.MAX_VALUE)
+		    .addGroup(mainMenuPanelLayout.createSequentialGroup()
+			.addComponent(panel1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+			.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+			.addComponent(panel2, GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
+			.addContainerGap())
 	    );
 	}
 	// JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -750,5 +882,14 @@ public class MainWindow {
     private JLabel registerPasswordLabel;
     private JPasswordField registerPasswordField;
     private JPanel mainMenuPanel;
+    private JPanel panel1;
+    private JLabel mainMenuLogo;
+    private JButton mainMenuExercisesButton;
+    private JButton mainMenuWorkoutsButton;
+    private JButton mainMenuFoodsButton;
+    private JButton mainMenuMealsButton;
+    private JButton mainMenuTrackerButton;
+    private JButton mainMenuProfileButton;
+    private JPanel panel2;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
