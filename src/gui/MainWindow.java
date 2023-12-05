@@ -1,5 +1,8 @@
 package gui;
 
+import java.beans.*;
+import javax.swing.border.*;
+import com.jgoodies.forms.factories.*;
 import core.*;
 import database.*;
 import utils.*;
@@ -51,6 +54,7 @@ public class MainWindow {
     }
 
     private void startRegister(ActionEvent e) {
+        notificationShow("Click", "Actions.Red");
         window.getContentPane().remove(startPanel);
         registerPanel.setBounds(new Rectangle(new Point(124, 48), registerPanel.getPreferredSize()));
         window.getContentPane().add(registerPanel);
@@ -71,6 +75,38 @@ public class MainWindow {
     }
 
     private void loginLogin(ActionEvent e) {
+        String username = loginUsernameField.getText();
+        String password = StringUtil.applySha256(loginPasswordField.getText());
+         
+        File usersFile = new File("users.json");
+        Gson gson = new Gson();
+        java.util.List<User> users;
+        try (FileReader reader = new FileReader(usersFile)) {
+            Type userListType = new TypeToken<ArrayList<User>>() {}.getType();
+            users = gson.fromJson(reader, userListType);
+        } catch (IOException ex) {
+            users = new ArrayList<>();
+        }
+        
+        User loggedInUser = users.stream().filter(user -> user.getUsername().equals(username)).findFirst().orElse(null);
+        
+        if (loggedInUser == null) {
+            loginUsernameField.setText("User does not exist");
+            loginPasswordField.setText("");
+            loginUsernameField.setForeground(Color.RED);
+            return;
+        }
+
+        if (!loggedInUser.getPassword().equals(password)) {
+            loginPasswordField.setText("Incorrect password");
+            loginPasswordField.setForeground(Color.RED);
+            return;
+        }
+        
+        /*if (loggedInUser == user && loggedInUser.getPassword().equals(password)) {
+            
+        }*/
+        
         mainWindowLogoutButton.setVisible(true);
     }
 
@@ -99,8 +135,7 @@ public class MainWindow {
         Gson gson = new Gson();
         java.util.List<User> users;
         try (FileReader reader = new FileReader(usersFile)) {
-            Type userListType = new TypeToken<ArrayList<User>>() {
-            }.getType();
+            Type userListType = new TypeToken<ArrayList<User>>() {}.getType();
             users = gson.fromJson(reader, userListType);
         } catch (IOException ex) {
             users = new ArrayList<>();
@@ -140,6 +175,7 @@ public class MainWindow {
         if (!userExists && usernameValid && !emailExists && emailValid && passwordValid) {
             User newUser = new User(username, email, fName, lName, password);
             users.add(newUser);
+            registerBack(null);
         }
     }
 
@@ -213,6 +249,73 @@ public class MainWindow {
         }
     }
 
+    private void notificationShow(String message, String color) {
+        JLabel messageLabel = new JLabel(message);
+        messageLabel.setForeground(new Color(0x2b3036));
+        messageLabel.setFont(messageLabel.getFont().deriveFont(Font.BOLD));
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center label horizontally
+
+        // Custom JPanel with rounded corners
+        JPanel notificationPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(getBackground());
+                g.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25); // 25 is the arc width and height
+            }
+        };
+        notificationPanel.setOpaque(false); // Make JPanel non-opaque to allow custom painting
+        notificationPanel.setLayout(new BoxLayout(notificationPanel, BoxLayout.PAGE_AXIS)); // Use BoxLayout for vertical alignment
+        notificationPanel.add(Box.createVerticalGlue()); // Glue at the top for spacing
+        notificationPanel.add(messageLabel); // Add label, which will be centered vertically
+        notificationPanel.add(Box.createVerticalGlue()); // Glue at the bottom for spacing
+
+        notificationPanel.setBackground(UIManager.getColor(color));
+
+        int panelWidth = window.getWidth() / 5; // Fifth the width of the window
+        int panelHeight = 80; // Adjust the height as needed
+        int xPosStart = (window.getWidth() - panelWidth) / 2; // Horizontally centered
+        notificationPanel.setBounds(xPosStart, window.getHeight(), panelWidth, panelHeight);
+        window.getContentPane().add(notificationPanel);
+        window.getContentPane().setComponentZOrder(notificationPanel, 0);
+        window.getContentPane().repaint();
+
+        javax.swing.Timer slideUpTimer = new javax.swing.Timer(5, new ActionListener() {
+            int yPos = window.getHeight();
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (yPos > window.getHeight() - panelHeight) {
+                    yPos -= 1; // Slide-up speed
+                    notificationPanel.setBounds(xPosStart, yPos, panelWidth, panelHeight);
+                } else {
+                    ((javax.swing.Timer) e.getSource()).stop();
+                    // Delay before slide-down
+                    new javax.swing.Timer(1000, ev -> {
+                        javax.swing.Timer slideDownTimer = new javax.swing.Timer(5, new ActionListener() {
+                            int yPosDown = window.getHeight() - panelHeight;
+
+                            @Override
+                            public void actionPerformed(ActionEvent evt) {
+                                if (yPosDown < window.getHeight()) {
+                                    yPosDown += 1; // Slide-down speed
+                                    notificationPanel.setBounds(xPosStart, yPosDown, panelWidth, panelHeight);
+                                } else {
+                                    ((javax.swing.Timer) evt.getSource()).stop();
+                                    window.getContentPane().remove(notificationPanel);
+                                    window.getContentPane().revalidate();
+                                    window.getContentPane().repaint();
+                                }
+                            }
+                        });
+                        slideDownTimer.start();
+                    }).start();
+                }
+            }
+        });
+        slideUpTimer.start();
+    }
+
     private void initComponents() {
 	// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
 	// Generated using JFormDesigner Educational license - Thomas Scardino (THOMAS A SCARDINO)
@@ -228,9 +331,9 @@ public class MainWindow {
 	loginUsernameLabel = new JLabel();
 	loginPasswordLabel = new JLabel();
 	loginUsernameField = new JTextField();
-	loginPasswordField = new JTextField();
 	loginLoginButton = new JButton();
 	loginBackButton = new JButton();
+	loginPasswordField = new JPasswordField();
 	registerPanel = new JPanel();
 	registerLogoLabel = new JLabel();
 	registerUsernameLabel = new JLabel();
@@ -264,7 +367,7 @@ public class MainWindow {
 	    mainWindowExitButton.setFocusPainted(false);
 	    mainWindowExitButton.addActionListener(e -> exit(e));
 	    windowContentPane.add(mainWindowExitButton);
-	    mainWindowExitButton.setBounds(816, 804, 157, 40);
+	    mainWindowExitButton.setBounds(825, 815, 157, 40);
 
 	    //======== startPanel ========
 	    {
@@ -318,9 +421,10 @@ public class MainWindow {
 	    mainWindowLogoutButton.setForeground(Color.white);
 	    mainWindowLogoutButton.setFont(mainWindowLogoutButton.getFont().deriveFont(mainWindowLogoutButton.getFont().getStyle() | Font.BOLD));
 	    mainWindowLogoutButton.setFocusPainted(false);
+	    mainWindowLogoutButton.setVisible(false);
 	    mainWindowLogoutButton.addActionListener(e -> logout(e));
 	    windowContentPane.add(mainWindowLogoutButton);
-	    mainWindowLogoutButton.setBounds(25, 804, 157, 40);
+	    mainWindowLogoutButton.setBounds(15, 815, 157, 40);
 
 	    {
 		// compute preferred size
@@ -360,12 +464,8 @@ public class MainWindow {
 	    loginPasswordLabel.setForeground(Color.white);
 
 	    //---- loginUsernameField ----
-	    loginUsernameField.setFont(loginUsernameField.getFont().deriveFont(loginUsernameField.getFont().getSize() + 10f));
+	    loginUsernameField.setFont(loginUsernameField.getFont().deriveFont(loginUsernameField.getFont().getStyle() | Font.BOLD, loginUsernameField.getFont().getSize() + 10f));
 	    loginUsernameField.setForeground(Color.white);
-
-	    //---- loginPasswordField ----
-	    loginPasswordField.setFont(loginPasswordField.getFont().deriveFont(loginPasswordField.getFont().getStyle() | Font.BOLD, loginPasswordField.getFont().getSize() + 10f));
-	    loginPasswordField.setForeground(Color.white);
 
 	    //---- loginLoginButton ----
 	    loginLoginButton.setText("LOGIN");
@@ -381,6 +481,16 @@ public class MainWindow {
 	    loginBackButton.setPreferredSize(new Dimension(275, 75));
 	    loginBackButton.addActionListener(e -> loginBack(e));
 
+	    //---- loginPasswordField ----
+	    loginPasswordField.setFont(loginPasswordField.getFont().deriveFont(loginPasswordField.getFont().getStyle() | Font.BOLD, loginPasswordField.getFont().getSize() + 10f));
+	    loginPasswordField.setForeground(Color.white);
+	    loginPasswordField.addFocusListener(new FocusAdapter() {
+		@Override
+		public void focusGained(FocusEvent e) {
+		    registerTextFieldFocusGained(e);
+		}
+	    });
+
 	    GroupLayout loginPanelLayout = new GroupLayout(loginPanel);
 	    loginPanel.setLayout(loginPanelLayout);
 	    loginPanelLayout.setHorizontalGroup(
@@ -395,12 +505,12 @@ public class MainWindow {
 				.addComponent(loginLoginButton, GroupLayout.PREFERRED_SIZE, 275, GroupLayout.PREFERRED_SIZE)
 				.addGap(84, 84, 84))
 			    .addGroup(GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
-				.addGroup(loginPanelLayout.createParallelGroup()
-				    .addGroup(GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+				.addGroup(loginPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+				    .addGroup(loginPanelLayout.createSequentialGroup()
 					.addComponent(loginPasswordLabel, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
 					.addGap(30, 30, 30)
 					.addComponent(loginPasswordField, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE))
-				    .addGroup(GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+				    .addGroup(loginPanelLayout.createSequentialGroup()
 					.addComponent(loginUsernameLabel, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
 					.addGap(30, 30, 30)
 					.addComponent(loginUsernameField, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE)))
@@ -417,8 +527,8 @@ public class MainWindow {
 			    .addComponent(loginUsernameLabel, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
 			.addGap(18, 18, 18)
 			.addGroup(loginPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			    .addComponent(loginPasswordField, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-			    .addComponent(loginPasswordLabel, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
+			    .addComponent(loginPasswordLabel, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+			    .addComponent(loginPasswordField, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
 			.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 166, Short.MAX_VALUE)
 			.addGroup(loginPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 			    .addComponent(loginBackButton, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
@@ -619,9 +729,9 @@ public class MainWindow {
     private JLabel loginUsernameLabel;
     private JLabel loginPasswordLabel;
     private JTextField loginUsernameField;
-    private JTextField loginPasswordField;
     private JButton loginLoginButton;
     private JButton loginBackButton;
+    private JPasswordField loginPasswordField;
     private JPanel registerPanel;
     private JLabel registerLogoLabel;
     private JLabel registerUsernameLabel;
