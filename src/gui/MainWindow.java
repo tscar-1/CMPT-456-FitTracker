@@ -60,6 +60,8 @@ public class MainWindow {
     }
 
     private void loginBack(ActionEvent e) {
+        loginUsernameField.setText("");
+        loginPasswordField.setText("");
         window.getContentPane().remove(loginPanel);
         startPanel.setBounds(new Rectangle(new Point(124, 48), startPanel.getPreferredSize()));
         window.getContentPane().add(startPanel);
@@ -73,6 +75,11 @@ public class MainWindow {
     }
 
     private void registerBack(ActionEvent e) {
+        registerUsernameField.setText("");
+        registerEmailField.setText("");
+        registerFNameField.setText("");
+        registerLNameField.setText("");
+        registerPasswordField.setText("");
         window.getContentPane().remove(registerPanel);
         startPanel.setBounds(new Rectangle(new Point(124, 48), startPanel.getPreferredSize()));
         window.getContentPane().add(startPanel);
@@ -117,17 +124,17 @@ public class MainWindow {
 
         if (emailExists) {
             registerEmailField.setText("Email already exists");
-            registerUsernameField.setForeground(Color.RED);
+            registerEmailField.setForeground(Color.RED);
         }
 
         if (!emailValid) {
-            registerUsernameField.setText("Email invalid");
-            registerUsernameField.setForeground(Color.RED);
+            registerEmailField.setText("Email invalid");
+            registerEmailField.setForeground(Color.RED);
         }
 
         if (!passwordValid) {
             registerPasswordField.setText("Password invalid");
-            registerUsernameField.setForeground(Color.RED);
+            registerPasswordField.setForeground(Color.RED);
         }
 
         if (!userExists && usernameValid && !emailExists && emailValid && passwordValid) {
@@ -137,7 +144,7 @@ public class MainWindow {
     }
 
     private boolean usernameValid(String username) {
-        if (username.length() < 4 && username.length() > 16) {
+        if (username.length() < 4 || username.length() > 16) {
             return false;
         }
 
@@ -236,8 +243,8 @@ public class MainWindow {
 	registerFNameField = new JTextField();
 	registerLNameField = new JTextField();
 	registerLNameLabel = new JLabel();
-	registerPasswordField = new JTextField();
 	registerPasswordLabel = new JLabel();
+	registerPasswordField = new JPasswordField();
 	mainMenuPanel = new JPanel();
 
 	//======== window ========
@@ -442,6 +449,7 @@ public class MainWindow {
 	    //---- registerUsernameField ----
 	    registerUsernameField.setFont(registerUsernameField.getFont().deriveFont(registerUsernameField.getFont().getStyle() | Font.BOLD, registerUsernameField.getFont().getSize() + 10f));
 	    registerUsernameField.setForeground(Color.white);
+	    registerUsernameField.setToolTipText("Must be between 4 and 16 characters long and may not contain any special characters.");
 	    registerUsernameField.addFocusListener(new FocusAdapter() {
 		@Override
 		public void focusGained(FocusEvent e) {
@@ -491,20 +499,21 @@ public class MainWindow {
 	    registerLNameLabel.setFont(registerLNameLabel.getFont().deriveFont(registerLNameLabel.getFont().getStyle() | Font.BOLD, registerLNameLabel.getFont().getSize() + 10f));
 	    registerLNameLabel.setForeground(Color.white);
 
+	    //---- registerPasswordLabel ----
+	    registerPasswordLabel.setText("PASSWORD:");
+	    registerPasswordLabel.setFont(registerPasswordLabel.getFont().deriveFont(registerPasswordLabel.getFont().getStyle() | Font.BOLD, registerPasswordLabel.getFont().getSize() + 10f));
+	    registerPasswordLabel.setForeground(Color.white);
+
 	    //---- registerPasswordField ----
-	    registerPasswordField.setFont(registerPasswordField.getFont().deriveFont(registerPasswordField.getFont().getSize() + 10f));
+	    registerPasswordField.setFont(registerPasswordField.getFont().deriveFont(registerPasswordField.getFont().getStyle() | Font.BOLD, registerPasswordField.getFont().getSize() + 10f));
 	    registerPasswordField.setForeground(Color.white);
+	    registerPasswordField.setToolTipText("Must be between 8 and 16 characters long, contain atleast one uppercase character, one lowercase character, and one digit.");
 	    registerPasswordField.addFocusListener(new FocusAdapter() {
 		@Override
 		public void focusGained(FocusEvent e) {
 		    registerTextFieldFocusGained(e);
 		}
 	    });
-
-	    //---- registerPasswordLabel ----
-	    registerPasswordLabel.setText("PASSWORD:");
-	    registerPasswordLabel.setFont(registerPasswordLabel.getFont().deriveFont(registerPasswordLabel.getFont().getStyle() | Font.BOLD, registerPasswordLabel.getFont().getSize() + 10f));
-	    registerPasswordLabel.setForeground(Color.white);
 
 	    GroupLayout registerPanelLayout = new GroupLayout(registerPanel);
 	    registerPanel.setLayout(registerPanelLayout);
@@ -566,7 +575,7 @@ public class MainWindow {
 			    .addComponent(registerLNameLabel, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
 			    .addComponent(registerLNameField, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
 			.addGap(18, 18, 18)
-			.addGroup(registerPanelLayout.createParallelGroup()
+			.addGroup(registerPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 			    .addComponent(registerPasswordLabel, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
 			    .addComponent(registerPasswordField, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
 			.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
@@ -625,8 +634,8 @@ public class MainWindow {
     private JTextField registerFNameField;
     private JTextField registerLNameField;
     private JLabel registerLNameLabel;
-    private JTextField registerPasswordField;
     private JLabel registerPasswordLabel;
+    private JPasswordField registerPasswordField;
     private JPanel mainMenuPanel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
