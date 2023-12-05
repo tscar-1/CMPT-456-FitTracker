@@ -1,5 +1,6 @@
 <p align="center">
   <img src="src/assets/FitTrackerLogo.png" alt="FitTracker Logo" />
+  Louie Celiberti, Thomas Scardino
 </p>
 
 ## What is FitTracker?
