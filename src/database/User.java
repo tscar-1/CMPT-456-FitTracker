@@ -34,12 +34,13 @@ public class User {
         password = "";
     }
     
-    public User(String Username, String email, String fName, String lName, String password) {
+    public User(String username, String email, String fName, String lName, String password) {
         this.username = username;
         this.email = email;
         this.fName = fName;
         this.lName = lName;
         this.password = StringUtil.applySha256(password);
+        
         File usersFile = new File("users.json");
         if (!usersFile.exists()) {
             try ( FileWriter writer = new FileWriter(usersFile)) {
@@ -48,6 +49,29 @@ public class User {
                 e.printStackTrace();
             }
         }
+        
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+        List<User> userList;
+        try ( FileReader reader = new FileReader(usersFile)) {
+            userList = gson.fromJson(reader, new TypeToken<List<User>>() {}.getType());
+            if (userList == null) {
+                userList = new ArrayList<>();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            userList = new ArrayList<>();
+        }
+        
+        User currentUser = this;
+        userList.add(currentUser);
+        
+        try ( BufferedWriter writer = new BufferedWriter(new FileWriter(usersFile))) {
+            gson.toJson(userList, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.printf("User " + username + " registered.\n");
     }
     
     public void setUsername(String username) {
