@@ -28,6 +28,6 @@ Create a Java with Ant project in NetBeans (we recommend naming it "FitTracker")
 
 FitTracker requires Gson (https://github.com/google/gson), FlatLaf Themes (https://github.com/JFormDesigner/FlatLaf), and FlatLaf IntelliJ Themes (https://github.com/JFormDesigner/FlatLaf/tree/main/flatlaf-intellij-themes)
 
-All dependencies are can be downloaded at the links above or pulled from this repo's src/lib folder.
+All dependencies can be downloaded at the links above or pulled from this repo's src/lib folder.
 
 To set up dependencies, download the dependency jar files and in the NetBeans Projects pane, right click on the FitTracker 'Libraries' folder and click 'Add JAR/Folder', and then add the respective JAR files.
