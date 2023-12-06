@@ -1,9 +1,6 @@
 package core;
 
-import java.time.LocalDate;
-
 public class Exercise {
-    private LocalDate date;
     private String name;
     private int recordType; //1 weight-based, 2 distance-based
     private int muscleType; //1 triceps, 2 chest, 3 shoulders, 4 biceps, 5 core, 6 back, 7 forearms, 8 upper legs, 9 glutes, 10 cardio, 11 lower legs
@@ -14,16 +11,14 @@ public class Exercise {
     private double duration;
 
     //Constructor
-    public Exercise(LocalDate date, String name, int recordType, int muscleType) {
-        this.date = date;
+    public Exercise(String name, int recordType, int muscleType) {
         this.name = name;
         this.recordType = recordType;
         this.muscleType = muscleType;
     }
     
     //Weight-based Constructor
-    public Exercise(LocalDate date, String name, int recordType, int muscleType, int sets, int weight, int reps) {
-        this.date = date;
+    public Exercise(String name, int recordType, int muscleType, int sets, int weight, int reps) {
         this.name = name;
         this.recordType = recordType;
         this.muscleType = muscleType;
@@ -33,8 +28,7 @@ public class Exercise {
     }
     
     //Distance-based Constructor
-    public Exercise(LocalDate date, String name, int recordType, int muscleType, int sets, double distance, double duration) {
-        this.date = date;
+    public Exercise(String name, int recordType, int muscleType, int sets, double distance, double duration) {
         this.name = name;
         this.recordType = recordType;
         this.muscleType = muscleType;
@@ -44,14 +38,6 @@ public class Exercise {
     }
 
     //Setters and getters
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-    
-    public LocalDate getDate() {
-        return date;
-    }
-    
     public void setName(String name) {
         this.name = name;
     }
