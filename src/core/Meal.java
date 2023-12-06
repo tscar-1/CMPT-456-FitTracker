@@ -7,13 +7,14 @@ public class Meal {
 
 
     private String name;
+    
+    private List<Food> meal;
 
     public Meal(String name, List<Food> meal) {
         this.name = name;
         this.meal = meal;
     }
 
-    private List<Food> meal;
     public String getName() {
         return name;
     }
