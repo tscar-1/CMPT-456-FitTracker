@@ -1,1 +1,24 @@
-[]
+[
+  {
+    "name": "Breakfast",
+    "recordType": "eggs",
+    "muscleType": "toast",
+     "sets": "Avocado",
+    "weight": "Orange Juice"
+  },
+  
+  {
+    "name": "Lunch",
+    "recordType": "Burger",
+    "muscleType": "Fries",
+     "sets": "Ketchup",
+    "weight": "Water"
+  },
+  {
+    "name": "Dinner",
+    "recordType": "Steak",
+    "muscleType": "Asaragus",
+     "sets": "Potatoe",
+    "weight": "Water"
+  }
+]
