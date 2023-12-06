@@ -2,81 +2,86 @@
   {
     "mainMeal": "Eggs",
     "side": " Avocado",
-    "drink": "Orange Juice"
+    "drink": "Orange Juice",
+    "Calories": "500"
   },
   {
     "mainMeal": "Burger",
     "side": "Fries",
-    "drink": "Water"
+    "drink": "Water",
+    "Calories": "750"
   },
   {
     "mainMeal": "Steak",
     "side": "Asparagus",
-    "drink": "Water"
+    "drink": "Water",
+    "Calories": "500"
   },
   {
     "mainMeal": "Eggs",
     "side": " Avocado",
-    "drink": "Orange Juice"
+    "drink": "Orange Juice",
+    "Calories": "950"
   },
-  {
-    "mainMeal": "Burger",
-    "side": "Fries",
-    "drink": "Water"
-  },
-  {
-    "mainMeal": "Steak",
-    "side": "Asparagus",
-    "drink": "Water"
-  }
   {
     "mainMeal": "Eggs",
     "side": " Bacon",
-    "drink": "Apple Juice"
+    "drink": "Apple Juice",
+    "Calories": "1020",
   {
     "mainMeal": "Eggs",
     "side": "Sausage",
-    "drink": "Milk"
+    "drink": "Milk",
+    "Calories": "1100"
   },
   {
     "mainMeal": "Frosted Flakes",
     "side": "Strawberries",
-    "drink": "Water"
-  }
+    "drink": "Water",
+    "Calories": "450"
+  },
   {
     "mainMeal": "Corn Flakes",
-    "side": "Bananna",
-    "drink": "Orange Juice"
+    "side": "Banana",
+    "drink": "Orange Juice",
+    "Calories": "600"
   },
   {
     "mainMeal": "Eggs",
     "side": "English Muffin",
-    "drink": "Orange Juice"
+    "drink": "Orange Juice",
+    "Calories": "725"
   },
   {
     "mainMeal": "Eggs",
     "side": "Turkey Bacon",
-    "drink": "Orange Juice"
+    "drink": "Orange Juice",
+    "Calories": "800"
   },{
     "mainMeal": "Pancakes",
     "side": "Bacon",
-    "drink": "Orange Juice"
+    "drink": "Orange Juice",
+    "Calories": "1100"
   },{
     "mainMeal": "Pancakes",
     "side": "Sausage",
-    "drink": "Orange Juice"
+    "drink": "Orange Juice",
+    "Calories": "1150"
   },{
     "mainMeal": "Waffles",
     "side": "Bacon",
-    "drink": "Orange Juice"
+    "drink": "Orange Juice",
+    "Calories": "1050"
   },{
     "mainMeal": "Waffles",
     "side": "Sausage",
-    "drink": "Orange Juice"
+    "drink": "Orange Juice",
+    "Calories": "1200"
   },
   {
     "mainMeal": "Steak",
     "side": "Asparagus",
-    "drink": "Water"
+    "drink": "Water",
+    "Calories": "650"
   }
 ]
