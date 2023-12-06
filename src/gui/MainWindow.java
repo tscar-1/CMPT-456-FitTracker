@@ -9,6 +9,7 @@ import utils.*;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.*;
@@ -22,6 +23,7 @@ import net.miginfocom.swing.*;
 public class MainWindow {
 
     private static User currentUser = new User();
+    private static int currentMuscleType;
 
     public MainWindow() {
         initComponents();
@@ -30,10 +32,6 @@ public class MainWindow {
     public void show() {
         window.pack();
         window.setVisible(true);
-    }
-
-    private void createUIComponents() {
-        // TODO: add custom component creation code here
     }
 
     private void logout(ActionEvent e) {
@@ -341,6 +339,285 @@ public class MainWindow {
         slideUpTimer.start();
     }
 
+    private void mainMenuLogo(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuStartPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuStartPanel.getPreferredSize()));
+        mainMenuStartPanel.setVisible(true);
+        mainMenuPanel.add(mainMenuStartPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void mainMenuExercises(ActionEvent e) {
+        Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuExercisesPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuExercisesPanel.getPreferredSize()));
+        mainMenuPanel.add(mainMenuExercisesPanel);
+        mainMenuExercisesPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void mainMenuWorkouts(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuWorkoutsPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuWorkoutsPanel.getPreferredSize()));
+        mainMenuPanel.add(mainMenuWorkoutsPanel);
+        mainMenuWorkoutsPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void mainMenuFoods(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuFoodsPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuFoodsPanel.getPreferredSize()));
+        mainMenuPanel.add(mainMenuFoodsPanel);
+        mainMenuFoodsPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void mainMenuMeals(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuMealsPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuMealsPanel.getPreferredSize()));
+        mainMenuPanel.add(mainMenuMealsPanel);
+        mainMenuMealsPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void mainMenuProgress(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuProgressPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuProgressPanel.getPreferredSize()));
+        mainMenuPanel.add(mainMenuProgressPanel);
+        mainMenuProgressPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void mainMenuProfile(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuProfilePanel.setBounds(new Rectangle(new Point(6, 106), mainMenuProfilePanel.getPreferredSize()));
+        mainMenuPanel.add(mainMenuProfilePanel);
+        mainMenuProfilePanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+    
+    public enum exerciseSource {
+        ALL,
+        FITTRACKER,
+        CUSTOM
+    }
+    
+    private java.util.List<Exercise> exercisesRead(String filePath) {
+        File ftExercisesFile = new File(filePath);
+        Gson gson = new Gson();
+        java.util.List<Exercise> exercises = new ArrayList<>();
+        try (FileReader reader = new FileReader(ftExercisesFile)) {
+            Type exerciseListType = new TypeToken<ArrayList<Exercise>>() {}.getType();
+            exercises = gson.fromJson(reader, exerciseListType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return exercises;
+    }
+    
+    private void exercisesPopulate(int source, int muscleType) {
+        java.util.List<Exercise> exercises;
+        
+        if(source == 1) {
+            exercises = Stream.concat(exercisesRead("fittracker_exercises.json").stream(),exercisesRead(currentUser.getUsername() + "_exercises.json").stream()).collect(Collectors.toList());
+        }
+        else if (source == 2) {
+            exercises = exercisesRead("fittracker_exercises.json");
+        }
+        else {
+            exercises = exercisesRead(currentUser.getUsername() + "_exercises.json");
+        }
+        
+        java.util.List<Exercise> groupedExercises = exercises.stream().filter(e -> e.getMuscleType() == muscleType).collect(Collectors.toList());
+        
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        
+        for (Exercise exercise : groupedExercises) {
+            JButton button = new JButton(exercise.getName());
+            button.setForeground(Color.white);
+	    button.setFont(button.getFont().deriveFont(button.getFont().getStyle() | Font.BOLD, button.getFont().getSize() + 10f));
+            button.addActionListener(e -> exerciseSelection(exercise));
+            listPanel.add(button);
+        }
+        
+        exercisesExercisesScrollPanel.setViewportView(listPanel);
+        exercisesExercisesScrollPanel.revalidate();
+        exercisesExercisesScrollPanel.repaint();
+    }
+    
+    private void exerciseSelection(Exercise exercise) {
+        
+    }
+    
+    private void exercisesExercisesTopBarAll(ActionEvent e) {
+	exercisesPopulate(1, currentMuscleType);
+    }
+    
+    private void exercisesExercisesTopBarFT(ActionEvent e) {
+	exercisesPopulate(2, currentMuscleType);
+    }
+
+    private void exercisesExercisesTopBarMy(ActionEvent e) {
+	exercisesPopulate(3, currentMuscleType);
+    }
+
+    private void exercisesTriceps(ActionEvent e) {
+        currentMuscleType = 1;
+        
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        java.util.List<Exercise> exercises = exercisesRead("fittracker_exercises.json");
+        exercisesPopulate(1, 1);
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void exercisesChest(ActionEvent e) {
+	currentMuscleType = 2;
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void exercisesShoulders(ActionEvent e) {
+	currentMuscleType = 3;
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void exercisesBiceps(ActionEvent e) {
+	// TODO add your code here
+    }
+
+    private void exercisesCore(ActionEvent e) {
+	// TODO add your code here
+    }
+
+    private void exercisesBack(ActionEvent e) {
+	// TODO add your code here
+    }
+
+    private void exercisesForearms(ActionEvent e) {
+	// TODO add your code here
+    }
+
+    private void exercisesUpperLegs(ActionEvent e) {
+	// TODO add your code here
+    }
+
+    private void exercisesGlutes(ActionEvent e) {
+	// TODO add your code here
+    }
+
+    private void exercisesCardio(ActionEvent e) {
+	// TODO add your code here
+    }
+
+    private void exercisesLowerLegs(ActionEvent e) {
+	// TODO add your code here
+    }
+
+    private void exercisesAll(ActionEvent e) {
+	// TODO add your code here
+    }
+
     private void initComponents() {
 	// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
 	// Generated using JFormDesigner Educational license - Thomas Scardino (THOMAS A SCARDINO)
@@ -374,15 +651,47 @@ public class MainWindow {
 	registerPasswordLabel = new JLabel();
 	registerPasswordField = new JPasswordField();
 	mainMenuPanel = new JPanel();
-	panel1 = new JPanel();
-	mainMenuLogo = new JLabel();
+	mainMenuButtonPanel = new JPanel();
+	mainMenuLogoButton = new JButton();
 	mainMenuExercisesButton = new JButton();
 	mainMenuWorkoutsButton = new JButton();
 	mainMenuFoodsButton = new JButton();
 	mainMenuMealsButton = new JButton();
-	mainMenuTrackerButton = new JButton();
+	mainMenuProgressButton = new JButton();
 	mainMenuProfileButton = new JButton();
-	panel2 = new JPanel();
+	mainMenuStartPanel = new JPanel();
+	startWelcomeLabel = new JLabel();
+	label14 = new JLabel();
+	mainMenuExercisesPanel = new JPanel();
+	exercisesTricepsButton = new JButton();
+	exercisesChestButton = new JButton();
+	exercisesShouldersButton = new JButton();
+	exercisesBicepsButton = new JButton();
+	exercisesCoreButton = new JButton();
+	exercisesBackButton = new JButton();
+	exercisesForearmsButton = new JButton();
+	exercisesUpperLegsButton = new JButton();
+	exercisesGlutesButton = new JButton();
+	exercisesCardioButton = new JButton();
+	exercisesLowerLegsButton = new JButton();
+	exercisesAllButton = new JButton();
+	mainMenuWorkoutsPanel = new JPanel();
+	workoutSelectButton = new JButton();
+	workoutAddNewButton = new JButton();
+	mainMenuFoodsPanel = new JPanel();
+	foodSelectButton = new JButton();
+	foodAddNewButton = new JButton();
+	mainMenuMealsPanel = new JPanel();
+	mealSelectButton = new JButton();
+	mealAddNewButton = new JButton();
+	mainMenuProgressPanel = new JPanel();
+	mainMenuProfilePanel = new JPanel();
+	exercisesExercisesPanel = new JPanel();
+	exercisesExercisesTopPanel = new JPanel();
+	exercisesExercisesTopBarAllButton = new JButton();
+	exercisesExercisesTopBarFTButton = new JButton();
+	exercisesExercisesTopBarCusButton = new JButton();
+	exercisesExercisesScrollPanel = new JScrollPane();
 
 	//======== window ========
 	{
@@ -746,12 +1055,13 @@ public class MainWindow {
 	    mainMenuPanel.setVisible(false);
 	    mainMenuPanel.setMinimumSize(new Dimension(1000, 700));
 	    mainMenuPanel.setMaximumSize(new Dimension(1000, 700));
+	    mainMenuPanel.setLayout(null);
 
-	    //======== panel1 ========
+	    //======== mainMenuButtonPanel ========
 	    {
-		panel1.setBackground(new Color(0x1e2428));
-		panel1.setBorder(null);
-		panel1.setLayout(new MigLayout(
+		mainMenuButtonPanel.setBackground(new Color(0x1e2428));
+		mainMenuButtonPanel.setBorder(null);
+		mainMenuButtonPanel.setLayout(new MigLayout(
 		    "fill,hidemode 3",
 		    // columns
 		    "[center]" +
@@ -764,89 +1074,427 @@ public class MainWindow {
 		    // rows
 		    "[]"));
 
-		//---- mainMenuLogo ----
-		mainMenuLogo.setHorizontalAlignment(SwingConstants.CENTER);
-		mainMenuLogo.setIcon(new ImageIcon("D:\\Documents\\NetBeansProjects\\FitTracker\\src\\assets\\FitTrackerLogoSmall.png"));
-		mainMenuLogo.setMaximumSize(new Dimension(50, 50));
-		mainMenuLogo.setMinimumSize(new Dimension(85, 66));
-		mainMenuLogo.setPreferredSize(new Dimension(70, 66));
-		panel1.add(mainMenuLogo, "cell 0 0,align center center,grow 0 0");
+		//---- mainMenuLogoButton ----
+		mainMenuLogoButton.setHorizontalAlignment(SwingConstants.CENTER);
+		mainMenuLogoButton.setIcon(new ImageIcon("D:\\Documents\\NetBeansProjects\\FitTracker\\src\\assets\\FitTrackerLogoSmall.png"));
+		mainMenuLogoButton.setMaximumSize(new Dimension(50, 50));
+		mainMenuLogoButton.setMinimumSize(new Dimension(85, 66));
+		mainMenuLogoButton.setPreferredSize(new Dimension(70, 66));
+		mainMenuLogoButton.setBackground(new Color(0x1e2428));
+		mainMenuLogoButton.setForeground(new Color(0x1e2428));
+		mainMenuLogoButton.setBorderPainted(false);
+		mainMenuLogoButton.setBorder(null);
+		mainMenuLogoButton.addActionListener(e -> mainMenuLogo(e));
+		mainMenuButtonPanel.add(mainMenuLogoButton, "cell 0 0,align center center,grow 0 0");
 
 		//---- mainMenuExercisesButton ----
 		mainMenuExercisesButton.setText("EXERCISES");
 		mainMenuExercisesButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuExercisesButton.setFont(mainMenuExercisesButton.getFont().deriveFont(mainMenuExercisesButton.getFont().getStyle() | Font.BOLD, mainMenuExercisesButton.getFont().getSize() + 5f));
 		mainMenuExercisesButton.setForeground(Color.white);
-		panel1.add(mainMenuExercisesButton, "cell 1 0,alignx center,growx 0,width 140:140:140");
+		mainMenuExercisesButton.addActionListener(e -> mainMenuExercises(e));
+		mainMenuButtonPanel.add(mainMenuExercisesButton, "cell 1 0,alignx center,growx 0,width 140:140:140");
 
 		//---- mainMenuWorkoutsButton ----
 		mainMenuWorkoutsButton.setText("WORKOUTS");
 		mainMenuWorkoutsButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuWorkoutsButton.setFont(mainMenuWorkoutsButton.getFont().deriveFont(mainMenuWorkoutsButton.getFont().getStyle() | Font.BOLD, mainMenuWorkoutsButton.getFont().getSize() + 5f));
 		mainMenuWorkoutsButton.setForeground(Color.white);
-		panel1.add(mainMenuWorkoutsButton, "cell 2 0,alignx center,growx 0,width 140:140:140");
+		mainMenuWorkoutsButton.addActionListener(e -> mainMenuWorkouts(e));
+		mainMenuButtonPanel.add(mainMenuWorkoutsButton, "cell 2 0,alignx center,growx 0,width 140:140:140");
 
 		//---- mainMenuFoodsButton ----
 		mainMenuFoodsButton.setText("FOODS");
 		mainMenuFoodsButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuFoodsButton.setFont(mainMenuFoodsButton.getFont().deriveFont(mainMenuFoodsButton.getFont().getStyle() | Font.BOLD, mainMenuFoodsButton.getFont().getSize() + 5f));
 		mainMenuFoodsButton.setForeground(Color.white);
-		panel1.add(mainMenuFoodsButton, "cell 3 0,alignx center,growx 0,width 140:140:140");
+		mainMenuFoodsButton.addActionListener(e -> mainMenuFoods(e));
+		mainMenuButtonPanel.add(mainMenuFoodsButton, "cell 3 0,alignx center,growx 0,width 140:140:140");
 
 		//---- mainMenuMealsButton ----
 		mainMenuMealsButton.setText("MEALS");
 		mainMenuMealsButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuMealsButton.setFont(mainMenuMealsButton.getFont().deriveFont(mainMenuMealsButton.getFont().getStyle() | Font.BOLD, mainMenuMealsButton.getFont().getSize() + 5f));
 		mainMenuMealsButton.setForeground(Color.white);
-		panel1.add(mainMenuMealsButton, "cell 4 0,alignx center,growx 0,width 140:140:140");
+		mainMenuMealsButton.addActionListener(e -> mainMenuMeals(e));
+		mainMenuButtonPanel.add(mainMenuMealsButton, "cell 4 0,alignx center,growx 0,width 140:140:140");
 
-		//---- mainMenuTrackerButton ----
-		mainMenuTrackerButton.setText("PROGRESS");
-		mainMenuTrackerButton.setHorizontalAlignment(SwingConstants.CENTER);
-		mainMenuTrackerButton.setFont(mainMenuTrackerButton.getFont().deriveFont(mainMenuTrackerButton.getFont().getStyle() | Font.BOLD, mainMenuTrackerButton.getFont().getSize() + 5f));
-		mainMenuTrackerButton.setForeground(Color.white);
-		panel1.add(mainMenuTrackerButton, "cell 5 0,alignx center,growx 0,width 140:140:140");
+		//---- mainMenuProgressButton ----
+		mainMenuProgressButton.setText("PROGRESS");
+		mainMenuProgressButton.setHorizontalAlignment(SwingConstants.CENTER);
+		mainMenuProgressButton.setFont(mainMenuProgressButton.getFont().deriveFont(mainMenuProgressButton.getFont().getStyle() | Font.BOLD, mainMenuProgressButton.getFont().getSize() + 5f));
+		mainMenuProgressButton.setForeground(Color.white);
+		mainMenuProgressButton.addActionListener(e -> mainMenuProgress(e));
+		mainMenuButtonPanel.add(mainMenuProgressButton, "cell 5 0,alignx center,growx 0,width 140:140:140");
 
 		//---- mainMenuProfileButton ----
 		mainMenuProfileButton.setText("PROFILE");
 		mainMenuProfileButton.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMenuProfileButton.setFont(mainMenuProfileButton.getFont().deriveFont(mainMenuProfileButton.getFont().getStyle() | Font.BOLD, mainMenuProfileButton.getFont().getSize() + 5f));
 		mainMenuProfileButton.setForeground(Color.white);
-		panel1.add(mainMenuProfileButton, "cell 6 0,alignx center,growx 0,width 140:140:140");
+		mainMenuProfileButton.addActionListener(e -> mainMenuProfile(e));
+		mainMenuButtonPanel.add(mainMenuProfileButton, "cell 6 0,alignx center,growx 0,width 140:140:140");
 	    }
+	    mainMenuPanel.add(mainMenuButtonPanel);
+	    mainMenuButtonPanel.setBounds(0, 0, 1000, 100);
 
-	    //======== panel2 ========
+	    //======== mainMenuStartPanel ========
 	    {
-		panel2.setBackground(new Color(0x1e2428));
-		panel2.setLayout(new MigLayout(
+		mainMenuStartPanel.setPreferredSize(new Dimension(988, 638));
+		mainMenuStartPanel.setLayout(new MigLayout(
 		    "fill,hidemode 3",
 		    // columns
+		    "[fill]" +
 		    "[fill]" +
 		    "[fill]",
 		    // rows
 		    "[]" +
 		    "[]" +
+		    "[]" +
 		    "[]"));
-	    }
 
-	    GroupLayout mainMenuPanelLayout = new GroupLayout(mainMenuPanel);
-	    mainMenuPanel.setLayout(mainMenuPanelLayout);
-	    mainMenuPanelLayout.setHorizontalGroup(
-		mainMenuPanelLayout.createParallelGroup()
-		    .addComponent(panel1, GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
-		    .addGroup(mainMenuPanelLayout.createSequentialGroup()
-			.addContainerGap()
-			.addComponent(panel2, GroupLayout.DEFAULT_SIZE, 988, Short.MAX_VALUE)
-			.addContainerGap())
-	    );
-	    mainMenuPanelLayout.setVerticalGroup(
-		mainMenuPanelLayout.createParallelGroup()
-		    .addGroup(mainMenuPanelLayout.createSequentialGroup()
-			.addComponent(panel1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-			.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-			.addComponent(panel2, GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
-			.addContainerGap())
-	    );
+		//---- startWelcomeLabel ----
+		startWelcomeLabel.setText("Welcome to FitTracker");
+		startWelcomeLabel.setFont(startWelcomeLabel.getFont().deriveFont(startWelcomeLabel.getFont().getStyle() | Font.BOLD, startWelcomeLabel.getFont().getSize() + 10f));
+		startWelcomeLabel.setForeground(Color.white);
+		startWelcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		mainMenuStartPanel.add(startWelcomeLabel, "cell 0 1 3 1,align center bottom,grow 0 0");
+
+		//---- label14 ----
+		label14.setText("Please select an option above");
+		label14.setForeground(Color.white);
+		label14.setFont(label14.getFont().deriveFont(label14.getFont().getStyle() | Font.BOLD, label14.getFont().getSize() + 10f));
+		label14.setHorizontalAlignment(SwingConstants.CENTER);
+		label14.setVerticalAlignment(SwingConstants.TOP);
+		mainMenuStartPanel.add(label14, "cell 1 2,aligny top,growy 0");
+	    }
+	    mainMenuPanel.add(mainMenuStartPanel);
+	    mainMenuStartPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuStartPanel.getPreferredSize()));
+
+	    {
+		// compute preferred size
+		Dimension preferredSize = new Dimension();
+		for(int i = 0; i < mainMenuPanel.getComponentCount(); i++) {
+		    Rectangle bounds = mainMenuPanel.getComponent(i).getBounds();
+		    preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+		    preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+		}
+		Insets insets = mainMenuPanel.getInsets();
+		preferredSize.width += insets.right;
+		preferredSize.height += insets.bottom;
+		mainMenuPanel.setMinimumSize(preferredSize);
+		mainMenuPanel.setPreferredSize(preferredSize);
+	    }
+	}
+
+	//======== mainMenuExercisesPanel ========
+	{
+	    mainMenuExercisesPanel.setPreferredSize(new Dimension(988, 638));
+	    mainMenuExercisesPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]",
+		// rows
+		"[]" +
+		"[]" +
+		"[]"));
+
+	    //---- exercisesTricepsButton ----
+	    exercisesTricepsButton.setText("TRICEPS");
+	    exercisesTricepsButton.setForeground(Color.white);
+	    exercisesTricepsButton.setFont(exercisesTricepsButton.getFont().deriveFont(exercisesTricepsButton.getFont().getStyle() | Font.BOLD, exercisesTricepsButton.getFont().getSize() + 10f));
+	    exercisesTricepsButton.addActionListener(e -> exercisesTriceps(e));
+	    mainMenuExercisesPanel.add(exercisesTricepsButton, "cell 0 0,height 200:200:200");
+
+	    //---- exercisesChestButton ----
+	    exercisesChestButton.setText("CHEST");
+	    exercisesChestButton.setForeground(Color.white);
+	    exercisesChestButton.setFont(exercisesChestButton.getFont().deriveFont(exercisesChestButton.getFont().getStyle() | Font.BOLD, exercisesChestButton.getFont().getSize() + 10f));
+	    exercisesChestButton.addActionListener(e -> exercisesChest(e));
+	    mainMenuExercisesPanel.add(exercisesChestButton, "cell 1 0,height 200:200:200");
+
+	    //---- exercisesShouldersButton ----
+	    exercisesShouldersButton.setText("SHOULDERS");
+	    exercisesShouldersButton.setForeground(Color.white);
+	    exercisesShouldersButton.setFont(exercisesShouldersButton.getFont().deriveFont(exercisesShouldersButton.getFont().getStyle() | Font.BOLD, exercisesShouldersButton.getFont().getSize() + 10f));
+	    exercisesShouldersButton.addActionListener(e -> exercisesShoulders(e));
+	    mainMenuExercisesPanel.add(exercisesShouldersButton, "cell 2 0,height 200:200:200");
+
+	    //---- exercisesBicepsButton ----
+	    exercisesBicepsButton.setText("BICEPS");
+	    exercisesBicepsButton.setForeground(Color.white);
+	    exercisesBicepsButton.setFont(exercisesBicepsButton.getFont().deriveFont(exercisesBicepsButton.getFont().getStyle() | Font.BOLD, exercisesBicepsButton.getFont().getSize() + 10f));
+	    exercisesBicepsButton.addActionListener(e -> exercisesBiceps(e));
+	    mainMenuExercisesPanel.add(exercisesBicepsButton, "cell 3 0,height 200:200:200");
+
+	    //---- exercisesCoreButton ----
+	    exercisesCoreButton.setText("CORE");
+	    exercisesCoreButton.setForeground(Color.white);
+	    exercisesCoreButton.setFont(exercisesCoreButton.getFont().deriveFont(exercisesCoreButton.getFont().getStyle() | Font.BOLD, exercisesCoreButton.getFont().getSize() + 10f));
+	    exercisesCoreButton.addActionListener(e -> exercisesCore(e));
+	    mainMenuExercisesPanel.add(exercisesCoreButton, "cell 0 1,height 200:200:200");
+
+	    //---- exercisesBackButton ----
+	    exercisesBackButton.setText("BACK");
+	    exercisesBackButton.setForeground(Color.white);
+	    exercisesBackButton.setFont(exercisesBackButton.getFont().deriveFont(exercisesBackButton.getFont().getStyle() | Font.BOLD, exercisesBackButton.getFont().getSize() + 10f));
+	    exercisesBackButton.addActionListener(e -> exercisesBack(e));
+	    mainMenuExercisesPanel.add(exercisesBackButton, "cell 1 1,height 200:200:200");
+
+	    //---- exercisesForearmsButton ----
+	    exercisesForearmsButton.setText("FOREARMS");
+	    exercisesForearmsButton.setForeground(Color.white);
+	    exercisesForearmsButton.setFont(exercisesForearmsButton.getFont().deriveFont(exercisesForearmsButton.getFont().getStyle() | Font.BOLD, exercisesForearmsButton.getFont().getSize() + 10f));
+	    exercisesForearmsButton.addActionListener(e -> exercisesForearms(e));
+	    mainMenuExercisesPanel.add(exercisesForearmsButton, "cell 2 1,height 200:200:200");
+
+	    //---- exercisesUpperLegsButton ----
+	    exercisesUpperLegsButton.setText("UPPER LEGS");
+	    exercisesUpperLegsButton.setForeground(Color.white);
+	    exercisesUpperLegsButton.setFont(exercisesUpperLegsButton.getFont().deriveFont(exercisesUpperLegsButton.getFont().getStyle() | Font.BOLD, exercisesUpperLegsButton.getFont().getSize() + 10f));
+	    exercisesUpperLegsButton.addActionListener(e -> exercisesUpperLegs(e));
+	    mainMenuExercisesPanel.add(exercisesUpperLegsButton, "cell 3 1,height 200:200:200");
+
+	    //---- exercisesGlutesButton ----
+	    exercisesGlutesButton.setText("GLUTES");
+	    exercisesGlutesButton.setForeground(Color.white);
+	    exercisesGlutesButton.setFont(exercisesGlutesButton.getFont().deriveFont(exercisesGlutesButton.getFont().getStyle() | Font.BOLD, exercisesGlutesButton.getFont().getSize() + 10f));
+	    exercisesGlutesButton.addActionListener(e -> exercisesGlutes(e));
+	    mainMenuExercisesPanel.add(exercisesGlutesButton, "cell 0 2,height 200:200:200");
+
+	    //---- exercisesCardioButton ----
+	    exercisesCardioButton.setText("CARDIO");
+	    exercisesCardioButton.setForeground(Color.white);
+	    exercisesCardioButton.setFont(exercisesCardioButton.getFont().deriveFont(exercisesCardioButton.getFont().getStyle() | Font.BOLD, exercisesCardioButton.getFont().getSize() + 10f));
+	    exercisesCardioButton.addActionListener(e -> exercisesCardio(e));
+	    mainMenuExercisesPanel.add(exercisesCardioButton, "cell 1 2,height 200:200:200");
+
+	    //---- exercisesLowerLegsButton ----
+	    exercisesLowerLegsButton.setText("LOWER LEGS");
+	    exercisesLowerLegsButton.setForeground(Color.white);
+	    exercisesLowerLegsButton.setFont(exercisesLowerLegsButton.getFont().deriveFont(exercisesLowerLegsButton.getFont().getStyle() | Font.BOLD, exercisesLowerLegsButton.getFont().getSize() + 10f));
+	    exercisesLowerLegsButton.addActionListener(e -> exercisesLowerLegs(e));
+	    mainMenuExercisesPanel.add(exercisesLowerLegsButton, "cell 2 2,height 200:200:200");
+
+	    //---- exercisesAllButton ----
+	    exercisesAllButton.setText("SHOW ALL");
+	    exercisesAllButton.setForeground(Color.white);
+	    exercisesAllButton.setFont(exercisesAllButton.getFont().deriveFont(exercisesAllButton.getFont().getStyle() | Font.BOLD, exercisesAllButton.getFont().getSize() + 10f));
+	    exercisesAllButton.addActionListener(e -> exercisesAll(e));
+	    mainMenuExercisesPanel.add(exercisesAllButton, "cell 3 2,height 200:200:200");
+	}
+
+	//======== mainMenuWorkoutsPanel ========
+	{
+	    mainMenuWorkoutsPanel.setPreferredSize(new Dimension(988, 638));
+	    mainMenuWorkoutsPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]",
+		// rows
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]"));
+
+	    //---- workoutSelectButton ----
+	    workoutSelectButton.setText("Select Workout");
+	    workoutSelectButton.setFont(workoutSelectButton.getFont().deriveFont(workoutSelectButton.getFont().getStyle() | Font.BOLD, workoutSelectButton.getFont().getSize() + 5f));
+	    workoutSelectButton.setForeground(Color.white);
+	    mainMenuWorkoutsPanel.add(workoutSelectButton, "cell 2 3,height 100:100:100");
+
+	    //---- workoutAddNewButton ----
+	    workoutAddNewButton.setText("Add New Workout");
+	    workoutAddNewButton.setForeground(Color.white);
+	    workoutAddNewButton.setFont(workoutAddNewButton.getFont().deriveFont(workoutAddNewButton.getFont().getStyle() | Font.BOLD, workoutAddNewButton.getFont().getSize() + 5f));
+	    mainMenuWorkoutsPanel.add(workoutAddNewButton, "cell 5 3,height 100:100:100");
+	}
+
+	//======== mainMenuFoodsPanel ========
+	{
+	    mainMenuFoodsPanel.setPreferredSize(new Dimension(988, 638));
+	    mainMenuFoodsPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]",
+		// rows
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]"));
+
+	    //---- foodSelectButton ----
+	    foodSelectButton.setText("Select Food");
+	    foodSelectButton.setForeground(Color.white);
+	    foodSelectButton.setFont(foodSelectButton.getFont().deriveFont(foodSelectButton.getFont().getStyle() | Font.BOLD, foodSelectButton.getFont().getSize() + 5f));
+	    mainMenuFoodsPanel.add(foodSelectButton, "cell 2 3,height 100:100:100");
+
+	    //---- foodAddNewButton ----
+	    foodAddNewButton.setText("Add New Food");
+	    foodAddNewButton.setForeground(Color.white);
+	    foodAddNewButton.setFont(foodAddNewButton.getFont().deriveFont(foodAddNewButton.getFont().getStyle() | Font.BOLD, foodAddNewButton.getFont().getSize() + 5f));
+	    mainMenuFoodsPanel.add(foodAddNewButton, "cell 5 3,height 100:100:100");
+	}
+
+	//======== mainMenuMealsPanel ========
+	{
+	    mainMenuMealsPanel.setPreferredSize(new Dimension(988, 638));
+	    mainMenuMealsPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]",
+		// rows
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]"));
+
+	    //---- mealSelectButton ----
+	    mealSelectButton.setText("Select Meal");
+	    mealSelectButton.setFont(mealSelectButton.getFont().deriveFont(mealSelectButton.getFont().getStyle() | Font.BOLD, mealSelectButton.getFont().getSize() + 5f));
+	    mealSelectButton.setForeground(Color.white);
+	    mainMenuMealsPanel.add(mealSelectButton, "cell 2 3,height 100:100:100");
+
+	    //---- mealAddNewButton ----
+	    mealAddNewButton.setText("Add New Meal");
+	    mealAddNewButton.setForeground(Color.white);
+	    mealAddNewButton.setFont(mealAddNewButton.getFont().deriveFont(mealAddNewButton.getFont().getStyle() | Font.BOLD, mealAddNewButton.getFont().getSize() + 5f));
+	    mainMenuMealsPanel.add(mealAddNewButton, "cell 5 3,height 100:100:100");
+	}
+
+	//======== mainMenuProgressPanel ========
+	{
+	    mainMenuProgressPanel.setPreferredSize(new Dimension(988, 638));
+	    mainMenuProgressPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]",
+		// rows
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]"));
+	}
+
+	//======== mainMenuProfilePanel ========
+	{
+	    mainMenuProfilePanel.setPreferredSize(new Dimension(988, 638));
+	    mainMenuProfilePanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]" +
+		"[fill]",
+		// rows
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]" +
+		"[]"));
+	}
+
+	//======== exercisesExercisesPanel ========
+	{
+	    exercisesExercisesPanel.setPreferredSize(new Dimension(988, 638));
+	    exercisesExercisesPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]",
+		// rows
+		"[37,top]" +
+		"[grow,fill]"));
+
+	    //======== exercisesExercisesTopPanel ========
+	    {
+		exercisesExercisesTopPanel.setBackground(new Color(0x1e2428));
+		exercisesExercisesTopPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[]"));
+
+		//---- exercisesExercisesTopBarAllButton ----
+		exercisesExercisesTopBarAllButton.setText("All Exercises");
+		exercisesExercisesTopBarAllButton.setForeground(Color.white);
+		exercisesExercisesTopBarAllButton.setFont(exercisesExercisesTopBarAllButton.getFont().deriveFont(exercisesExercisesTopBarAllButton.getFont().getStyle() | Font.BOLD));
+		exercisesExercisesTopBarAllButton.addActionListener(e -> exercisesExercisesTopBarAll(e));
+		exercisesExercisesTopPanel.add(exercisesExercisesTopBarAllButton, "cell 0 0");
+
+		//---- exercisesExercisesTopBarFTButton ----
+		exercisesExercisesTopBarFTButton.setText("FitTracker Exercises");
+		exercisesExercisesTopBarFTButton.setForeground(Color.white);
+		exercisesExercisesTopBarFTButton.setFont(exercisesExercisesTopBarFTButton.getFont().deriveFont(exercisesExercisesTopBarFTButton.getFont().getStyle() | Font.BOLD));
+		exercisesExercisesTopBarFTButton.addActionListener(e -> exercisesExercisesTopBarFT(e));
+		exercisesExercisesTopPanel.add(exercisesExercisesTopBarFTButton, "cell 1 0");
+
+		//---- exercisesExercisesTopBarCusButton ----
+		exercisesExercisesTopBarCusButton.setText("Custom Exercises");
+		exercisesExercisesTopBarCusButton.setForeground(Color.white);
+		exercisesExercisesTopBarCusButton.setFont(exercisesExercisesTopBarCusButton.getFont().deriveFont(exercisesExercisesTopBarCusButton.getFont().getStyle() | Font.BOLD));
+		exercisesExercisesTopBarCusButton.addActionListener(e -> exercisesExercisesTopBarMy(e));
+		exercisesExercisesTopPanel.add(exercisesExercisesTopBarCusButton, "cell 2 0");
+	    }
+	    exercisesExercisesPanel.add(exercisesExercisesTopPanel, "cell 0 0");
+
+	    //======== exercisesExercisesScrollPanel ========
+	    {
+		exercisesExercisesScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+	    }
+	    exercisesExercisesPanel.add(exercisesExercisesScrollPanel, "cell 0 1");
 	}
 	// JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -883,14 +1531,46 @@ public class MainWindow {
     private JLabel registerPasswordLabel;
     private JPasswordField registerPasswordField;
     private JPanel mainMenuPanel;
-    private JPanel panel1;
-    private JLabel mainMenuLogo;
+    private JPanel mainMenuButtonPanel;
+    private JButton mainMenuLogoButton;
     private JButton mainMenuExercisesButton;
     private JButton mainMenuWorkoutsButton;
     private JButton mainMenuFoodsButton;
     private JButton mainMenuMealsButton;
-    private JButton mainMenuTrackerButton;
+    private JButton mainMenuProgressButton;
     private JButton mainMenuProfileButton;
-    private JPanel panel2;
+    private JPanel mainMenuStartPanel;
+    private JLabel startWelcomeLabel;
+    private JLabel label14;
+    private JPanel mainMenuExercisesPanel;
+    private JButton exercisesTricepsButton;
+    private JButton exercisesChestButton;
+    private JButton exercisesShouldersButton;
+    private JButton exercisesBicepsButton;
+    private JButton exercisesCoreButton;
+    private JButton exercisesBackButton;
+    private JButton exercisesForearmsButton;
+    private JButton exercisesUpperLegsButton;
+    private JButton exercisesGlutesButton;
+    private JButton exercisesCardioButton;
+    private JButton exercisesLowerLegsButton;
+    private JButton exercisesAllButton;
+    private JPanel mainMenuWorkoutsPanel;
+    private JButton workoutSelectButton;
+    private JButton workoutAddNewButton;
+    private JPanel mainMenuFoodsPanel;
+    private JButton foodSelectButton;
+    private JButton foodAddNewButton;
+    private JPanel mainMenuMealsPanel;
+    private JButton mealSelectButton;
+    private JButton mealAddNewButton;
+    private JPanel mainMenuProgressPanel;
+    private JPanel mainMenuProfilePanel;
+    private JPanel exercisesExercisesPanel;
+    private JPanel exercisesExercisesTopPanel;
+    private JButton exercisesExercisesTopBarAllButton;
+    private JButton exercisesExercisesTopBarFTButton;
+    private JButton exercisesExercisesTopBarCusButton;
+    private JScrollPane exercisesExercisesScrollPanel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
