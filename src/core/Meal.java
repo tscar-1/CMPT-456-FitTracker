@@ -8,12 +8,16 @@ public class Meal {
     private String mainMeal;
     private String side;
     private String drink;
+    private int Calories;
 
-    public Meal(LocalDate date, String mainMeal, String side, String drink) {
+
+
+    public Meal(LocalDate date, String mainMeal, String side, String drink, int calories) {
         this.date = date;
         this.mainMeal = mainMeal;
         this.side = side;
         this.drink = drink;
+        this.Calories = calories;
     }
     public LocalDate getDate() {
         return date;
@@ -47,4 +51,11 @@ public class Meal {
         this.drink = drink;
     }
 
+    public int getCalories() {
+        return Calories;
+    }
+
+    public void setCalories(int calories) {
+        Calories = calories;
+    }
 }
