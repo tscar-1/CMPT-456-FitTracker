@@ -1186,7 +1186,7 @@ public class MainWindow {
 	    window.setMinimumSize(new Dimension(1000, 900));
 	    window.setMaximumSize(new Dimension(1000, 900));
 	    window.setShape(null);
-	    window.setIconImage(new ImageIcon("src\\assets\\FitTrackerLogoSmall.png").getImage());
+	    window.setIconImage(new ImageIcon(getClass().getResource("/assets/FitTrackerLogoSmall.png")).getImage());
 	    var windowContentPane = window.getContentPane();
 	    windowContentPane.setLayout(null);
 
@@ -1204,7 +1204,7 @@ public class MainWindow {
 		startPanel.setPreferredSize(new Dimension(750, 750));
 
 		//---- startLogoLabel ----
-		startLogoLabel.setIcon(new ImageIcon("src\\assets\\FitTrackerLogo.png"));
+		startLogoLabel.setIcon(new ImageIcon(getClass().getResource("/assets/FitTrackerLogo.png")));
 		startLogoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		//---- startLoginButton ----
@@ -1280,7 +1280,7 @@ public class MainWindow {
 	    loginPanel.setVisible(false);
 
 	    //---- loginLogoLabel ----
-	    loginLogoLabel.setIcon(new ImageIcon("src\\assets\\FitTrackerLogo.png"));
+	    loginLogoLabel.setIcon(new ImageIcon(getClass().getResource("/assets/FitTrackerLogo.png")));
 	    loginLogoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 	    //---- loginUsernameLabel ----
@@ -1379,7 +1379,7 @@ public class MainWindow {
 	    registerPanel.setVisible(false);
 
 	    //---- registerLogoLabel ----
-	    registerLogoLabel.setIcon(new ImageIcon("src\\assets\\FitTrackerLogo.png"));
+	    registerLogoLabel.setIcon(new ImageIcon(getClass().getResource("/assets/FitTrackerLogo.png")));
 	    registerLogoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 	    //---- registerUsernameLabel ----
@@ -1559,7 +1559,7 @@ public class MainWindow {
 
 		//---- mainMenuLogoButton ----
 		mainMenuLogoButton.setHorizontalAlignment(SwingConstants.CENTER);
-		mainMenuLogoButton.setIcon(new ImageIcon("D:\\Documents\\NetBeansProjects\\FitTracker\\src\\assets\\FitTrackerLogoSmall.png"));
+		mainMenuLogoButton.setIcon(new ImageIcon(getClass().getResource("/assets/FitTrackerLogoSmall.png")));
 		mainMenuLogoButton.setMaximumSize(new Dimension(50, 50));
 		mainMenuLogoButton.setMinimumSize(new Dimension(85, 66));
 		mainMenuLogoButton.setPreferredSize(new Dimension(70, 66));
