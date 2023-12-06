@@ -3,7 +3,6 @@ package core;
 import java.time.LocalDate;
 
 public class Exercise {
-
     private LocalDate date;
     private String name;
     private int recordType; //1 weight-based, 2 distance-based
@@ -11,8 +10,8 @@ public class Exercise {
     private int weight;
     private int sets;
     private int reps;
-    private int distance;
-    private int duration;
+    private double distance;
+    private double duration;
 
     //Constructor
     public Exercise(LocalDate date, String name, int recordType, int muscleType) {
@@ -23,22 +22,23 @@ public class Exercise {
     }
     
     //Weight-based Constructor
-    public Exercise(LocalDate date, String name, int recordType, int muscleType, int weight, int sets, int reps) {
+    public Exercise(LocalDate date, String name, int recordType, int muscleType, int sets, int weight, int reps) {
         this.date = date;
         this.name = name;
         this.recordType = recordType;
         this.muscleType = muscleType;
-        this.weight = weight;
         this.sets = sets;
+        this.weight = weight;
         this.reps = reps;
     }
     
     //Distance-based Constructor
-    public Exercise(LocalDate date, String name, int recordType, int muscleType, int distance, int duration) {
+    public Exercise(LocalDate date, String name, int recordType, int muscleType, int sets, double distance, double duration) {
         this.date = date;
         this.name = name;
         this.recordType = recordType;
         this.muscleType = muscleType;
+        this.sets = sets;
         this.distance = distance;
         this.duration = duration;
     }
@@ -100,19 +100,19 @@ public class Exercise {
         return reps;
     }
     
-    public void setDistance(int distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
     
-    public int getDistance() {
+    public double getDistance() {
         return distance;
     }
     
-    public void setDuration(int duration) {
+    public void setDuration(double duration) {
         this.duration = duration;
     }
     
-    public int getDuration() {
+    public double getDuration() {
         return duration;
     }
 }
