@@ -13,5 +13,70 @@
     "mainMeal": "Steak",
     "side": "Asparagus",
     "drink": "Water"
+  },
+  {
+    "mainMeal": "Eggs",
+    "side": " Avocado",
+    "drink": "Orange Juice"
+  },
+  {
+    "mainMeal": "Burger",
+    "side": "Fries",
+    "drink": "Water"
+  },
+  {
+    "mainMeal": "Steak",
+    "side": "Asparagus",
+    "drink": "Water"
+  }
+  {
+    "mainMeal": "Eggs",
+    "side": " Bacon",
+    "drink": "Apple Juice"
+  {
+    "mainMeal": "Eggs",
+    "side": "Sausage",
+    "drink": "Milk"
+  },
+  {
+    "mainMeal": "Frosted Flakes",
+    "side": "Strawberries",
+    "drink": "Water"
+  }
+  {
+    "mainMeal": "Corn Flakes",
+    "side": "Bananna",
+    "drink": "Orange Juice"
+  },
+  {
+    "mainMeal": "Eggs",
+    "side": "English Muffin",
+    "drink": "Orange Juice"
+  },
+  {
+    "mainMeal": "Eggs",
+    "side": "Turkey Bacon",
+    "drink": "Orange Juice"
+  },{
+    "mainMeal": "Pancakes",
+    "side": "Bacon",
+    "drink": "Orange Juice"
+  },{
+    "mainMeal": "Pancakes",
+    "side": "Sausage",
+    "drink": "Orange Juice"
+  },{
+    "mainMeal": "Waffles",
+    "side": "Bacon",
+    "drink": "Orange Juice"
+  },{
+    "mainMeal": "Waffles",
+    "side": "Sausage",
+    "drink": "Orange Juice"
+  },
+  {
+    "mainMeal": "Steak",
+    "side": "Asparagus",
+    "drink": "Water"
   }
 ]
