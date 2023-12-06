@@ -1158,6 +1158,22 @@ public class MainWindow {
 	exercisesCustomTopBarAddButton = new JButton();
 	customFieldsPanel = new JPanel();
 	label1 = new JLabel();
+	textField1 = new JTextField();
+	label2 = new JLabel();
+	toggleButton1 = new JToggleButton();
+	toggleButton2 = new JToggleButton();
+	label3 = new JLabel();
+	toggleButton3 = new JToggleButton();
+	toggleButton4 = new JToggleButton();
+	toggleButton5 = new JToggleButton();
+	toggleButton6 = new JToggleButton();
+	toggleButton7 = new JToggleButton();
+	toggleButton8 = new JToggleButton();
+	toggleButton9 = new JToggleButton();
+	toggleButton10 = new JToggleButton();
+	toggleButton11 = new JToggleButton();
+	toggleButton12 = new JToggleButton();
+	toggleButton13 = new JToggleButton();
 
 	//======== window ========
 	{
@@ -2280,21 +2296,94 @@ public class MainWindow {
 		    "fill,hidemode 3",
 		    // columns
 		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
 		    "[fill]",
 		    // rows
 		    "[center]" +
 		    "[center]" +
-		    "[top]" +
-		    "[top]" +
-		    "[top]" +
-		    "[top]" +
-		    "[top]" +
-		    "[top]" +
-		    "[top]"));
+		    "[center]" +
+		    "[center]" +
+		    "[center]" +
+		    "[center]" +
+		    "[center]" +
+		    "[center]" +
+		    "[center]"));
 
 		//---- label1 ----
 		label1.setText("Name:");
+		label1.setFont(label1.getFont().deriveFont(label1.getFont().getStyle() | Font.BOLD, label1.getFont().getSize() + 2f));
+		label1.setForeground(Color.white);
+		label1.setHorizontalAlignment(SwingConstants.CENTER);
 		customFieldsPanel.add(label1, "cell 0 0");
+		customFieldsPanel.add(textField1, "cell 1 0 4 1");
+
+		//---- label2 ----
+		label2.setText("Record Type:");
+		label2.setFont(label2.getFont().deriveFont(label2.getFont().getStyle() | Font.BOLD, label2.getFont().getSize() + 2f));
+		label2.setForeground(Color.white);
+		label2.setHorizontalAlignment(SwingConstants.CENTER);
+		customFieldsPanel.add(label2, "cell 0 1");
+
+		//---- toggleButton1 ----
+		toggleButton1.setText("Weight-based");
+		customFieldsPanel.add(toggleButton1, "cell 1 1 2 1");
+
+		//---- toggleButton2 ----
+		toggleButton2.setText("Distance-based");
+		customFieldsPanel.add(toggleButton2, "cell 3 1 2 1");
+
+		//---- label3 ----
+		label3.setText("Muscle Group:");
+		label3.setFont(label3.getFont().deriveFont(label3.getFont().getStyle() | Font.BOLD, label3.getFont().getSize() + 2f));
+		label3.setForeground(Color.white);
+		label3.setHorizontalAlignment(SwingConstants.CENTER);
+		customFieldsPanel.add(label3, "cell 0 2");
+
+		//---- toggleButton3 ----
+		toggleButton3.setText("Triceps");
+		customFieldsPanel.add(toggleButton3, "cell 1 2");
+
+		//---- toggleButton4 ----
+		toggleButton4.setText("Chest");
+		customFieldsPanel.add(toggleButton4, "cell 2 2");
+
+		//---- toggleButton5 ----
+		toggleButton5.setText("Shoulders");
+		customFieldsPanel.add(toggleButton5, "cell 3 2");
+
+		//---- toggleButton6 ----
+		toggleButton6.setText("Biceps");
+		customFieldsPanel.add(toggleButton6, "cell 4 2");
+
+		//---- toggleButton7 ----
+		toggleButton7.setText("Core");
+		customFieldsPanel.add(toggleButton7, "cell 1 3");
+
+		//---- toggleButton8 ----
+		toggleButton8.setText("Back");
+		customFieldsPanel.add(toggleButton8, "cell 2 3");
+
+		//---- toggleButton9 ----
+		toggleButton9.setText("Forearms");
+		customFieldsPanel.add(toggleButton9, "cell 3 3");
+
+		//---- toggleButton10 ----
+		toggleButton10.setText("Upper Legs");
+		customFieldsPanel.add(toggleButton10, "cell 4 3");
+
+		//---- toggleButton11 ----
+		toggleButton11.setText("Glutes");
+		customFieldsPanel.add(toggleButton11, "cell 1 4");
+
+		//---- toggleButton12 ----
+		toggleButton12.setText("Cardio");
+		customFieldsPanel.add(toggleButton12, "cell 2 4");
+
+		//---- toggleButton13 ----
+		toggleButton13.setText("Lower Legs");
+		customFieldsPanel.add(toggleButton13, "cell 3 4");
 	    }
 	    exercisesCustomPanel.add(customFieldsPanel, "cell 0 1");
 	}
@@ -2410,5 +2499,21 @@ public class MainWindow {
     private JButton exercisesCustomTopBarAddButton;
     private JPanel customFieldsPanel;
     private JLabel label1;
+    private JTextField textField1;
+    private JLabel label2;
+    private JToggleButton toggleButton1;
+    private JToggleButton toggleButton2;
+    private JLabel label3;
+    private JToggleButton toggleButton3;
+    private JToggleButton toggleButton4;
+    private JToggleButton toggleButton5;
+    private JToggleButton toggleButton6;
+    private JToggleButton toggleButton7;
+    private JToggleButton toggleButton8;
+    private JToggleButton toggleButton9;
+    private JToggleButton toggleButton10;
+    private JToggleButton toggleButton11;
+    private JToggleButton toggleButton12;
+    private JToggleButton toggleButton13;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
