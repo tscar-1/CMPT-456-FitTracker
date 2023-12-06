@@ -6,18 +6,39 @@ import javax.imageio.ImageIO;
 public class Exercise {
 
     private String name;
-    private String recordType;
-    private String muscleType;
-    private String muscleGroup;
-    //private Image image;
+    private int recordType; //1 weight-based, 2 distance-based
+    private int muscleType; //1 triceps, 2 chest, 3 shoulders, 4 biceps, 5 core, 6 back, 7 forearms, 8 upper legs, 9 glutes, 10 cardio, 11 lower legs
+    private int weight;
+    private int sets;
+    private int reps;
+    private int distance;
+    private int duration;
+    
 
     //Constructor
-    public Exercise(String name, String recordType, String muscleType, String muscleGroup/*, Image image*/) {
+    public Exercise(String name, int recordType, int muscleType) {
         this.name = name;
         this.recordType = recordType;
         this.muscleType = muscleType;
-        this.muscleGroup = muscleGroup;
-        //this.image = image;
+    }
+    
+    //Weight-based Constructor
+    public Exercise(String name, int recordType, int muscleType, int weight, int sets, int reps) {
+        this.name = name;
+        this.recordType = recordType;
+        this.muscleType = muscleType;
+        this.weight = weight;
+        this.sets = sets;
+        this.reps = reps;
+    }
+    
+    //Distance-based Constructor
+    public Exercise(String name, int recordType, int muscleType, int distance, int duration) {
+        this.name = name;
+        this.recordType = recordType;
+        this.muscleType = muscleType;
+        this.distance = distance;
+        this.duration = duration;
     }
 
     //Setters and getters
@@ -29,28 +50,60 @@ public class Exercise {
         return name;
     }
     
-    public void setRecordType(String recordType) {
+    public void setRecordType(int recordType) {
         this.recordType = recordType;
     }
 
-    public String getRecordType() {
+    public int getRecordType() {
         return recordType;
     }
 
-    public void setMuscleType(String muscleType) {
+    public void setMuscleType(int muscleType) {
         this.muscleType = muscleType;
     }
     
-    public String getMuscleType() {
+    public int getMuscleType() {
         return muscleType;
     }
     
-    public void setMuscleGroup(String muscleGroup) {
-        this.muscleGroup = muscleGroup;
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
-
-    public String getMuscleGroup() {
-        return muscleGroup;
+    
+    public int getWeight() {
+        return weight;
+    }
+    
+    public void setSets(int sets) {
+        this.sets = sets;
+    }
+    
+    public int getSets() {
+        return sets;
+    }
+    
+    public void setReps(int reps) {
+        this.reps = reps;
+    }
+    
+    public int getReps() {
+        return reps;
+    }
+    
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+    
+    public int getDistance() {
+        return distance;
+    }
+    
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+    
+    public int getDuration() {
+        return duration;
     }
 
     /*public String getImage() {
@@ -68,7 +121,7 @@ public class Exercise {
 
     public void removeExercise(Exercise exercise, String username) {
         workout.remove(exercise);
-    }*/
+    }
 
     @Override
     public String toString() {
@@ -78,5 +131,5 @@ public class Exercise {
                 + ", muscleType='" + muscleType + '\''
                 + ", muscleGroup='" + muscleGroup + '\''
                 + '}';
-    }
+    }*/
 }
