@@ -50,6 +50,42 @@ public class User {
             }
         }
         
+        File exercisesFile = new File(username + "_exercises.json");
+        if (!exercisesFile.exists()) {
+            try ( FileWriter writer = new FileWriter(exercisesFile)) {
+                writer.write("[]");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        File workoutsFile = new File(username + "_workouts.json");
+        if (!workoutsFile.exists()) {
+            try ( FileWriter writer = new FileWriter(workoutsFile)) {
+                writer.write("[]");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        File foodsFile = new File(username + "_foods.json");
+        if (!foodsFile.exists()) {
+            try ( FileWriter writer = new FileWriter(foodsFile)) {
+                writer.write("[]");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        File mealsFile = new File(username + "_meals.json");
+        if (!mealsFile.exists()) {
+            try ( FileWriter writer = new FileWriter(mealsFile)) {
+                writer.write("[]");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
         List<User> userList;
         try ( FileReader reader = new FileReader(usersFile)) {
