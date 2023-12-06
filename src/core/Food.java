@@ -3,16 +3,19 @@ package core;
 import java.time.LocalDate;
 
 public class Food {
-    private LocalDate date;
-
     private String name;
+    private int Calories;
+    private double proteins;
+    private int carbohydrates;
 
-    public LocalDate getDate() {
-        return date;
-    }
+    private double fats;
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public Food(String name, int calories, double proteins, int carbohydrates, double fats) {
+        this.name = name;
+        Calories = calories;
+        this.proteins = proteins;
+        this.carbohydrates = carbohydrates;
+        this.fats = fats;
     }
 
     public String getName() {
@@ -31,11 +34,27 @@ public class Food {
         Calories = calories;
     }
 
-    private int Calories;
-    public Food(LocalDate date, String name, int calories) {
-        this.date = date;
-        this.name = name;
-        Calories = calories;
+    public double getProteins() {
+        return proteins;
     }
 
+    public void setProteins(double proteins) {
+        this.proteins = proteins;
+    }
+
+    public int getCarbohydrates() {
+        return carbohydrates;
+    }
+
+    public void setCarbohydrates(int carbohydrates) {
+        this.carbohydrates = carbohydrates;
+    }
+
+    public double getFats() {
+        return fats;
+    }
+
+    public void setFats(double fats) {
+        this.fats = fats;
+    }
 }
