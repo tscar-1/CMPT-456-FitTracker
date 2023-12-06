@@ -176,6 +176,14 @@
 	"reps": "0"
   },
   {
+    "name": "Cycling",
+    "recordType": "2",
+    "muscleType": "9",
+    "weight": "0",
+    "sets": "0",
+    "reps": "0"
+  },
+  {
     "name": "Running",
     "recordType": "2",
     "muscleType": "10",
