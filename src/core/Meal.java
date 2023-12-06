@@ -1,66 +1,34 @@
 package core;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Meal {
 
-    private LocalDate date;
-    private String mainMeal;
-    private String side;
 
-    private String drink;
-    private int Calories;
+    private String name;
 
-
-
-    public Meal(LocalDate date, String mainMeal, String side, String drink, int calories) {
-        this.date = date;
-        this.mainMeal = mainMeal;
-        this.side = side;
-        this.drink = drink;
-        Calories = calories;
+    public Meal(String name, List<Food> meal) {
+        this.name = name;
+        this.meal = meal;
     }
 
-    public LocalDate getDate() {
-        return date;
+    private List<Food> meal;
+    public String getName() {
+        return name;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getMainMeal() {
-        return mainMeal;
+    public List<Food> getMeal() {
+        return meal;
     }
 
-    public void setMainMeal(String mainMeal) {
-        this.mainMeal = mainMeal;
+    public void setMeal(List<Food> meal) {
+        this.meal = meal;
     }
-
-    public String getSide() {
-        return side;
-    }
-
-    public void setSide(String side) {
-        this.side = side;
-    }
-
-    public String getDrink() {
-        return drink;
-    }
-
-    public void setDrink(String drink) {
-        this.drink = drink;
-    }
-
-    public int getCalories() {
-        return Calories;
-    }
-
-    public void setCalories(int calories) {
-        Calories = calories;
-    }
-
 
 
 }
