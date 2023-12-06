@@ -1,0 +1,130 @@
+[
+  {
+    "name": "Dip",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Weighted Dip",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Tricep Pulldown",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Overhead Tricep Extension",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Skullcrusher",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Tricep Kickback",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Bench Press",
+    "recordType": "1",
+    "muscleType": "2",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Shoulder Press",
+    "recordType": "1",
+    "muscleType": "3",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Bicep Curl",
+    "recordType": "1",
+    "muscleType": "4",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Crunch",
+    "recordType": "1",
+    "muscleType": "5",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Lat Pulldown",
+    "recordType": "1",
+    "muscleType": "6",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Hammer Curl",
+    "recordType": "1",
+    "muscleType": "7",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Squat",
+    "recordType": "1",
+    "muscleType": "8",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Lunge",
+    "recordType": "1",
+    "muscleType": "9",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Running",
+    "recordType": "2",
+    "muscleType": "10",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  },
+  {
+    "name": "Calf Raise",
+    "recordType": "1",
+    "muscleType": "11",
+    "weight": "0",
+    "sets": "0",
+	"reps": "0"
+  }
+]
