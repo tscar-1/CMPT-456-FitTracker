@@ -552,6 +552,23 @@ public class MainWindow {
     private void exercisesExercisesTopBarMy(ActionEvent e) {
 	exercisesPopulate(3, currentMuscleType);
     }
+    
+    private void exercisesExercisesTopBarBack(ActionEvent e) {
+        Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuExercisesPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuExercisesPanel.getPreferredSize()));
+        mainMenuPanel.add(mainMenuExercisesPanel);
+        mainMenuExercisesPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
 
     private void exercisesTriceps(ActionEvent e) {
         currentMuscleType = 1;
@@ -762,9 +779,23 @@ public class MainWindow {
         mainMenuPanel.repaint();
     }
 
-    private void exercisesAll(ActionEvent e) {
-	// TODO add your code here
+    private void exercisesAddNew(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesCustomPanel.setBounds(new Rectangle(new Point(6, 106), exercisesCustomPanel.getPreferredSize()));
+        exercisesCustomPanel.setVisible(true);
+        mainMenuPanel.add(exercisesCustomPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
     }
+
 
     private void exercisesWeightTopBarAdd(ActionEvent e) {
         weightSetRowCount++;
@@ -1000,6 +1031,23 @@ public class MainWindow {
         mainMenuPanel.repaint();
     }
 
+    private void exercisesCustomTopBarBack(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuExercisesPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuExercisesPanel.getPreferredSize()));
+        mainMenuPanel.add(mainMenuExercisesPanel);
+        mainMenuExercisesPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
     private void initComponents() {
 	// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
 	// Generated using JFormDesigner Educational license - Thomas Scardino (THOMAS A SCARDINO)
@@ -1056,7 +1104,7 @@ public class MainWindow {
 	exercisesGlutesButton = new JButton();
 	exercisesCardioButton = new JButton();
 	exercisesLowerLegsButton = new JButton();
-	exercisesAllButton = new JButton();
+	exercisesAddNewButton = new JButton();
 	mainMenuWorkoutsPanel = new JPanel();
 	workoutSelectButton = new JButton();
 	workoutAddNewButton = new JButton();
@@ -1070,6 +1118,7 @@ public class MainWindow {
 	mainMenuProfilePanel = new JPanel();
 	exercisesExercisesPanel = new JPanel();
 	exercisesExercisesTopPanel = new JPanel();
+	exercisesExercisesTopBarBackButton = new JButton();
 	exercisesExercisesTopBarAllButton = new JButton();
 	exercisesExercisesTopBarFTButton = new JButton();
 	exercisesExercisesTopBarCusButton = new JButton();
@@ -1103,6 +1152,12 @@ public class MainWindow {
 	distanceSet1Label = new JLabel();
 	distanceSet1DistanceField = new JTextField();
 	distanceSet1DurationField = new JTextField();
+	exercisesCustomPanel = new JPanel();
+	exercisesExercisesTopPanel2 = new JPanel();
+	exercisesCustomTopBarBackButton = new JButton();
+	exercisesCustomTopBarAddButton = new JButton();
+	customFieldsPanel = new JPanel();
+	label1 = new JLabel();
 
 	//======== window ========
 	{
@@ -1611,6 +1666,7 @@ public class MainWindow {
 		// rows
 		"[]" +
 		"[]" +
+		"[]" +
 		"[]"));
 
 	    //---- exercisesTricepsButton ----
@@ -1690,12 +1746,12 @@ public class MainWindow {
 	    exercisesLowerLegsButton.addActionListener(e -> exercisesLowerLegs(e));
 	    mainMenuExercisesPanel.add(exercisesLowerLegsButton, "cell 2 2,height 200:200:200");
 
-	    //---- exercisesAllButton ----
-	    exercisesAllButton.setText("SHOW ALL");
-	    exercisesAllButton.setForeground(Color.white);
-	    exercisesAllButton.setFont(exercisesAllButton.getFont().deriveFont(exercisesAllButton.getFont().getStyle() | Font.BOLD, exercisesAllButton.getFont().getSize() + 10f));
-	    exercisesAllButton.addActionListener(e -> exercisesAll(e));
-	    mainMenuExercisesPanel.add(exercisesAllButton, "cell 3 2,height 200:200:200");
+	    //---- exercisesAddNewButton ----
+	    exercisesAddNewButton.setText("ADD NEW");
+	    exercisesAddNewButton.setFont(exercisesAddNewButton.getFont().deriveFont(exercisesAddNewButton.getFont().getStyle() | Font.BOLD, exercisesAddNewButton.getFont().getSize() + 10f));
+	    exercisesAddNewButton.setForeground(Color.white);
+	    exercisesAddNewButton.addActionListener(e -> exercisesAddNew(e));
+	    mainMenuExercisesPanel.add(exercisesAddNewButton, "cell 3 2,height 200:200:200");
 	}
 
 	//======== mainMenuWorkoutsPanel ========
@@ -1872,32 +1928,40 @@ public class MainWindow {
 		exercisesExercisesTopPanel.setLayout(new MigLayout(
 		    "fill,hidemode 3",
 		    // columns
+		    "[left]" +
 		    "[fill]" +
 		    "[fill]" +
 		    "[fill]",
 		    // rows
 		    "[]"));
 
+		//---- exercisesExercisesTopBarBackButton ----
+		exercisesExercisesTopBarBackButton.setText("BACK");
+		exercisesExercisesTopBarBackButton.setFont(exercisesExercisesTopBarBackButton.getFont().deriveFont(exercisesExercisesTopBarBackButton.getFont().getStyle() | Font.BOLD));
+		exercisesExercisesTopBarBackButton.setForeground(Color.white);
+		exercisesExercisesTopBarBackButton.addActionListener(e -> exercisesExercisesTopBarBack(e));
+		exercisesExercisesTopPanel.add(exercisesExercisesTopBarBackButton, "cell 0 0");
+
 		//---- exercisesExercisesTopBarAllButton ----
 		exercisesExercisesTopBarAllButton.setText("ALL EXERCISES");
 		exercisesExercisesTopBarAllButton.setForeground(Color.white);
 		exercisesExercisesTopBarAllButton.setFont(exercisesExercisesTopBarAllButton.getFont().deriveFont(exercisesExercisesTopBarAllButton.getFont().getStyle() | Font.BOLD));
 		exercisesExercisesTopBarAllButton.addActionListener(e -> exercisesExercisesTopBarAll(e));
-		exercisesExercisesTopPanel.add(exercisesExercisesTopBarAllButton, "cell 0 0");
+		exercisesExercisesTopPanel.add(exercisesExercisesTopBarAllButton, "cell 1 0");
 
 		//---- exercisesExercisesTopBarFTButton ----
 		exercisesExercisesTopBarFTButton.setText("FITTRACKER EXERCISES");
 		exercisesExercisesTopBarFTButton.setForeground(Color.white);
 		exercisesExercisesTopBarFTButton.setFont(exercisesExercisesTopBarFTButton.getFont().deriveFont(exercisesExercisesTopBarFTButton.getFont().getStyle() | Font.BOLD));
 		exercisesExercisesTopBarFTButton.addActionListener(e -> exercisesExercisesTopBarFT(e));
-		exercisesExercisesTopPanel.add(exercisesExercisesTopBarFTButton, "cell 1 0");
+		exercisesExercisesTopPanel.add(exercisesExercisesTopBarFTButton, "cell 2 0");
 
 		//---- exercisesExercisesTopBarCusButton ----
 		exercisesExercisesTopBarCusButton.setText("CUSTOM EXERCISES");
 		exercisesExercisesTopBarCusButton.setForeground(Color.white);
 		exercisesExercisesTopBarCusButton.setFont(exercisesExercisesTopBarCusButton.getFont().deriveFont(exercisesExercisesTopBarCusButton.getFont().getStyle() | Font.BOLD));
 		exercisesExercisesTopBarCusButton.addActionListener(e -> exercisesExercisesTopBarMy(e));
-		exercisesExercisesTopPanel.add(exercisesExercisesTopBarCusButton, "cell 2 0");
+		exercisesExercisesTopPanel.add(exercisesExercisesTopBarCusButton, "cell 3 0");
 	    }
 	    exercisesExercisesPanel.add(exercisesExercisesTopPanel, "cell 0 0");
 
@@ -2170,6 +2234,70 @@ public class MainWindow {
 	    }
 	    exercisesDistancePanel.add(distanceSetsPanel, "cell 0 3");
 	}
+
+	//======== exercisesCustomPanel ========
+	{
+	    exercisesCustomPanel.setPreferredSize(new Dimension(988, 638));
+	    exercisesCustomPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]",
+		// rows
+		"[37,top]" +
+		"[grow,fill]"));
+
+	    //======== exercisesExercisesTopPanel2 ========
+	    {
+		exercisesExercisesTopPanel2.setBackground(new Color(0x1e2428));
+		exercisesExercisesTopPanel2.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[left]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[]"));
+
+		//---- exercisesCustomTopBarBackButton ----
+		exercisesCustomTopBarBackButton.setText("BACK");
+		exercisesCustomTopBarBackButton.setFont(exercisesCustomTopBarBackButton.getFont().deriveFont(exercisesCustomTopBarBackButton.getFont().getStyle() | Font.BOLD));
+		exercisesCustomTopBarBackButton.setForeground(Color.white);
+		exercisesCustomTopBarBackButton.addActionListener(e -> exercisesCustomTopBarBack(e));
+		exercisesExercisesTopPanel2.add(exercisesCustomTopBarBackButton, "cell 0 0");
+
+		//---- exercisesCustomTopBarAddButton ----
+		exercisesCustomTopBarAddButton.setText("ADD EXERCISE");
+		exercisesCustomTopBarAddButton.setFont(exercisesCustomTopBarAddButton.getFont().deriveFont(exercisesCustomTopBarAddButton.getFont().getStyle() | Font.BOLD));
+		exercisesCustomTopBarAddButton.setForeground(Color.white);
+		exercisesExercisesTopPanel2.add(exercisesCustomTopBarAddButton, "cell 3 0");
+	    }
+	    exercisesCustomPanel.add(exercisesExercisesTopPanel2, "cell 0 0");
+
+	    //======== customFieldsPanel ========
+	    {
+		customFieldsPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[center]" +
+		    "[center]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]"));
+
+		//---- label1 ----
+		label1.setText("Name:");
+		customFieldsPanel.add(label1, "cell 0 0");
+	    }
+	    exercisesCustomPanel.add(customFieldsPanel, "cell 0 1");
+	}
 	// JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -2228,7 +2356,7 @@ public class MainWindow {
     private JButton exercisesGlutesButton;
     private JButton exercisesCardioButton;
     private JButton exercisesLowerLegsButton;
-    private JButton exercisesAllButton;
+    private JButton exercisesAddNewButton;
     private JPanel mainMenuWorkoutsPanel;
     private JButton workoutSelectButton;
     private JButton workoutAddNewButton;
@@ -2242,6 +2370,7 @@ public class MainWindow {
     private JPanel mainMenuProfilePanel;
     private JPanel exercisesExercisesPanel;
     private JPanel exercisesExercisesTopPanel;
+    private JButton exercisesExercisesTopBarBackButton;
     private JButton exercisesExercisesTopBarAllButton;
     private JButton exercisesExercisesTopBarFTButton;
     private JButton exercisesExercisesTopBarCusButton;
@@ -2275,5 +2404,11 @@ public class MainWindow {
     private JLabel distanceSet1Label;
     private JTextField distanceSet1DistanceField;
     private JTextField distanceSet1DurationField;
+    private JPanel exercisesCustomPanel;
+    private JPanel exercisesExercisesTopPanel2;
+    private JButton exercisesCustomTopBarBackButton;
+    private JButton exercisesCustomTopBarAddButton;
+    private JPanel customFieldsPanel;
+    private JLabel label1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
