@@ -1,5 +1,61 @@
 [
   {
+    "name": "Pull-ups",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+    "reps": "0"
+  },
+  {
+    "name": "Close-grip Pull-ups",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+    "reps": "0"
+  },
+  {
+    "name": "Reverse-grip Pull-ups",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+    "reps": "0"
+  },
+  {
+    "name": "Chin-ups",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+    "reps": "0"
+  },
+  {
+    "name": "Isometric hold Pull-ups",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+    "reps": "0"
+  },
+  {
+    "name": "Weighted Pull-ups",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+    "reps": "0"
+  },
+  {
+    "name": "Dip",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+    "reps": "0"
+  },
+  {
     "name": "Dip",
     "recordType": "1",
     "muscleType": "1",
@@ -14,6 +70,22 @@
     "weight": "0",
     "sets": "0",
 	"reps": "0"
+  },
+  {
+    "name": "Incline Push-ups",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+    "reps": "0"
+  },
+  {
+    "name": "Decline Push-ups",
+    "recordType": "1",
+    "muscleType": "1",
+    "weight": "0",
+    "sets": "0",
+    "reps": "0"
   },
   {
     "name": "Tricep Pulldown",
