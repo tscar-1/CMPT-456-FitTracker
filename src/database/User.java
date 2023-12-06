@@ -1,10 +1,12 @@
 package database;
 
 import core.*;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import utils.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -156,15 +158,78 @@ public class User {
         return this.password;
     }
     
+    private List<ProgressEntry> readProgress() {
+        File progressFile = new File(username + "_progress.json");
+        Gson gson = new Gson();
+        if (!progressFile.exists()) {
+            return new ArrayList<>();
+        }
+
+        try (FileReader reader = new FileReader(progressFile)) {
+            Type progressListType = new TypeToken<List<ProgressEntry>>(){}.getType();
+            return gson.fromJson(reader, progressListType);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    
+    private void writeProgress(List<ProgressEntry> progressEntries) {
+        File progressFile = new File(username + "_progress.json");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        try (FileWriter writer = new FileWriter(progressFile)) {
+            gson.toJson(progressEntries, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void saveProgressExerciseWeight(LocalDate date, String exerciseName, int exerciseRecordType, int exerciseMuscleType, int exerciseSetNum, int exerciseWeightAmt, int exerciseRepsAmt) {
-        Exercise exercise = new Exercise(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseWeightAmt, exerciseRepsAmt);
+        Exercise exercise = new Exercise(exerciseName, exerciseRecordType, exerciseMuscleType, exerciseWeightAmt, exerciseSetNum, exerciseRepsAmt);
+        List<ProgressEntry> progressEntries = readProgress();
+
+        ProgressEntry entry = progressEntries.stream()
+                .filter(e -> e.date.equals(date))
+                .findFirst()
+                .orElseGet(() -> {
+                    ProgressEntry newEntry = new ProgressEntry(date);
+                    progressEntries.add(newEntry);
+                    return newEntry;
+                });
+
+        entry.addExercise(exercise);
+        writeProgress(progressEntries);
     }
     
     public void saveProgressExerciseDistance(LocalDate date, String exerciseName, int exerciseRecordType, int exerciseMuscleType, int exerciseSetNum, double exerciseDistanceAmt, double exerciseDurationLen) {
-        Exercise exercise = new Exercise(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseDistanceAmt, exerciseDurationLen);
+        Exercise exercise = new Exercise(exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseDistanceAmt, exerciseDurationLen);
+        //to be implemented
     }
     
     public void saveProgressFood(LocalDate date, String foodName, int foodCalorieAmt, int foodProteinAmt, int foodCarbsAmt) {
         
+    }
+    
+    private class ProgressEntry {
+        private LocalDate date;
+        private List<Exercise> exercises;
+        
+        public ProgressEntry(LocalDate date) {
+            this.date = date;
+            this.exercises = new ArrayList<>();
+        }
+        
+        public void addExercise(Exercise exercise) {
+            exercises.add(exercise);
+        }
+        
+        public void setDate(LocalDate date) {
+            this.date = date;
+        }
+        
+        public LocalDate getDate() {
+            return date;
+        }
     }
 }
