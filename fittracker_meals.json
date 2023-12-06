@@ -1,24 +1,17 @@
 [
   {
-    "name": "Breakfast",
-    "recordType": "eggs",
-    "muscleType": "toast",
-     "sets": "Avocado",
-    "weight": "Orange Juice"
-  },
-  
-  {
-    "name": "Lunch",
-    "recordType": "Burger",
-    "muscleType": "Fries",
-     "sets": "Ketchup",
-    "weight": "Water"
+    "mainMeal": "eggs",
+    "side": " Avocado",
+    "drink": "Orange Juice"
   },
   {
-    "name": "Dinner",
-    "recordType": "Steak",
-    "muscleType": "Asaragus",
-     "sets": "Potatoe",
-    "weight": "Water"
+    "mainMeal": "Burger",
+    "side": "Fries",
+    "drink": "Water"
+  },
+  {
+    "mainMeal": "Steak",
+    "side": "Asparagus",
+    "drink": "Water"
   }
 ]
