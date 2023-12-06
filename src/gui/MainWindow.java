@@ -8,6 +8,7 @@ import database.*;
 import utils.*;
 import java.io.*;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.*;
 import java.util.logging.Level;
@@ -27,7 +28,7 @@ public class MainWindow {
     private Exercise currentExercise;
     private Workout currentWorkout;
     private int weightSetRowCount = 1;
-    private int distanceSetRowCount = 0;
+    private int distanceSetRowCount = 1;
 
     public MainWindow() {
         initComponents();
@@ -278,30 +279,28 @@ public class MainWindow {
         JLabel messageLabel = new JLabel(message);
         messageLabel.setForeground(new Color(0x2b3036));
         messageLabel.setFont(messageLabel.getFont().deriveFont(Font.BOLD));
-        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center label horizontally
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Custom JPanel with rounded corners
         JPanel notificationPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.setColor(getBackground());
-                g.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25); // 25 is the arc width and height
+                g.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
             }
         };
-        notificationPanel.setOpaque(false); // Make JPanel non-opaque to allow custom painting
-        notificationPanel.setLayout(new BoxLayout(notificationPanel, BoxLayout.PAGE_AXIS)); // Use BoxLayout for vertical alignment
+        notificationPanel.setOpaque(false);
+        notificationPanel.setLayout(new BoxLayout(notificationPanel, BoxLayout.PAGE_AXIS));
 
-        // Offset from top, this is the space above the message label
-        int offset = 15; // Adjust this value as needed for your offset
+        int offset = 15;
         notificationPanel.add(Box.createRigidArea(new Dimension(0, offset)));
-        notificationPanel.add(messageLabel); // Add label, which will be pushed down by the offset
+        notificationPanel.add(messageLabel);
 
         notificationPanel.setBackground(UIManager.getColor(color));
 
-        int panelWidth = window.getWidth() / 5; // Fifth the width of the window
-        int panelHeight = 80; // Adjust the height as needed
-        int xPosStart = (window.getWidth() - panelWidth) / 2; // Horizontally centered
+        int panelWidth = window.getWidth() / 5;
+        int panelHeight = 80;
+        int xPosStart = (window.getWidth() - panelWidth) / 2;
         notificationPanel.setBounds(xPosStart, window.getHeight(), panelWidth, panelHeight);
         window.getContentPane().add(notificationPanel);
         window.getContentPane().setComponentZOrder(notificationPanel, 0);
@@ -313,11 +312,10 @@ public class MainWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (yPos > window.getHeight() - panelHeight) {
-                    yPos -= 1; // Slide-up speed
+                    yPos -= 1;
                     notificationPanel.setBounds(xPosStart, yPos, panelWidth, panelHeight);
                 } else {
                     ((javax.swing.Timer) e.getSource()).stop();
-                    // Delay before slide-down
                     new javax.swing.Timer(2000, ev -> {
                         javax.swing.Timer slideDownTimer = new javax.swing.Timer(5, new ActionListener() {
                             int yPosDown = window.getHeight() - panelHeight;
@@ -325,7 +323,7 @@ public class MainWindow {
                             @Override
                             public void actionPerformed(ActionEvent evt) {
                                 if (yPosDown < window.getHeight()) {
-                                    yPosDown += 1; // Slide-down speed
+                                    yPosDown += 1;
                                     notificationPanel.setBounds(xPosStart, yPosDown, panelWidth, panelHeight);
                                 } else {
                                     ((javax.swing.Timer) evt.getSource()).stop();
@@ -656,7 +654,6 @@ public class MainWindow {
         setLabel.setFont(weightSet1Label.getFont().deriveFont(weightSet1Label.getFont().getSize() + 2f));
         weightSetsPanel.add(setLabel, "cell 0 " + weightSetRowCount);
 
-        //---- exercisesWeightSet3WeightField ----
         JTextField weightField = new JTextField();
         weightField.setName("weightSet" + weightSetRowCount + "WeightField");
         weightField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -664,7 +661,6 @@ public class MainWindow {
         weightField.setForeground(Color.white);
         weightSetsPanel.add(weightField, "cell 1 " + weightSetRowCount + ",alignx center,growx 0");
 
-        //---- label22 ----
         JLabel xLabel = new JLabel();
         xLabel.setName("weightSet" + weightSetRowCount + "XLabel");
         xLabel.setText("X");
@@ -672,7 +668,6 @@ public class MainWindow {
         xLabel.setFont(weightSet1XLabel.getFont().deriveFont(weightSet1XLabel.getFont().getSize() + 2f));
         weightSetsPanel.add(xLabel, "cell 2 " + weightSetRowCount);
 
-        //---- textField6 ----
         JTextField repsField = new JTextField();
         repsField.setName("weightSet" + weightSetRowCount + "RepsField");
         repsField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -713,14 +708,159 @@ public class MainWindow {
     }
 
     private void exercisesWeightTopBarRec(ActionEvent e) {
-	java.util.List<Exercise> exerciseSets = new ArrayList<>();
-        
+        Exercise exercise = currentExercise;
+
         for (int i = 1; i <= weightSetRowCount; i++) {
+            LocalDate date = LocalDate.now();
+            String exerciseName = exercise.getName();
+            int exerciseRecordType = exercise.getRecordType();
+            int exerciseMuscleType = exercise.getMuscleType();
+            int exerciseSetNum = i;
+            int exerciseWeightAmt = 0;
+            int exerciseRepAmt = 0;
+
+            String[] componentsToRecord = {
+                "weightSet" + i + "WeightField",
+                "weightSet" + i + "RepsField"
+            };
+
+            for (String name : componentsToRecord) {
+                for (Component comp : weightSetsPanel.getComponents()) {
+                    if (name.equals(comp.getName()) && comp instanceof JTextField) {
+                        JTextField textField = (JTextField) comp;
+                        try {
+                            if (name.contains("WeightField")) {
+                                exerciseWeightAmt = Integer.parseInt(textField.getText());
+                            }
+                            else if (name.contains("RepsField")) {
+                                exerciseRepAmt = Integer.parseInt(textField.getText());
+                            }
+                        } catch (NumberFormatException ex) {
+                            notificationShow("Error", "Button.focusedBorderColor");
+                        }
+                    }
+                }
+            }
             
+            currentUser.saveProgressExerciseWeight(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseWeightAmt, exerciseRepAmt);
+            notificationShow("Exercise Recorded", "Actions.Red");
         }
     }
 
     private void exercisesWeightTopBarBack(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesPopulate(1, currentMuscleType);
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void exercisesDistanceTopBarAdd(ActionEvent e) {
+	distanceSetRowCount++;
+        
+        JLabel setLabel = new JLabel();
+        setLabel.setName("distanceSet" + distanceSetRowCount + "Label");
+        setLabel.setText("" + distanceSetRowCount);
+        setLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        setLabel.setFont(distanceSet1Label.getFont().deriveFont(distanceSet1Label.getFont().getSize() + 2f));
+        distanceSetsPanel.add(setLabel, "cell 0 " + distanceSetRowCount);
+
+        JTextField distanceField = new JTextField();
+        distanceField.setName("distanceSet" + distanceSetRowCount + "WeightField");
+        distanceField.setHorizontalAlignment(SwingConstants.CENTER);
+        distanceField.setFont(distanceSet1DistanceField.getFont().deriveFont(distanceSet1DistanceField.getFont().getStyle() | Font.BOLD, distanceSet1DistanceField.getFont().getSize() + 5f));
+        distanceField.setForeground(Color.white);
+        distanceSetsPanel.add(distanceField, "cell 1 " + distanceSetRowCount + ",alignx center,growx 0");
+
+        JTextField durationField = new JTextField();
+        durationField.setName("weightSet" + distanceSetRowCount + "RepsField");
+        durationField.setHorizontalAlignment(SwingConstants.CENTER);
+        durationField.setFont(distanceSet1DurationField.getFont().deriveFont(distanceSet1DurationField.getFont().getStyle() | Font.BOLD, distanceSet1DurationField.getFont().getSize() + 5f));
+        durationField.setForeground(Color.white);
+        distanceSetsPanel.add(durationField, "cell 3 " + distanceSetRowCount + ",alignx center,growx 0");
+        
+        distanceSetsPanel.revalidate();
+        distanceSetsPanel.repaint();
+    }
+
+    private void exercisesDistanceTopBarRem(ActionEvent e) {
+	if (distanceSetRowCount > 1) {
+            String[] componentsToRemove = {
+                "distanceSet" + distanceSetRowCount + "Label",
+                "distanceSet" + distanceSetRowCount + "DistanceField",
+                "distanceSet" + distanceSetRowCount + "DurationField"
+            };
+
+            for (String name : componentsToRemove) {
+                for (Component comp : distanceSetsPanel.getComponents()) {
+                    if (name.equals(comp.getName())) {
+                        distanceSetsPanel.remove(comp);
+                        break;
+                    }
+                }
+            }
+
+            distanceSetRowCount--;
+
+            distanceSetsPanel.revalidate();
+            distanceSetsPanel.repaint();
+        }
+        else {
+            notificationShow("Cannot remove last set", "Button.focusedBorderColor");
+        }
+    }
+
+    private void exercisesDistanceTopBarRec(ActionEvent e) {
+	Exercise exercise = currentExercise;
+
+        for (int i = 1; i <= distanceSetRowCount; i++) {
+            LocalDate date = LocalDate.now();
+            String exerciseName = exercise.getName();
+            int exerciseRecordType = exercise.getRecordType();
+            int exerciseMuscleType = exercise.getMuscleType();
+            int exerciseSetNum = i;
+            double exerciseDistanceAmt = 0.0;
+            double exerciseDurationLen = 0.0;
+
+            String[] componentsToRecord = {
+                "distanceSet" + i + "DistanceField",
+                "distanceSet" + i + "DurationField"
+            };
+
+            for (String name : componentsToRecord) {
+                for (Component comp : distanceSetsPanel.getComponents()) {
+                    if (name.equals(comp.getName()) && comp instanceof JTextField) {
+                        JTextField textField = (JTextField) comp;
+                        try {
+                            if (name.contains("DistanceField")) {
+                                exerciseDistanceAmt = Double.parseDouble(textField.getText());
+                            }
+                            else if (name.contains("DurationField")) {
+                                exerciseDurationLen = Double.parseDouble(textField.getText());
+                            }
+                        } catch (NumberFormatException ex) {
+                            notificationShow("Error", "Button.focusedBorderColor");
+                        }
+                    }
+                }
+            }
+            
+            currentUser.saveProgressExerciseDistance(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseDistanceAmt, exerciseDurationLen);
+            notificationShow("Exercise Recorded", "Actions.Red");
+        }
+    }
+
+    private void exercisesDistanceTopBarBack(ActionEvent e) {
 	Component[] components = mainMenuPanel.getComponents();
         
         for (Component comp : components) {
@@ -838,15 +978,9 @@ public class MainWindow {
 	label26 = new JLabel();
 	label27 = new JLabel();
 	label28 = new JLabel();
-	label29 = new JLabel();
-	exercisesWeightSet1WeightField2 = new JTextField();
-	textField7 = new JTextField();
-	label31 = new JLabel();
-	exercisesWeightSet2WeightField2 = new JTextField();
-	textField8 = new JTextField();
-	label33 = new JLabel();
-	exercisesWeightSet3WeightField2 = new JTextField();
-	textField9 = new JTextField();
+	distanceSet1Label = new JLabel();
+	distanceSet1DistanceField = new JTextField();
+	distanceSet1DurationField = new JTextField();
 
 	//======== window ========
 	{
@@ -1818,25 +1952,31 @@ public class MainWindow {
 		exercisesDistanceTopBarBackButton.setText("BACK");
 		exercisesDistanceTopBarBackButton.setForeground(Color.white);
 		exercisesDistanceTopBarBackButton.setFont(exercisesDistanceTopBarBackButton.getFont().deriveFont(exercisesDistanceTopBarBackButton.getFont().getStyle() | Font.BOLD));
-		exercisesDistanceTopBarBackButton.addActionListener(e -> exercisesExercisesTopBarAll(e));
+		exercisesDistanceTopBarBackButton.addActionListener(e -> {
+			exercisesExercisesTopBarAll(e);
+			exercisesDistanceTopBarBack(e);
+		});
 		exercisesDistanceTopPanel.add(exercisesDistanceTopBarBackButton, "cell 0 0,alignx left,growx 0");
 
 		//---- exercisesDistanceTopBarAddButton ----
 		exercisesDistanceTopBarAddButton.setText("ADD SET");
 		exercisesDistanceTopBarAddButton.setFont(exercisesDistanceTopBarAddButton.getFont().deriveFont(exercisesDistanceTopBarAddButton.getFont().getStyle() | Font.BOLD));
 		exercisesDistanceTopBarAddButton.setForeground(Color.white);
+		exercisesDistanceTopBarAddButton.addActionListener(e -> exercisesDistanceTopBarAdd(e));
 		exercisesDistanceTopPanel.add(exercisesDistanceTopBarAddButton, "cell 2 0");
 
 		//---- exercisesDistanceTopBarRemButton ----
 		exercisesDistanceTopBarRemButton.setText("REMOVE SET");
 		exercisesDistanceTopBarRemButton.setFont(exercisesDistanceTopBarRemButton.getFont().deriveFont(exercisesDistanceTopBarRemButton.getFont().getStyle() | Font.BOLD));
 		exercisesDistanceTopBarRemButton.setForeground(Color.white);
+		exercisesDistanceTopBarRemButton.addActionListener(e -> exercisesDistanceTopBarRem(e));
 		exercisesDistanceTopPanel.add(exercisesDistanceTopBarRemButton, "cell 3 0");
 
 		//---- exercisesDistanceTopBarRecButton ----
 		exercisesDistanceTopBarRecButton.setText("RECORD EXERCISE");
 		exercisesDistanceTopBarRecButton.setFont(exercisesDistanceTopBarRecButton.getFont().deriveFont(exercisesDistanceTopBarRecButton.getFont().getStyle() | Font.BOLD));
 		exercisesDistanceTopBarRecButton.setForeground(Color.white);
+		exercisesDistanceTopBarRecButton.addActionListener(e -> exercisesDistanceTopBarRec(e));
 		exercisesDistanceTopPanel.add(exercisesDistanceTopBarRecButton, "cell 4 0");
 	    }
 	    exercisesDistancePanel.add(exercisesDistanceTopPanel, "cell 0 0");
@@ -1888,59 +2028,23 @@ public class MainWindow {
 		label28.setFont(label28.getFont().deriveFont(label28.getFont().getStyle() | Font.BOLD, label28.getFont().getSize() + 2f));
 		distanceSetsPanel.add(label28, "cell 2 0");
 
-		//---- label29 ----
-		label29.setText("1");
-		label29.setHorizontalAlignment(SwingConstants.CENTER);
-		label29.setFont(label29.getFont().deriveFont(label29.getFont().getSize() + 2f));
-		distanceSetsPanel.add(label29, "cell 0 1");
+		//---- distanceSet1Label ----
+		distanceSet1Label.setText("1");
+		distanceSet1Label.setHorizontalAlignment(SwingConstants.CENTER);
+		distanceSet1Label.setFont(distanceSet1Label.getFont().deriveFont(distanceSet1Label.getFont().getSize() + 2f));
+		distanceSetsPanel.add(distanceSet1Label, "cell 0 1");
 
-		//---- exercisesWeightSet1WeightField2 ----
-		exercisesWeightSet1WeightField2.setHorizontalAlignment(SwingConstants.CENTER);
-		exercisesWeightSet1WeightField2.setFont(exercisesWeightSet1WeightField2.getFont().deriveFont(exercisesWeightSet1WeightField2.getFont().getStyle() | Font.BOLD, exercisesWeightSet1WeightField2.getFont().getSize() + 5f));
-		exercisesWeightSet1WeightField2.setForeground(Color.white);
-		distanceSetsPanel.add(exercisesWeightSet1WeightField2, "cell 1 1,alignx center,growx 0");
+		//---- distanceSet1DistanceField ----
+		distanceSet1DistanceField.setHorizontalAlignment(SwingConstants.CENTER);
+		distanceSet1DistanceField.setFont(distanceSet1DistanceField.getFont().deriveFont(distanceSet1DistanceField.getFont().getStyle() | Font.BOLD, distanceSet1DistanceField.getFont().getSize() + 5f));
+		distanceSet1DistanceField.setForeground(Color.white);
+		distanceSetsPanel.add(distanceSet1DistanceField, "cell 1 1,alignx center,growx 0");
 
-		//---- textField7 ----
-		textField7.setHorizontalAlignment(SwingConstants.CENTER);
-		textField7.setFont(textField7.getFont().deriveFont(textField7.getFont().getStyle() | Font.BOLD, textField7.getFont().getSize() + 5f));
-		textField7.setForeground(Color.white);
-		distanceSetsPanel.add(textField7, "cell 2 1,alignx center,growx 0");
-
-		//---- label31 ----
-		label31.setText("2");
-		label31.setHorizontalAlignment(SwingConstants.CENTER);
-		label31.setFont(label31.getFont().deriveFont(label31.getFont().getSize() + 2f));
-		distanceSetsPanel.add(label31, "cell 0 2");
-
-		//---- exercisesWeightSet2WeightField2 ----
-		exercisesWeightSet2WeightField2.setHorizontalAlignment(SwingConstants.CENTER);
-		exercisesWeightSet2WeightField2.setFont(exercisesWeightSet2WeightField2.getFont().deriveFont(exercisesWeightSet2WeightField2.getFont().getStyle() | Font.BOLD, exercisesWeightSet2WeightField2.getFont().getSize() + 5f));
-		exercisesWeightSet2WeightField2.setForeground(Color.white);
-		distanceSetsPanel.add(exercisesWeightSet2WeightField2, "cell 1 2,alignx center,growx 0");
-
-		//---- textField8 ----
-		textField8.setHorizontalAlignment(SwingConstants.CENTER);
-		textField8.setFont(textField8.getFont().deriveFont(textField8.getFont().getStyle() | Font.BOLD, textField8.getFont().getSize() + 5f));
-		textField8.setForeground(Color.white);
-		distanceSetsPanel.add(textField8, "cell 2 2,alignx center,growx 0");
-
-		//---- label33 ----
-		label33.setText("3");
-		label33.setHorizontalAlignment(SwingConstants.CENTER);
-		label33.setFont(label33.getFont().deriveFont(label33.getFont().getSize() + 2f));
-		distanceSetsPanel.add(label33, "cell 0 3");
-
-		//---- exercisesWeightSet3WeightField2 ----
-		exercisesWeightSet3WeightField2.setHorizontalAlignment(SwingConstants.CENTER);
-		exercisesWeightSet3WeightField2.setFont(exercisesWeightSet3WeightField2.getFont().deriveFont(exercisesWeightSet3WeightField2.getFont().getStyle() | Font.BOLD, exercisesWeightSet3WeightField2.getFont().getSize() + 5f));
-		exercisesWeightSet3WeightField2.setForeground(Color.white);
-		distanceSetsPanel.add(exercisesWeightSet3WeightField2, "cell 1 3,alignx center,growx 0");
-
-		//---- textField9 ----
-		textField9.setHorizontalAlignment(SwingConstants.CENTER);
-		textField9.setFont(textField9.getFont().deriveFont(textField9.getFont().getStyle() | Font.BOLD, textField9.getFont().getSize() + 5f));
-		textField9.setForeground(Color.white);
-		distanceSetsPanel.add(textField9, "cell 2 3,alignx center,growx 0");
+		//---- distanceSet1DurationField ----
+		distanceSet1DurationField.setHorizontalAlignment(SwingConstants.CENTER);
+		distanceSet1DurationField.setFont(distanceSet1DurationField.getFont().deriveFont(distanceSet1DurationField.getFont().getStyle() | Font.BOLD, distanceSet1DurationField.getFont().getSize() + 5f));
+		distanceSet1DurationField.setForeground(Color.white);
+		distanceSetsPanel.add(distanceSet1DurationField, "cell 2 1,alignx center,growx 0");
 	    }
 	    exercisesDistancePanel.add(distanceSetsPanel, "cell 0 3");
 	}
@@ -2046,14 +2150,8 @@ public class MainWindow {
     private JLabel label26;
     private JLabel label27;
     private JLabel label28;
-    private JLabel label29;
-    private JTextField exercisesWeightSet1WeightField2;
-    private JTextField textField7;
-    private JLabel label31;
-    private JTextField exercisesWeightSet2WeightField2;
-    private JTextField textField8;
-    private JLabel label33;
-    private JTextField exercisesWeightSet3WeightField2;
-    private JTextField textField9;
+    private JLabel distanceSet1Label;
+    private JTextField distanceSet1DistanceField;
+    private JTextField distanceSet1DurationField;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
