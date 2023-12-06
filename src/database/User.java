@@ -1,6 +1,7 @@
 package database;
 
 import core.*;
+import java.time.LocalDate;
 import utils.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,14 +156,15 @@ public class User {
         return this.password;
     }
     
-    public void saveProgress(Exercise exercise) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(exercise);
+    public void saveProgressExerciseWeight(LocalDate date, String exerciseName, int exerciseRecordType, int exerciseMuscleType, int exerciseSetNum, int exerciseWeightAmt, int exerciseRepsAmt) {
+        Exercise exercise = new Exercise(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseWeightAmt, exerciseRepsAmt);
+    }
+    
+    public void saveProgressExerciseDistance(LocalDate date, String exerciseName, int exerciseRecordType, int exerciseMuscleType, int exerciseSetNum, double exerciseDistanceAmt, double exerciseDurationLen) {
+        Exercise exercise = new Exercise(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseDistanceAmt, exerciseDurationLen);
+    }
+    
+    public void saveProgressFood(LocalDate date, String foodName, int foodCalorieAmt, int foodProteinAmt, int foodCarbsAmt) {
         
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(username + "_progress.json"))) {
-            writer.write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
