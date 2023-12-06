@@ -222,6 +222,7 @@
         {"name": "Apple Juice", "calories": 114, "proteins": 0.1, "carbohydrates": 28, "fats": 0.3},
         {"name": "Milk", "calories": 103, "proteins": 8, "carbohydrates": 12, "fats": 3.4},
         {"name": "Coca-Cola", "calories": 140, "proteins": 0, "carbohydrates": 39, "fats": 0},
+        {"name": "Unsweetened Iced Tea", "calories": 0, "proteins": 0, "carbohydrates": 0, "fats": 0},
         {"name": "Iced Tea (Sweetened)", "calories": 90, "proteins": 0, "carbohydrates": 24, "fats": 0},
         {"name": "Lemonade", "calories": 99, "proteins": 0, "carbohydrates": 26, "fats": 0},
         {"name": "Cranberry Juice", "calories": 116, "proteins": 0.1, "carbohydrates": 30, "fats": 0.3},
