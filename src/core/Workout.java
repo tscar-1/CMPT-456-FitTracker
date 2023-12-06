@@ -3,12 +3,12 @@ package core;
 import java.util.*;
 
 public class Workout {
-
     private String name;
-    private List<Exercise> workout;
+    private List<Exercise> exercises;
 
-    public Workout() {
-        workout = new ArrayList<>();
+    public Workout(String name) {
+        this.name = name;
+        this.exercises = new ArrayList<>();
     }
 
     public void setName(String name) {
@@ -18,18 +18,12 @@ public class Workout {
     public String getName() {
         return name;
     }
-
-
-    public int getLength() {
-        return workout.size();
+    
+    public void addExercise(Exercise exercise) {
+        exercises.add(exercise);
     }
-
-    /*public void addExercise(Exercise exercise, String username) {
-        workout.add(exercise);
-        database.saveWorkout(username + "_workout_" + name + ".json", this);
+    
+    public List<Exercise> getExercises() {
+        return exercises;
     }
-
-    public void removeExercise(Exercise exercise, String username) {
-        workout.remove(exercise);
-    }*/
 }
