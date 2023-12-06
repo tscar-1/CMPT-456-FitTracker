@@ -862,9 +862,10 @@ public class MainWindow {
 
     private void exercisesWeightTopBarRec(ActionEvent e) {
         Exercise exercise = currentExercise;
+        LocalDate date = LocalDate.now();
+        String dateString = date.toString();
 
         for (int i = 1; i <= weightSetRowCount; i++) {
-            LocalDate date = LocalDate.now();
             String exerciseName = exercise.getName();
             int exerciseRecordType = exercise.getRecordType();
             int exerciseMuscleType = exercise.getMuscleType();
@@ -1185,7 +1186,7 @@ public class MainWindow {
 	    window.setMinimumSize(new Dimension(1000, 900));
 	    window.setMaximumSize(new Dimension(1000, 900));
 	    window.setShape(null);
-	    window.setIconImage(new ImageIcon("D:\\Documents\\NetBeansProjects\\FitTracker\\src\\assets\\FitTrackerLogoSmall.png").getImage());
+	    window.setIconImage(new ImageIcon("src\\assets\\FitTrackerLogoSmall.png").getImage());
 	    var windowContentPane = window.getContentPane();
 	    windowContentPane.setLayout(null);
 
@@ -1203,7 +1204,7 @@ public class MainWindow {
 		startPanel.setPreferredSize(new Dimension(750, 750));
 
 		//---- startLogoLabel ----
-		startLogoLabel.setIcon(new ImageIcon("D:\\Documents\\NetBeansProjects\\FitTracker\\src\\assets\\FitTrackerLogo.png"));
+		startLogoLabel.setIcon(new ImageIcon("src\\assets\\FitTrackerLogo.png"));
 		startLogoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		//---- startLoginButton ----
@@ -1279,7 +1280,7 @@ public class MainWindow {
 	    loginPanel.setVisible(false);
 
 	    //---- loginLogoLabel ----
-	    loginLogoLabel.setIcon(new ImageIcon("D:\\Documents\\NetBeansProjects\\FitTracker\\src\\assets\\FitTrackerLogo.png"));
+	    loginLogoLabel.setIcon(new ImageIcon("src\\assets\\FitTrackerLogo.png"));
 	    loginLogoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 	    //---- loginUsernameLabel ----
@@ -1378,7 +1379,7 @@ public class MainWindow {
 	    registerPanel.setVisible(false);
 
 	    //---- registerLogoLabel ----
-	    registerLogoLabel.setIcon(new ImageIcon("D:\\Documents\\NetBeansProjects\\FitTracker\\src\\assets\\FitTrackerLogo.png"));
+	    registerLogoLabel.setIcon(new ImageIcon("src\\assets\\FitTrackerLogo.png"));
 	    registerLogoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 	    //---- registerUsernameLabel ----
