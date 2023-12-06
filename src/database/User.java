@@ -86,6 +86,15 @@ public class User {
             }
         }
         
+        File progressFile = new File(username + "_progress.json");
+        if (!mealsFile.exists()) {
+            try ( FileWriter writer = new FileWriter(progressFile)) {
+                writer.write("[]");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
         List<User> userList;
         try ( FileReader reader = new FileReader(usersFile)) {
@@ -144,5 +153,16 @@ public class User {
     
     public String getPassword() {
         return this.password;
+    }
+    
+    public void saveProgress(Exercise exercise) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(exercise);
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(username + "_progress.json"))) {
+            writer.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
