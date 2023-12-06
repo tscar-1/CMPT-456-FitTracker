@@ -583,6 +583,7 @@ public class MainWindow {
             }
         }
 
+        exercisesPopulate(1, currentMuscleType);
         exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
         exercisesExercisesPanel.setVisible(true);
         mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
@@ -600,7 +601,8 @@ public class MainWindow {
                 break;
             }
         }
-
+        
+        exercisesPopulate(1, currentMuscleType);
         exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
         exercisesExercisesPanel.setVisible(true);
         mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
@@ -609,35 +611,155 @@ public class MainWindow {
     }
 
     private void exercisesBiceps(ActionEvent e) {
-	// TODO add your code here
+	currentMuscleType = 4;
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesPopulate(1, currentMuscleType);
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
     }
 
     private void exercisesCore(ActionEvent e) {
-	// TODO add your code here
+	currentMuscleType = 5;
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesPopulate(1, currentMuscleType);
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
     }
 
     private void exercisesBack(ActionEvent e) {
-	// TODO add your code here
+	currentMuscleType = 6;
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesPopulate(1, currentMuscleType);
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
     }
 
     private void exercisesForearms(ActionEvent e) {
-	// TODO add your code here
+	currentMuscleType = 7;
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesPopulate(1, currentMuscleType);
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
     }
 
     private void exercisesUpperLegs(ActionEvent e) {
-	// TODO add your code here
+	currentMuscleType = 8;
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesPopulate(1, currentMuscleType);
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
     }
 
     private void exercisesGlutes(ActionEvent e) {
-	// TODO add your code here
+	currentMuscleType = 9;
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesPopulate(1, currentMuscleType);
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
     }
 
     private void exercisesCardio(ActionEvent e) {
-	// TODO add your code here
+	currentMuscleType = 10;
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesPopulate(1, currentMuscleType);
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
     }
 
     private void exercisesLowerLegs(ActionEvent e) {
-	// TODO add your code here
+	currentMuscleType = 11;
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        exercisesPopulate(1, currentMuscleType);
+        exercisesExercisesPanel.setBounds(new Rectangle(new Point(6, 106), exercisesExercisesPanel.getPreferredSize()));
+        exercisesExercisesPanel.setVisible(true);
+        mainMenuPanel.add(exercisesExercisesPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
     }
 
     private void exercisesAll(ActionEvent e) {
