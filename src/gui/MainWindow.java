@@ -31,6 +31,8 @@ public class MainWindow {
     private Meal currentMeal;
     private int weightSetRowCount = 1;
     private int distanceSetRowCount = 1;
+    private int workoutWeightSetRowCount = 1;
+    private int workoutDistanceSetRowCount = 1;
 
     public MainWindow() {
         initComponents();
@@ -486,7 +488,7 @@ public class MainWindow {
             button.setHorizontalAlignment(SwingConstants.CENTER);
             button.setForeground(Color.white);
             button.setFont(button.getFont().deriveFont(button.getFont().getStyle() | Font.BOLD, button.getFont().getSize() + 10f));
-            button.addActionListener(e -> exerciseSelection(exercise));
+            button.addActionListener(e -> workoutsExerciseSelection(exercise));
             listPanel.add(button);
             totalHeight += 100;
         }
@@ -644,6 +646,37 @@ public class MainWindow {
         mainMenuPanel.repaint();
     }
     
+    private void workoutsExerciseSelection(Exercise exercise) {
+        int recordType = exercise.getRecordType();
+        Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+        
+        if (recordType == 1) {
+            currentExercise = exercise;
+            workoutsExerciseWeightPanel.setBounds(new Rectangle(new Point(6, 106), workoutsExerciseWeightPanel.getPreferredSize()));
+            workoutsExerciseWeightPanel.setVisible(true);
+            workoutsExerciseWeightTitleLabel.setText(exercise.getName());
+            mainMenuPanel.add(workoutsExerciseWeightPanel, BorderLayout.CENTER);
+            mainMenuPanel.revalidate();
+            mainMenuPanel.repaint();
+        }
+        else {
+            currentExercise = exercise;
+            workoutsExerciseDistancePanel.setBounds(new Rectangle(new Point(6, 106), workoutsExerciseDistancePanel.getPreferredSize()));
+            workoutsExerciseDistancePanel.setVisible(true);
+            workoutsExerciseDistanceTitleLabel.setText(exercise.getName());
+            mainMenuPanel.add(workoutsExerciseDistancePanel, BorderLayout.CENTER);
+            mainMenuPanel.revalidate();
+            mainMenuPanel.repaint();
+        }
+    }
+    
     private void foodSelection(Food food) {
         Component[] components = mainMenuPanel.getComponents();
 
@@ -678,35 +711,6 @@ public class MainWindow {
     //
     // Exercises Panels Buttons
     //
-    private void exercisesExercisesTopBarAll(ActionEvent e) {
-	exercisesPopulate(1, currentMuscleType);
-    }
-    
-    private void exercisesExercisesTopBarFT(ActionEvent e) {
-	exercisesPopulate(2, currentMuscleType);
-    }
-
-    private void exercisesExercisesTopBarMy(ActionEvent e) {
-	exercisesPopulate(3, currentMuscleType);
-    }
-    
-    private void exercisesExercisesTopBarBack(ActionEvent e) {
-        Component[] components = mainMenuPanel.getComponents();
-        
-        for (Component comp : components) {
-            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
-                mainMenuPanel.remove(comp);
-                break;
-            }
-        }
-
-        mainMenuExercisesPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuExercisesPanel.getPreferredSize()));
-        mainMenuPanel.add(mainMenuExercisesPanel);
-        mainMenuExercisesPanel.setVisible(true);
-        mainMenuPanel.revalidate();
-        mainMenuPanel.repaint();
-    }
-
     private void exercisesTriceps(ActionEvent e) {
         currentMuscleType = 1;
 	Component[] components = mainMenuPanel.getComponents();
@@ -932,6 +936,35 @@ public class MainWindow {
         mainMenuPanel.revalidate();
         mainMenuPanel.repaint();
     }
+    
+    private void exercisesExercisesTopBarAll(ActionEvent e) {
+	exercisesPopulate(1, currentMuscleType);
+    }
+    
+    private void exercisesExercisesTopBarFT(ActionEvent e) {
+	exercisesPopulate(2, currentMuscleType);
+    }
+
+    private void exercisesExercisesTopBarCus(ActionEvent e) {
+	exercisesPopulate(3, currentMuscleType);
+    }
+    
+    private void exercisesExercisesTopBarBack(ActionEvent e) {
+        Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuExercisesPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuExercisesPanel.getPreferredSize()));
+        mainMenuPanel.add(mainMenuExercisesPanel);
+        mainMenuExercisesPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
 
     private void exercisesWeightTopBarAdd(ActionEvent e) {
         weightSetRowCount++;
@@ -1061,7 +1094,7 @@ public class MainWindow {
         distanceSetsPanel.add(distanceField, "cell 1 " + distanceSetRowCount + ",alignx center,growx 0");
 
         JTextField durationField = new JTextField();
-        durationField.setName("weightSet" + distanceSetRowCount + "RepsField");
+        durationField.setName("distanceSet" + distanceSetRowCount + "RepsField");
         durationField.setHorizontalAlignment(SwingConstants.CENTER);
         durationField.setFont(distanceSet1DurationField.getFont().deriveFont(distanceSet1DurationField.getFont().getStyle() | Font.BOLD, distanceSet1DurationField.getFont().getSize() + 5f));
         durationField.setForeground(Color.white);
@@ -1236,6 +1269,217 @@ public class MainWindow {
         workoutsWorkoutsPanel.setBounds(new Rectangle(new Point(6, 106), workoutsWorkoutsPanel.getPreferredSize()));
         mainMenuPanel.add(workoutsWorkoutsPanel);
         workoutsWorkoutsPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+    
+    private void workoutsExerciseWeightTopBarAdd(ActionEvent e) {
+	workoutWeightSetRowCount++;
+        
+        JLabel setLabel = new JLabel();
+        setLabel.setName("workoutsExerciseWeightSet" + workoutWeightSetRowCount + "Label");
+        setLabel.setText("" + workoutWeightSetRowCount);
+        setLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        setLabel.setFont(workoutsExerciseWeightSet1Label.getFont().deriveFont(workoutsExerciseWeightSet1Label.getFont().getSize() + 2f));
+        workoutsExerciseWeightPanel.add(setLabel, "cell 0 " + workoutWeightSetRowCount);
+
+        JTextField weightField = new JTextField();
+        weightField.setName("workoutsExerciseWeightSet" + workoutWeightSetRowCount + "WeightField");
+        weightField.setHorizontalAlignment(SwingConstants.CENTER);
+        weightField.setFont(workoutsExerciseWeightSet1WeightField.getFont().deriveFont(workoutsExerciseWeightSet1WeightField.getFont().getStyle() | Font.BOLD, workoutsExerciseWeightSet1WeightField.getFont().getSize() + 5f));
+        weightField.setForeground(Color.white);
+        workoutsExerciseWeightPanel.add(weightField, "cell 1 " + workoutWeightSetRowCount + ",alignx center,growx 0");
+
+        JLabel xLabel = new JLabel();
+        xLabel.setName("workoutsExerciseWeightSet" + workoutWeightSetRowCount + "XLabel");
+        xLabel.setText("X");
+        xLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        xLabel.setFont(workoutsExerciseWeightSet1XLabel.getFont().deriveFont(workoutsExerciseWeightSet1XLabel.getFont().getSize() + 2f));
+        workoutsExerciseWeightPanel.add(xLabel, "cell 2 " + workoutWeightSetRowCount);
+
+        JTextField repsField = new JTextField();
+        repsField.setName("workoutsExerciseWeightSet" + workoutWeightSetRowCount + "RepsField");
+        repsField.setHorizontalAlignment(SwingConstants.CENTER);
+        repsField.setFont(workoutsExerciseWeightSet1RepsField.getFont().deriveFont(workoutsExerciseWeightSet1RepsField.getFont().getStyle() | Font.BOLD, workoutsExerciseWeightSet1RepsField.getFont().getSize() + 5f));
+        repsField.setForeground(Color.white);
+        workoutsExerciseWeightPanel.add(repsField, "cell 3 " + workoutWeightSetRowCount + ",alignx center,growx 0");
+        
+        workoutsExerciseWeightPanel.revalidate();
+        workoutsExerciseWeightPanel.repaint();
+    }
+
+    private void workoutsExerciseWeightTopBarRem(ActionEvent e) {
+	if (workoutWeightSetRowCount > 1) {
+            String[] componentsToRemove = {
+                "workoutsExerciseWeightSet" + workoutWeightSetRowCount + "Label",
+                "workoutsExerciseWeightSet" + workoutWeightSetRowCount + "WeightField",
+                "workoutsExerciseWeightSet" + workoutWeightSetRowCount + "XLabel",
+                "workoutsExerciseWeightSet" + workoutWeightSetRowCount + "RepsField"
+            };
+
+            for (String name : componentsToRemove) {
+                for (Component comp : workoutsExerciseWeightSetsPanel.getComponents()) {
+                    if (name.equals(comp.getName())) {
+                        workoutsExerciseWeightSetsPanel.remove(comp);
+                        break;
+                    }
+                }
+            }
+
+            workoutWeightSetRowCount--;
+
+            workoutsExerciseWeightSetsPanel.revalidate();
+            workoutsExerciseWeightSetsPanel.repaint();
+        }
+        else {
+            notificationShow("Cannot remove last set", "Button.focusedBorderColor");
+        }
+    }
+
+    private void workoutsExerciseWeightTopBarRec(ActionEvent e) {
+	Exercise exercise = currentExercise;
+        LocalDate date = LocalDate.now();
+
+        for (int i = 1; i <= workoutWeightSetRowCount; i++) {
+            String exerciseName = exercise.getName();
+            int exerciseRecordType = exercise.getRecordType();
+            int exerciseMuscleType = exercise.getMuscleType();
+            int exerciseSetNum = i;
+            int exerciseWeightAmt = 0;
+            int exerciseRepAmt = 0;
+
+            JTextField weightField = (JTextField) findComponentByName(workoutsExerciseWeightSetsPanel, "workoutsExerciseWeightSet" + i + "WeightField");
+            JTextField repsField = (JTextField) findComponentByName(workoutsExerciseWeightSetsPanel, "workoutsExerciseWeightSet" + i + "RepsField");
+            
+            try {
+                exerciseWeightAmt = Integer.parseInt(weightField.getText());
+                exerciseRepAmt = Integer.parseInt(repsField.getText());
+            } catch (NumberFormatException ex) {
+                notificationShow("Invalid input in set " + i, "Button.focusedBorderColor");
+                return;
+            }
+
+            currentUser.saveProgressExerciseWeight(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseWeightAmt, exerciseRepAmt);
+        }
+        
+        notificationShow("Exercise Recorded", "Actions.Red");
+    }
+    
+    private void workoutsExerciseWeightTopBarBack(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        workoutsExercisesPanel.setBounds(new Rectangle(new Point(6, 106), workoutsExercisesPanel.getPreferredSize()));
+        mainMenuPanel.add(workoutsExercisesPanel);
+        workoutsExercisesPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void workoutsExerciseDistanceTopBarAdd(ActionEvent e) {
+	workoutDistanceSetRowCount++;
+        
+        JLabel setLabel = new JLabel();
+        setLabel.setName("workoutsExerciseDistanceSet" + workoutDistanceSetRowCount + "Label");
+        setLabel.setText("" + workoutDistanceSetRowCount);
+        setLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        setLabel.setFont(workoutsExerciseDistanceSet1Label.getFont().deriveFont(workoutsExerciseDistanceSet1Label.getFont().getSize() + 2f));
+        workoutsExerciseDistanceSetsPanel.add(setLabel, "cell 0 " + workoutDistanceSetRowCount);
+
+        JTextField distanceField = new JTextField();
+        distanceField.setName("workoutsExerciseDistanceSet" + workoutDistanceSetRowCount + "WeightField");
+        distanceField.setHorizontalAlignment(SwingConstants.CENTER);
+        distanceField.setFont(workoutsExerciseDistanceSet1DistanceField.getFont().deriveFont(workoutsExerciseDistanceSet1DistanceField.getFont().getStyle() | Font.BOLD, workoutsExerciseDistanceSet1DistanceField.getFont().getSize() + 5f));
+        distanceField.setForeground(Color.white);
+        workoutsExerciseDistanceSetsPanel.add(distanceField, "cell 1 " + workoutDistanceSetRowCount + ",alignx center,growx 0");
+
+        JTextField durationField = new JTextField();
+        durationField.setName("workoutsExerciseDistanceSet" + workoutDistanceSetRowCount + "RepsField");
+        durationField.setHorizontalAlignment(SwingConstants.CENTER);
+        durationField.setFont(workoutsExerciseDistanceSet1DurationField.getFont().deriveFont(workoutsExerciseDistanceSet1DurationField.getFont().getStyle() | Font.BOLD, workoutsExerciseDistanceSet1DurationField.getFont().getSize() + 5f));
+        durationField.setForeground(Color.white);
+        workoutsExerciseDistanceSetsPanel.add(durationField, "cell 3 " + workoutDistanceSetRowCount + ",alignx center,growx 0");
+        
+        workoutsExerciseDistanceSetsPanel.revalidate();
+        workoutsExerciseDistanceSetsPanel.repaint();
+    }
+
+    private void workoutsExerciseDistanceTopBarRem(ActionEvent e) {
+	if (workoutDistanceSetRowCount > 1) {
+            String[] componentsToRemove = {
+                "workoutsExerciseWeightSet" + workoutDistanceSetRowCount + "Label",
+                "workoutsExerciseWeightSet" + workoutDistanceSetRowCount + "WeightField",
+                "workoutsExerciseWeightSet" + workoutDistanceSetRowCount + "XLabel",
+                "workoutsExerciseWeightSet" + workoutDistanceSetRowCount + "RepsField"
+            };
+
+            for (String name : componentsToRemove) {
+                for (Component comp : workoutsExerciseDistanceSetsPanel.getComponents()) {
+                    if (name.equals(comp.getName())) {
+                        workoutsExerciseDistanceSetsPanel.remove(comp);
+                        break;
+                    }
+                }
+            }
+
+            workoutDistanceSetRowCount--;
+
+            workoutsExerciseDistanceSetsPanel.revalidate();
+            workoutsExerciseDistanceSetsPanel.repaint();
+        }
+        else {
+            notificationShow("Cannot remove last set", "Button.focusedBorderColor");
+        }
+    }
+
+    private void workoutsExerciseDistanceTopBarRec(ActionEvent e) {
+	Exercise exercise = currentExercise;
+        LocalDate date = LocalDate.now();
+
+        for (int i = 1; i <= workoutDistanceSetRowCount; i++) {
+            String exerciseName = exercise.getName();
+            int exerciseRecordType = exercise.getRecordType();
+            int exerciseMuscleType = exercise.getMuscleType();
+            int exerciseSetNum = i;
+            int exerciseWeightAmt = 0;
+            int exerciseRepAmt = 0;
+
+            JTextField weightField = (JTextField) findComponentByName(workoutsExerciseDistanceSetsPanel, "workoutsExerciseDistanceSet" + i + "WeightField");
+            JTextField repsField = (JTextField) findComponentByName(workoutsExerciseDistanceSetsPanel, "workoutsExerciseDistanceSet" + i + "RepsField");
+            
+            try {
+                exerciseWeightAmt = Integer.parseInt(weightField.getText());
+                exerciseRepAmt = Integer.parseInt(repsField.getText());
+            } catch (NumberFormatException ex) {
+                notificationShow("Invalid input in set " + i, "Button.focusedBorderColor");
+                return;
+            }
+
+            currentUser.saveProgressExerciseWeight(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseWeightAmt, exerciseRepAmt);
+        }
+        
+        notificationShow("Exercise Recorded", "Actions.Red");
+    }
+    
+    private void workoutsExerciseDistanceTopBarBack(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        workoutsExercisesPanel.setBounds(new Rectangle(new Point(6, 106), workoutsExercisesPanel.getPreferredSize()));
+        mainMenuPanel.add(workoutsExercisesPanel);
+        workoutsExercisesPanel.setVisible(true);
         mainMenuPanel.revalidate();
         mainMenuPanel.repaint();
     }
@@ -1647,6 +1891,35 @@ public class MainWindow {
 	mealsFoodsTopBarBackButton = new JButton();
 	mealsMealTitleLabel = new JLabel();
 	mealsFoodsScrollPanel = new JScrollPane();
+	workoutsExerciseWeightPanel = new JPanel();
+	workoutsExerciseWeightTopPanel = new JPanel();
+	workoutsExerciseWeightTopBarBackButton = new JButton();
+	workoutsExerciseWeightTopBarAddButton = new JButton();
+	workoutsExerciseWeightTopBarRemButton = new JButton();
+	workoutsExerciseWeightTopBarRecButton = new JButton();
+	workoutsExerciseWeightTitleLabel = new JLabel();
+	workoutsExerciseWeightSetsPanel = new JPanel();
+	label20 = new JLabel();
+	label21 = new JLabel();
+	label22 = new JLabel();
+	workoutsExerciseWeightSet1Label = new JLabel();
+	workoutsExerciseWeightSet1WeightField = new JTextField();
+	workoutsExerciseWeightSet1XLabel = new JLabel();
+	workoutsExerciseWeightSet1RepsField = new JTextField();
+	workoutsExerciseDistancePanel = new JPanel();
+	exercisesDistanceTopPanel2 = new JPanel();
+	workoutsExerciseDistanceTopBarBackButton = new JButton();
+	workoutsExerciseDistanceTopBarAddButton = new JButton();
+	workoutsExerciseDistanceTopBarRemButton = new JButton();
+	workoutsExerciseDistanceTopBarRecButton = new JButton();
+	workoutsExerciseDistanceTitleLabel = new JLabel();
+	workoutsExerciseDistanceSetsPanel = new JPanel();
+	label29 = new JLabel();
+	label30 = new JLabel();
+	label31 = new JLabel();
+	workoutsExerciseDistanceSet1Label = new JLabel();
+	workoutsExerciseDistanceSet1DistanceField = new JTextField();
+	workoutsExerciseDistanceSet1DurationField = new JTextField();
 
 	//======== window ========
 	{
@@ -2452,7 +2725,7 @@ public class MainWindow {
 		exercisesExercisesTopBarCusButton.setText("CUSTOM EXERCISES");
 		exercisesExercisesTopBarCusButton.setForeground(Color.white);
 		exercisesExercisesTopBarCusButton.setFont(exercisesExercisesTopBarCusButton.getFont().deriveFont(exercisesExercisesTopBarCusButton.getFont().getStyle() | Font.BOLD));
-		exercisesExercisesTopBarCusButton.addActionListener(e -> exercisesExercisesTopBarMy(e));
+		exercisesExercisesTopBarCusButton.addActionListener(e -> exercisesExercisesTopBarCus(e));
 		exercisesExercisesTopPanel.add(exercisesExercisesTopBarCusButton, "cell 3 0");
 	    }
 	    exercisesExercisesPanel.add(exercisesExercisesTopPanel, "cell 0 0");
@@ -2495,10 +2768,7 @@ public class MainWindow {
 		exercisesWeightTopBarBackButton.setText("BACK");
 		exercisesWeightTopBarBackButton.setForeground(Color.white);
 		exercisesWeightTopBarBackButton.setFont(exercisesWeightTopBarBackButton.getFont().deriveFont(exercisesWeightTopBarBackButton.getFont().getStyle() | Font.BOLD));
-		exercisesWeightTopBarBackButton.addActionListener(e -> {
-			exercisesExercisesTopBarAll(e);
-			exercisesWeightTopBarBack(e);
-		});
+		exercisesWeightTopBarBackButton.addActionListener(e -> exercisesWeightTopBarBack(e));
 		exercisesWeightTopPanel.add(exercisesWeightTopBarBackButton, "cell 0 0,alignx left,growx 0");
 
 		//---- exercisesWeightTopBarAddButton ----
@@ -2632,10 +2902,7 @@ public class MainWindow {
 		exercisesDistanceTopBarBackButton.setText("BACK");
 		exercisesDistanceTopBarBackButton.setForeground(Color.white);
 		exercisesDistanceTopBarBackButton.setFont(exercisesDistanceTopBarBackButton.getFont().deriveFont(exercisesDistanceTopBarBackButton.getFont().getStyle() | Font.BOLD));
-		exercisesDistanceTopBarBackButton.addActionListener(e -> {
-			exercisesExercisesTopBarAll(e);
-			exercisesDistanceTopBarBack(e);
-		});
+		exercisesDistanceTopBarBackButton.addActionListener(e -> exercisesDistanceTopBarBack(e));
 		exercisesDistanceTopPanel.add(exercisesDistanceTopBarBackButton, "cell 0 0,alignx left,growx 0");
 
 		//---- exercisesDistanceTopBarAddButton ----
@@ -3119,6 +3386,265 @@ public class MainWindow {
 	    }
 	    mealsFoodsPanel.add(mealsFoodsScrollPanel, "cell 0 1");
 	}
+
+	//======== workoutsExerciseWeightPanel ========
+	{
+	    workoutsExerciseWeightPanel.setPreferredSize(new Dimension(988, 638));
+	    workoutsExerciseWeightPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]",
+		// rows
+		"[37,top]" +
+		"[]" +
+		"[]" +
+		"[grow,fill]"));
+
+	    //======== workoutsExerciseWeightTopPanel ========
+	    {
+		workoutsExerciseWeightTopPanel.setBackground(new Color(0x1e2428));
+		workoutsExerciseWeightTopPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[]"));
+
+		//---- workoutsExerciseWeightTopBarBackButton ----
+		workoutsExerciseWeightTopBarBackButton.setText("BACK");
+		workoutsExerciseWeightTopBarBackButton.setForeground(Color.white);
+		workoutsExerciseWeightTopBarBackButton.setFont(workoutsExerciseWeightTopBarBackButton.getFont().deriveFont(workoutsExerciseWeightTopBarBackButton.getFont().getStyle() | Font.BOLD));
+		workoutsExerciseWeightTopBarBackButton.addActionListener(e -> workoutsExerciseWeightTopBarBack(e));
+		workoutsExerciseWeightTopPanel.add(workoutsExerciseWeightTopBarBackButton, "cell 0 0,alignx left,growx 0");
+
+		//---- workoutsExerciseWeightTopBarAddButton ----
+		workoutsExerciseWeightTopBarAddButton.setText("ADD SET");
+		workoutsExerciseWeightTopBarAddButton.setFont(workoutsExerciseWeightTopBarAddButton.getFont().deriveFont(workoutsExerciseWeightTopBarAddButton.getFont().getStyle() | Font.BOLD));
+		workoutsExerciseWeightTopBarAddButton.setForeground(Color.white);
+		workoutsExerciseWeightTopBarAddButton.addActionListener(e -> workoutsExerciseWeightTopBarAdd(e));
+		workoutsExerciseWeightTopPanel.add(workoutsExerciseWeightTopBarAddButton, "cell 2 0");
+
+		//---- workoutsExerciseWeightTopBarRemButton ----
+		workoutsExerciseWeightTopBarRemButton.setText("REMOVE SET");
+		workoutsExerciseWeightTopBarRemButton.setFont(workoutsExerciseWeightTopBarRemButton.getFont().deriveFont(workoutsExerciseWeightTopBarRemButton.getFont().getStyle() | Font.BOLD));
+		workoutsExerciseWeightTopBarRemButton.setForeground(Color.white);
+		workoutsExerciseWeightTopBarRemButton.addActionListener(e -> workoutsExerciseWeightTopBarRem(e));
+		workoutsExerciseWeightTopPanel.add(workoutsExerciseWeightTopBarRemButton, "cell 3 0");
+
+		//---- workoutsExerciseWeightTopBarRecButton ----
+		workoutsExerciseWeightTopBarRecButton.setText("RECORD EXERCISE");
+		workoutsExerciseWeightTopBarRecButton.setForeground(Color.white);
+		workoutsExerciseWeightTopBarRecButton.setFont(workoutsExerciseWeightTopBarRecButton.getFont().deriveFont(workoutsExerciseWeightTopBarRecButton.getFont().getStyle() | Font.BOLD));
+		workoutsExerciseWeightTopBarRecButton.addActionListener(e -> workoutsExerciseWeightTopBarRec(e));
+		workoutsExerciseWeightTopPanel.add(workoutsExerciseWeightTopBarRecButton, "cell 4 0");
+	    }
+	    workoutsExerciseWeightPanel.add(workoutsExerciseWeightTopPanel, "cell 0 0");
+
+	    //---- workoutsExerciseWeightTitleLabel ----
+	    workoutsExerciseWeightTitleLabel.setText("Exercise");
+	    workoutsExerciseWeightTitleLabel.setFont(workoutsExerciseWeightTitleLabel.getFont().deriveFont(workoutsExerciseWeightTitleLabel.getFont().getStyle() | Font.BOLD, workoutsExerciseWeightTitleLabel.getFont().getSize() + 10f));
+	    workoutsExerciseWeightTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    workoutsExerciseWeightTitleLabel.setForeground(Color.white);
+	    workoutsExerciseWeightPanel.add(workoutsExerciseWeightTitleLabel, "cell 0 2");
+
+	    //======== workoutsExerciseWeightSetsPanel ========
+	    {
+		workoutsExerciseWeightSetsPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[center]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]"));
+
+		//---- label20 ----
+		label20.setText("Sets");
+		label20.setHorizontalAlignment(SwingConstants.CENTER);
+		label20.setForeground(UIManager.getColor("#545556"));
+		label20.setFont(label20.getFont().deriveFont(label20.getFont().getStyle() | Font.BOLD, label20.getFont().getSize() + 2f));
+		workoutsExerciseWeightSetsPanel.add(label20, "cell 0 0");
+
+		//---- label21 ----
+		label21.setText("Weight (lbs)");
+		label21.setHorizontalAlignment(SwingConstants.CENTER);
+		label21.setForeground(UIManager.getColor("#545556"));
+		label21.setFont(label21.getFont().deriveFont(label21.getFont().getStyle() | Font.BOLD, label21.getFont().getSize() + 2f));
+		workoutsExerciseWeightSetsPanel.add(label21, "cell 1 0");
+
+		//---- label22 ----
+		label22.setText("Reps");
+		label22.setHorizontalAlignment(SwingConstants.CENTER);
+		label22.setForeground(UIManager.getColor("#545556"));
+		label22.setFont(label22.getFont().deriveFont(label22.getFont().getStyle() | Font.BOLD, label22.getFont().getSize() + 2f));
+		workoutsExerciseWeightSetsPanel.add(label22, "cell 3 0");
+
+		//---- workoutsExerciseWeightSet1Label ----
+		workoutsExerciseWeightSet1Label.setText("1");
+		workoutsExerciseWeightSet1Label.setHorizontalAlignment(SwingConstants.CENTER);
+		workoutsExerciseWeightSet1Label.setFont(workoutsExerciseWeightSet1Label.getFont().deriveFont(workoutsExerciseWeightSet1Label.getFont().getSize() + 2f));
+		workoutsExerciseWeightSetsPanel.add(workoutsExerciseWeightSet1Label, "cell 0 1");
+
+		//---- workoutsExerciseWeightSet1WeightField ----
+		workoutsExerciseWeightSet1WeightField.setHorizontalAlignment(SwingConstants.CENTER);
+		workoutsExerciseWeightSet1WeightField.setFont(workoutsExerciseWeightSet1WeightField.getFont().deriveFont(workoutsExerciseWeightSet1WeightField.getFont().getStyle() | Font.BOLD, workoutsExerciseWeightSet1WeightField.getFont().getSize() + 5f));
+		workoutsExerciseWeightSet1WeightField.setForeground(Color.white);
+		weightSet1WeightField.setName("weightSet1WeightField");
+		workoutsExerciseWeightSetsPanel.add(workoutsExerciseWeightSet1WeightField, "cell 1 1,alignx center,growx 0");
+
+		//---- workoutsExerciseWeightSet1XLabel ----
+		workoutsExerciseWeightSet1XLabel.setText("X");
+		workoutsExerciseWeightSet1XLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		workoutsExerciseWeightSet1XLabel.setFont(workoutsExerciseWeightSet1XLabel.getFont().deriveFont(workoutsExerciseWeightSet1XLabel.getFont().getSize() + 2f));
+		workoutsExerciseWeightSetsPanel.add(workoutsExerciseWeightSet1XLabel, "cell 2 1");
+
+		//---- workoutsExerciseWeightSet1RepsField ----
+		workoutsExerciseWeightSet1RepsField.setHorizontalAlignment(SwingConstants.CENTER);
+		workoutsExerciseWeightSet1RepsField.setFont(workoutsExerciseWeightSet1RepsField.getFont().deriveFont(workoutsExerciseWeightSet1RepsField.getFont().getStyle() | Font.BOLD, workoutsExerciseWeightSet1RepsField.getFont().getSize() + 5f));
+		workoutsExerciseWeightSet1RepsField.setForeground(Color.white);
+		weightSet1RepsField.setName("weightSet1RepsField");
+		workoutsExerciseWeightSetsPanel.add(workoutsExerciseWeightSet1RepsField, "cell 3 1,alignx center,growx 0");
+	    }
+	    workoutsExerciseWeightPanel.add(workoutsExerciseWeightSetsPanel, "cell 0 3");
+	}
+
+	//======== workoutsExerciseDistancePanel ========
+	{
+	    workoutsExerciseDistancePanel.setPreferredSize(new Dimension(988, 638));
+	    workoutsExerciseDistancePanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]",
+		// rows
+		"[37,top]" +
+		"[]" +
+		"[]" +
+		"[grow,fill]"));
+
+	    //======== exercisesDistanceTopPanel2 ========
+	    {
+		exercisesDistanceTopPanel2.setBackground(new Color(0x1e2428));
+		exercisesDistanceTopPanel2.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[]"));
+
+		//---- workoutsExerciseDistanceTopBarBackButton ----
+		workoutsExerciseDistanceTopBarBackButton.setText("BACK");
+		workoutsExerciseDistanceTopBarBackButton.setForeground(Color.white);
+		workoutsExerciseDistanceTopBarBackButton.setFont(workoutsExerciseDistanceTopBarBackButton.getFont().deriveFont(workoutsExerciseDistanceTopBarBackButton.getFont().getStyle() | Font.BOLD));
+		workoutsExerciseDistanceTopBarBackButton.addActionListener(e -> workoutsExerciseDistanceTopBarBack(e));
+		exercisesDistanceTopPanel2.add(workoutsExerciseDistanceTopBarBackButton, "cell 0 0,alignx left,growx 0");
+
+		//---- workoutsExerciseDistanceTopBarAddButton ----
+		workoutsExerciseDistanceTopBarAddButton.setText("ADD SET");
+		workoutsExerciseDistanceTopBarAddButton.setFont(workoutsExerciseDistanceTopBarAddButton.getFont().deriveFont(workoutsExerciseDistanceTopBarAddButton.getFont().getStyle() | Font.BOLD));
+		workoutsExerciseDistanceTopBarAddButton.setForeground(Color.white);
+		workoutsExerciseDistanceTopBarAddButton.addActionListener(e -> workoutsExerciseDistanceTopBarAdd(e));
+		exercisesDistanceTopPanel2.add(workoutsExerciseDistanceTopBarAddButton, "cell 2 0");
+
+		//---- workoutsExerciseDistanceTopBarRemButton ----
+		workoutsExerciseDistanceTopBarRemButton.setText("REMOVE SET");
+		workoutsExerciseDistanceTopBarRemButton.setFont(workoutsExerciseDistanceTopBarRemButton.getFont().deriveFont(workoutsExerciseDistanceTopBarRemButton.getFont().getStyle() | Font.BOLD));
+		workoutsExerciseDistanceTopBarRemButton.setForeground(Color.white);
+		workoutsExerciseDistanceTopBarRemButton.addActionListener(e -> workoutsExerciseDistanceTopBarRem(e));
+		exercisesDistanceTopPanel2.add(workoutsExerciseDistanceTopBarRemButton, "cell 3 0");
+
+		//---- workoutsExerciseDistanceTopBarRecButton ----
+		workoutsExerciseDistanceTopBarRecButton.setText("RECORD EXERCISE");
+		workoutsExerciseDistanceTopBarRecButton.setFont(workoutsExerciseDistanceTopBarRecButton.getFont().deriveFont(workoutsExerciseDistanceTopBarRecButton.getFont().getStyle() | Font.BOLD));
+		workoutsExerciseDistanceTopBarRecButton.setForeground(Color.white);
+		workoutsExerciseDistanceTopBarRecButton.addActionListener(e -> workoutsExerciseDistanceTopBarRec(e));
+		exercisesDistanceTopPanel2.add(workoutsExerciseDistanceTopBarRecButton, "cell 4 0");
+	    }
+	    workoutsExerciseDistancePanel.add(exercisesDistanceTopPanel2, "cell 0 0");
+
+	    //---- workoutsExerciseDistanceTitleLabel ----
+	    workoutsExerciseDistanceTitleLabel.setText("Exercise");
+	    workoutsExerciseDistanceTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    workoutsExerciseDistanceTitleLabel.setFont(workoutsExerciseDistanceTitleLabel.getFont().deriveFont(workoutsExerciseDistanceTitleLabel.getFont().getStyle() | Font.BOLD, workoutsExerciseDistanceTitleLabel.getFont().getSize() + 10f));
+	    workoutsExerciseDistanceTitleLabel.setForeground(Color.white);
+	    workoutsExerciseDistancePanel.add(workoutsExerciseDistanceTitleLabel, "cell 0 2");
+
+	    //======== workoutsExerciseDistanceSetsPanel ========
+	    {
+		workoutsExerciseDistanceSetsPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[center]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]" +
+		    "[top]"));
+
+		//---- label29 ----
+		label29.setText("Sets");
+		label29.setHorizontalAlignment(SwingConstants.CENTER);
+		label29.setForeground(UIManager.getColor("#545556"));
+		label29.setFont(label29.getFont().deriveFont(label29.getFont().getStyle() | Font.BOLD, label29.getFont().getSize() + 2f));
+		workoutsExerciseDistanceSetsPanel.add(label29, "cell 0 0");
+
+		//---- label30 ----
+		label30.setText("Distance (mi)");
+		label30.setHorizontalAlignment(SwingConstants.CENTER);
+		label30.setForeground(UIManager.getColor("#545556"));
+		label30.setFont(label30.getFont().deriveFont(label30.getFont().getStyle() | Font.BOLD, label30.getFont().getSize() + 2f));
+		workoutsExerciseDistanceSetsPanel.add(label30, "cell 1 0");
+
+		//---- label31 ----
+		label31.setText("Duration (min)");
+		label31.setHorizontalAlignment(SwingConstants.CENTER);
+		label31.setForeground(UIManager.getColor("#545556"));
+		label31.setFont(label31.getFont().deriveFont(label31.getFont().getStyle() | Font.BOLD, label31.getFont().getSize() + 2f));
+		workoutsExerciseDistanceSetsPanel.add(label31, "cell 2 0");
+
+		//---- workoutsExerciseDistanceSet1Label ----
+		workoutsExerciseDistanceSet1Label.setText("1");
+		workoutsExerciseDistanceSet1Label.setHorizontalAlignment(SwingConstants.CENTER);
+		workoutsExerciseDistanceSet1Label.setFont(workoutsExerciseDistanceSet1Label.getFont().deriveFont(workoutsExerciseDistanceSet1Label.getFont().getSize() + 2f));
+		workoutsExerciseDistanceSetsPanel.add(workoutsExerciseDistanceSet1Label, "cell 0 1");
+
+		//---- workoutsExerciseDistanceSet1DistanceField ----
+		workoutsExerciseDistanceSet1DistanceField.setHorizontalAlignment(SwingConstants.CENTER);
+		workoutsExerciseDistanceSet1DistanceField.setFont(workoutsExerciseDistanceSet1DistanceField.getFont().deriveFont(workoutsExerciseDistanceSet1DistanceField.getFont().getStyle() | Font.BOLD, workoutsExerciseDistanceSet1DistanceField.getFont().getSize() + 5f));
+		workoutsExerciseDistanceSet1DistanceField.setForeground(Color.white);
+		workoutsExerciseDistanceSetsPanel.add(workoutsExerciseDistanceSet1DistanceField, "cell 1 1,alignx center,growx 0");
+
+		//---- workoutsExerciseDistanceSet1DurationField ----
+		workoutsExerciseDistanceSet1DurationField.setHorizontalAlignment(SwingConstants.CENTER);
+		workoutsExerciseDistanceSet1DurationField.setFont(workoutsExerciseDistanceSet1DurationField.getFont().deriveFont(workoutsExerciseDistanceSet1DurationField.getFont().getStyle() | Font.BOLD, workoutsExerciseDistanceSet1DurationField.getFont().getSize() + 5f));
+		workoutsExerciseDistanceSet1DurationField.setForeground(Color.white);
+		workoutsExerciseDistanceSetsPanel.add(workoutsExerciseDistanceSet1DurationField, "cell 2 1,alignx center,growx 0");
+	    }
+	    workoutsExerciseDistancePanel.add(workoutsExerciseDistanceSetsPanel, "cell 0 3");
+	}
 	// JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -3275,5 +3801,34 @@ public class MainWindow {
     private JButton mealsFoodsTopBarBackButton;
     private JLabel mealsMealTitleLabel;
     private JScrollPane mealsFoodsScrollPanel;
+    private JPanel workoutsExerciseWeightPanel;
+    private JPanel workoutsExerciseWeightTopPanel;
+    private JButton workoutsExerciseWeightTopBarBackButton;
+    private JButton workoutsExerciseWeightTopBarAddButton;
+    private JButton workoutsExerciseWeightTopBarRemButton;
+    private JButton workoutsExerciseWeightTopBarRecButton;
+    private JLabel workoutsExerciseWeightTitleLabel;
+    private JPanel workoutsExerciseWeightSetsPanel;
+    private JLabel label20;
+    private JLabel label21;
+    private JLabel label22;
+    private JLabel workoutsExerciseWeightSet1Label;
+    private JTextField workoutsExerciseWeightSet1WeightField;
+    private JLabel workoutsExerciseWeightSet1XLabel;
+    private JTextField workoutsExerciseWeightSet1RepsField;
+    private JPanel workoutsExerciseDistancePanel;
+    private JPanel exercisesDistanceTopPanel2;
+    private JButton workoutsExerciseDistanceTopBarBackButton;
+    private JButton workoutsExerciseDistanceTopBarAddButton;
+    private JButton workoutsExerciseDistanceTopBarRemButton;
+    private JButton workoutsExerciseDistanceTopBarRecButton;
+    private JLabel workoutsExerciseDistanceTitleLabel;
+    private JPanel workoutsExerciseDistanceSetsPanel;
+    private JLabel label29;
+    private JLabel label30;
+    private JLabel label31;
+    private JLabel workoutsExerciseDistanceSet1Label;
+    private JTextField workoutsExerciseDistanceSet1DistanceField;
+    private JTextField workoutsExerciseDistanceSet1DurationField;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
