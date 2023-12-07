@@ -1,81 +1,21 @@
 [
   {
-    "mainMeal": "Eggs",
-    "side": " Avocado",
-    "drink": "Orange Juice",
-    "Calories": "500"
-  },
-  {
-    "mainMeal": "Burger",
-    "side": "Fries",
-    "drink": "Water",
-    "Calories": "750"
-  },
-  {
-    "mainMeal": "Eggs",
-    "side": " Avocado",
-    "drink": "Orange Juice",
-    "Calories": "950"
-  },
-  {
-    "mainMeal": "Eggs",
-    "side": " Bacon",
-    "drink": "Apple Juice",
-    "Calories": "1020",
-  {
-    "mainMeal": "Eggs",
-    "side": "Sausage",
-    "drink": "Milk",
-    "Calories": "1100"
-  },
-  {
-    "mainMeal": "Frosted Flakes",
-    "side": "Strawberries",
-    "drink": "Water",
-    "Calories": "450"
-  },
-  {
-    "mainMeal": "Corn Flakes",
-    "side": "Banana",
-    "drink": "Orange Juice",
-    "Calories": "600"
-  },
-  {
-    "mainMeal": "Eggs",
-    "side": "English Muffin",
-    "drink": "Orange Juice",
-    "Calories": "725"
-  },
-  {
-    "mainMeal": "Eggs",
-    "side": "Turkey Bacon",
-    "drink": "Orange Juice",
-    "Calories": "800"
-  },{
-    "mainMeal": "Pancakes",
-    "side": "Bacon",
-    "drink": "Orange Juice",
-    "Calories": "1100"
-  },{
-    "mainMeal": "Pancakes",
-    "side": "Sausage",
-    "drink": "Orange Juice",
-    "Calories": "1150"
-  },{
-    "mainMeal": "Waffles",
-    "side": "Bacon",
-    "drink": "Orange Juice",
-    "Calories": "1050"
-  },{
-    "mainMeal": "Waffles",
-    "side": "Sausage",
-    "drink": "Orange Juice",
-    "Calories": "1200"
-  },
-  {
-    "mainMeal": "Steak",
-    "side": "Asparagus",
-    "drink": "Water",
-    "Calories": "650"
+    "name": "Chicken Breast with Rice",
+    "foods": [
+      {
+        "name": "Chicken Breast",
+        "calories": 120,
+        "proteins": 26,
+        "carbohydrates": 0,
+        "fats": 5
+      },
+      {
+        "name": "White Rice",
+        "calories": 205,
+        "proteins": 4.3,
+        "carbohydrates": 45,
+        "fats": 0.4
+      }
+    ]
   }
 ]
