@@ -1,0 +1,37 @@
+[
+  {
+    "date": "2023-12-06",
+    "exercises": [
+      {
+        "name": "Dip",
+        "recordType": 1,
+        "muscleType": 1,
+        "weight": 32,
+        "set": 1,
+        "reps": 421,
+        "distance": 0.0,
+        "duration": 0.0
+      },
+      {
+        "name": "Dip",
+        "recordType": 1,
+        "muscleType": 1,
+        "weight": 32,
+        "set": 2,
+        "reps": 2,
+        "distance": 0.0,
+        "duration": 0.0
+      },
+      {
+        "name": "Dip",
+        "recordType": 1,
+        "muscleType": 1,
+        "weight": 123,
+        "set": 3,
+        "reps": 1,
+        "distance": 0.0,
+        "duration": 0.0
+      }
+    ]
+  }
+]
