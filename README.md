@@ -29,6 +29,7 @@ Create a Java with Ant project in NetBeans (we recommend naming it "FitTracker")
 This repo comes with a premade user for testing purposes. The user's credentials are:
 
 Username: tester
+
 Password: abcABC123
 
 ## Dependencies
