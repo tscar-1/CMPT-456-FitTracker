@@ -1,1 +1,31 @@
-[]
+[
+  {
+    "name": "Chest Day",
+    "exercises": [
+      {
+        "name": "Bench Press",
+        "recordType": 1,
+        "muscleType": 2,
+        "set": 1,
+        "weight": 200,
+        "reps": 8
+      },
+      {
+        "name": "Fly",
+        "recordType": 1,
+        "muscleType": 2,
+        "set": 1,
+        "weight": 100,
+        "reps": 8
+      },
+      {
+        "name": "Incline Bench Press",
+        "recordType": 1,
+        "muscleType": 2,
+        "set": 1,
+        "weight": 150,
+        "reps": 8
+      }
+    ]
+  }
+]
