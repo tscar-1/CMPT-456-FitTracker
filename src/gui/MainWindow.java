@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.intellij.uiDesigner.core.*;
 import net.miginfocom.swing.*;
@@ -1188,6 +1189,75 @@ public class MainWindow {
         mainMenuPanel.revalidate();
         mainMenuPanel.repaint();
     }
+    
+    private void exercisesCustomTopBarAdd(ActionEvent e) {
+        String username = currentUser.getUsername();
+	String name = "(Custom) " + exerciseCustomNameField.getText();
+        int recordType = 1;
+        int muscleType = 1;
+        
+        File exercisesFile = new File(username + "_exercises.json");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        java.util.List<Exercise> exercises;
+        try (FileReader reader = new FileReader(exercisesFile)) {
+            Type exerciseListType = new TypeToken<ArrayList<Exercise>>() {}.getType();
+            exercises = gson.fromJson(reader, exerciseListType);
+        } catch (IOException ex) {
+            exercises = new ArrayList<>();
+        }
+        
+        if (exerciseCustomWeightRButton.isSelected()) {
+            recordType = 1;
+        }
+        else if (exerciseCustomDistanceRButton.isSelected()) {
+            recordType = 2;
+        }
+        
+        if (exerciseCustomTricepsRButton.isSelected()) {
+            muscleType = 1;
+        }
+        else if (exerciseCustomChestRButton.isSelected()) {
+            muscleType = 2;
+        }
+        else if (exerciseCustomShouldersRButton.isSelected()) {
+            muscleType = 3;
+        }
+        else if (exerciseCustomBicepsRButton.isSelected()) {
+            muscleType = 4;
+        }
+        else if (exerciseCustomCoreRButton.isSelected()) {
+            muscleType = 5;
+        }
+        else if (exerciseCustomBackRButton.isSelected()) {
+            muscleType = 6;
+        }
+        else if (exerciseCustomForearmsRButton.isSelected()) {
+            muscleType = 7;
+        }
+        else if (exerciseCustomUpperLegsRButton.isSelected()) {
+            muscleType = 8;
+        }
+        else if (exerciseCustomGlutesRButton.isSelected()) {
+            muscleType = 9;
+        }
+        else if (exerciseCustomCardioRButton.isSelected()) {
+            muscleType = 10;
+        }
+        else if (exerciseCustomLowerLegsRButton.isSelected()) {
+            muscleType = 11;
+        }
+
+        Exercise newExercise = new Exercise(name, recordType, muscleType);
+        exercises.add(newExercise);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(exercisesFile))) {
+            gson.toJson(exercises, writer);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+        notificationShow("Exercise Added", "Actions.Red");
+    }
 
     private void exercisesCustomTopBarBack(ActionEvent e) {
 	Component[] components = mainMenuPanel.getComponents();
@@ -1847,22 +1917,22 @@ public class MainWindow {
 	exercisesCustomTopBarAddButton = new JButton();
 	customFieldsPanel = new JPanel();
 	label1 = new JLabel();
-	textField1 = new JTextField();
+	exerciseCustomNameField = new JTextField();
 	label2 = new JLabel();
-	toggleButton1 = new JToggleButton();
-	toggleButton2 = new JToggleButton();
+	exerciseCustomWeightRButton = new JRadioButton();
+	exerciseCustomDistanceRButton = new JRadioButton();
 	label3 = new JLabel();
-	toggleButton3 = new JToggleButton();
-	toggleButton4 = new JToggleButton();
-	toggleButton5 = new JToggleButton();
-	toggleButton6 = new JToggleButton();
-	toggleButton7 = new JToggleButton();
-	toggleButton8 = new JToggleButton();
-	toggleButton9 = new JToggleButton();
-	toggleButton10 = new JToggleButton();
-	toggleButton11 = new JToggleButton();
-	toggleButton12 = new JToggleButton();
-	toggleButton13 = new JToggleButton();
+	exerciseCustomTricepsRButton = new JRadioButton();
+	exerciseCustomChestRButton = new JRadioButton();
+	exerciseCustomShouldersRButton = new JRadioButton();
+	exerciseCustomBicepsRButton = new JRadioButton();
+	exerciseCustomCoreRButton = new JRadioButton();
+	exerciseCustomBackRButton = new JRadioButton();
+	exerciseCustomForearmsRButton = new JRadioButton();
+	exerciseCustomUpperLegsRButton = new JRadioButton();
+	exerciseCustomGlutesRButton = new JRadioButton();
+	exerciseCustomCardioRButton = new JRadioButton();
+	exerciseCustomLowerLegsRButton = new JRadioButton();
 	workoutsWorkoutsPanel = new JPanel();
 	workoutsWorkoutsTopPanel = new JPanel();
 	workoutsWorkoutsTopBarBackButton = new JButton();
@@ -3031,6 +3101,7 @@ public class MainWindow {
 		exercisesCustomTopBarAddButton.setText("ADD EXERCISE");
 		exercisesCustomTopBarAddButton.setFont(exercisesCustomTopBarAddButton.getFont().deriveFont(exercisesCustomTopBarAddButton.getFont().getStyle() | Font.BOLD));
 		exercisesCustomTopBarAddButton.setForeground(Color.white);
+		exercisesCustomTopBarAddButton.addActionListener(e -> exercisesCustomTopBarAdd(e));
 		exercisesExercisesTopPanel2.add(exercisesCustomTopBarAddButton, "cell 3 0");
 	    }
 	    exercisesCustomPanel.add(exercisesExercisesTopPanel2, "cell 0 0");
@@ -3062,7 +3133,10 @@ public class MainWindow {
 		label1.setForeground(Color.white);
 		label1.setHorizontalAlignment(SwingConstants.CENTER);
 		customFieldsPanel.add(label1, "cell 0 0");
-		customFieldsPanel.add(textField1, "cell 1 0 4 1");
+
+		//---- exerciseCustomNameField ----
+		exerciseCustomNameField.setText("Exercise");
+		customFieldsPanel.add(exerciseCustomNameField, "cell 1 0 4 1");
 
 		//---- label2 ----
 		label2.setText("Record Type:");
@@ -3071,13 +3145,14 @@ public class MainWindow {
 		label2.setHorizontalAlignment(SwingConstants.CENTER);
 		customFieldsPanel.add(label2, "cell 0 1");
 
-		//---- toggleButton1 ----
-		toggleButton1.setText("Weight-based");
-		customFieldsPanel.add(toggleButton1, "cell 1 1 2 1");
+		//---- exerciseCustomWeightRButton ----
+		exerciseCustomWeightRButton.setText("Weight-based");
+		exerciseCustomWeightRButton.setSelected(true);
+		customFieldsPanel.add(exerciseCustomWeightRButton, "cell 1 1 2 1,alignx center,growx 0");
 
-		//---- toggleButton2 ----
-		toggleButton2.setText("Distance-based");
-		customFieldsPanel.add(toggleButton2, "cell 3 1 2 1");
+		//---- exerciseCustomDistanceRButton ----
+		exerciseCustomDistanceRButton.setText("Distance-based");
+		customFieldsPanel.add(exerciseCustomDistanceRButton, "cell 3 1 2 1,alignx center,growx 0");
 
 		//---- label3 ----
 		label3.setText("Muscle Group:");
@@ -3086,49 +3161,50 @@ public class MainWindow {
 		label3.setHorizontalAlignment(SwingConstants.CENTER);
 		customFieldsPanel.add(label3, "cell 0 2");
 
-		//---- toggleButton3 ----
-		toggleButton3.setText("Triceps");
-		customFieldsPanel.add(toggleButton3, "cell 1 2");
+		//---- exerciseCustomTricepsRButton ----
+		exerciseCustomTricepsRButton.setText("Triceps");
+		exerciseCustomTricepsRButton.setSelected(true);
+		customFieldsPanel.add(exerciseCustomTricepsRButton, "cell 1 2,alignx center,growx 0");
 
-		//---- toggleButton4 ----
-		toggleButton4.setText("Chest");
-		customFieldsPanel.add(toggleButton4, "cell 2 2");
+		//---- exerciseCustomChestRButton ----
+		exerciseCustomChestRButton.setText("Chest");
+		customFieldsPanel.add(exerciseCustomChestRButton, "cell 2 2,alignx center,growx 0");
 
-		//---- toggleButton5 ----
-		toggleButton5.setText("Shoulders");
-		customFieldsPanel.add(toggleButton5, "cell 3 2");
+		//---- exerciseCustomShouldersRButton ----
+		exerciseCustomShouldersRButton.setText("Shoulders");
+		customFieldsPanel.add(exerciseCustomShouldersRButton, "cell 3 2,alignx center,growx 0");
 
-		//---- toggleButton6 ----
-		toggleButton6.setText("Biceps");
-		customFieldsPanel.add(toggleButton6, "cell 4 2");
+		//---- exerciseCustomBicepsRButton ----
+		exerciseCustomBicepsRButton.setText("Biceps");
+		customFieldsPanel.add(exerciseCustomBicepsRButton, "cell 4 2,alignx center,growx 0");
 
-		//---- toggleButton7 ----
-		toggleButton7.setText("Core");
-		customFieldsPanel.add(toggleButton7, "cell 1 3");
+		//---- exerciseCustomCoreRButton ----
+		exerciseCustomCoreRButton.setText("Core");
+		customFieldsPanel.add(exerciseCustomCoreRButton, "cell 1 3,alignx center,growx 0");
 
-		//---- toggleButton8 ----
-		toggleButton8.setText("Back");
-		customFieldsPanel.add(toggleButton8, "cell 2 3");
+		//---- exerciseCustomBackRButton ----
+		exerciseCustomBackRButton.setText("Back");
+		customFieldsPanel.add(exerciseCustomBackRButton, "cell 2 3,alignx center,growx 0");
 
-		//---- toggleButton9 ----
-		toggleButton9.setText("Forearms");
-		customFieldsPanel.add(toggleButton9, "cell 3 3");
+		//---- exerciseCustomForearmsRButton ----
+		exerciseCustomForearmsRButton.setText("Forearms");
+		customFieldsPanel.add(exerciseCustomForearmsRButton, "cell 3 3,alignx center,growx 0");
 
-		//---- toggleButton10 ----
-		toggleButton10.setText("Upper Legs");
-		customFieldsPanel.add(toggleButton10, "cell 4 3");
+		//---- exerciseCustomUpperLegsRButton ----
+		exerciseCustomUpperLegsRButton.setText("Upper Legs");
+		customFieldsPanel.add(exerciseCustomUpperLegsRButton, "cell 4 3,alignx center,growx 0");
 
-		//---- toggleButton11 ----
-		toggleButton11.setText("Glutes");
-		customFieldsPanel.add(toggleButton11, "cell 1 4");
+		//---- exerciseCustomGlutesRButton ----
+		exerciseCustomGlutesRButton.setText("Glutes");
+		customFieldsPanel.add(exerciseCustomGlutesRButton, "cell 1 4,alignx center,growx 0");
 
-		//---- toggleButton12 ----
-		toggleButton12.setText("Cardio");
-		customFieldsPanel.add(toggleButton12, "cell 2 4");
+		//---- exerciseCustomCardioRButton ----
+		exerciseCustomCardioRButton.setText("Cardio");
+		customFieldsPanel.add(exerciseCustomCardioRButton, "cell 2 4,alignx center,growx 0");
 
-		//---- toggleButton13 ----
-		toggleButton13.setText("Lower Legs");
-		customFieldsPanel.add(toggleButton13, "cell 3 4");
+		//---- exerciseCustomLowerLegsRButton ----
+		exerciseCustomLowerLegsRButton.setText("Lower Legs");
+		customFieldsPanel.add(exerciseCustomLowerLegsRButton, "cell 3 4,alignx center,growx 0");
 	    }
 	    exercisesCustomPanel.add(customFieldsPanel, "cell 0 1");
 	}
@@ -3645,6 +3721,25 @@ public class MainWindow {
 	    }
 	    workoutsExerciseDistancePanel.add(workoutsExerciseDistanceSetsPanel, "cell 0 3");
 	}
+
+	//---- buttonGroup1 ----
+	var buttonGroup1 = new ButtonGroup();
+	buttonGroup1.add(exerciseCustomWeightRButton);
+	buttonGroup1.add(exerciseCustomDistanceRButton);
+
+	//---- buttonGroup2 ----
+	var buttonGroup2 = new ButtonGroup();
+	buttonGroup2.add(exerciseCustomTricepsRButton);
+	buttonGroup2.add(exerciseCustomChestRButton);
+	buttonGroup2.add(exerciseCustomShouldersRButton);
+	buttonGroup2.add(exerciseCustomBicepsRButton);
+	buttonGroup2.add(exerciseCustomCoreRButton);
+	buttonGroup2.add(exerciseCustomBackRButton);
+	buttonGroup2.add(exerciseCustomForearmsRButton);
+	buttonGroup2.add(exerciseCustomUpperLegsRButton);
+	buttonGroup2.add(exerciseCustomGlutesRButton);
+	buttonGroup2.add(exerciseCustomCardioRButton);
+	buttonGroup2.add(exerciseCustomLowerLegsRButton);
 	// JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -3757,22 +3852,22 @@ public class MainWindow {
     private JButton exercisesCustomTopBarAddButton;
     private JPanel customFieldsPanel;
     private JLabel label1;
-    private JTextField textField1;
+    private JTextField exerciseCustomNameField;
     private JLabel label2;
-    private JToggleButton toggleButton1;
-    private JToggleButton toggleButton2;
+    private JRadioButton exerciseCustomWeightRButton;
+    private JRadioButton exerciseCustomDistanceRButton;
     private JLabel label3;
-    private JToggleButton toggleButton3;
-    private JToggleButton toggleButton4;
-    private JToggleButton toggleButton5;
-    private JToggleButton toggleButton6;
-    private JToggleButton toggleButton7;
-    private JToggleButton toggleButton8;
-    private JToggleButton toggleButton9;
-    private JToggleButton toggleButton10;
-    private JToggleButton toggleButton11;
-    private JToggleButton toggleButton12;
-    private JToggleButton toggleButton13;
+    private JRadioButton exerciseCustomTricepsRButton;
+    private JRadioButton exerciseCustomChestRButton;
+    private JRadioButton exerciseCustomShouldersRButton;
+    private JRadioButton exerciseCustomBicepsRButton;
+    private JRadioButton exerciseCustomCoreRButton;
+    private JRadioButton exerciseCustomBackRButton;
+    private JRadioButton exerciseCustomForearmsRButton;
+    private JRadioButton exerciseCustomUpperLegsRButton;
+    private JRadioButton exerciseCustomGlutesRButton;
+    private JRadioButton exerciseCustomCardioRButton;
+    private JRadioButton exerciseCustomLowerLegsRButton;
     private JPanel workoutsWorkoutsPanel;
     private JPanel workoutsWorkoutsTopPanel;
     private JButton workoutsWorkoutsTopBarBackButton;
