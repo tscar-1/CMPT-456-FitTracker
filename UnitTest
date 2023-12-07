@@ -1,0 +1,38 @@
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+
+class MainWindowTest {
+
+    @Test
+    void show_if_username_is_Valid() {
+        Main m = new Main();
+        Boolean valid_username = m.usernameValid("yaboi");
+        Assertions.assertTrue(valid_username);
+    }
+    @Test
+    void show_if_username_is_Invalid() {
+        Main m1 = new Main();
+        Boolean invalid_username = m1.usernameValid("thisusernameistolongtobevalid");
+        Assertions.assertFalse(invalid_username);
+    }
+    @Test
+    void show_if_email_is_Valid() {
+        Main m2 = new Main();
+        Boolean valid_email = m2.emailValid("yaboi@gmail.com");
+        Assertions.assertTrue(valid_email);
+    }
+    @Test
+    void show_if_email_is_Invalid_short() {
+        Main m3 = new Main();
+        Boolean invalid_email = m3.emailValid("t@i.c");
+        Assertions.assertFalse(invalid_email);
+    }
+    @Test
+    void show_if_email_is_Invalid_no_special_characters() {
+        Main m3 = new Main();
+        Boolean invalid_email = m3.emailValid("tic");
+        Assertions.assertFalse(invalid_email);
+    }
+}
