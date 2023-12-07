@@ -118,8 +118,6 @@ public class User {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        System.out.printf("User " + username + " registered.\n");
     }
     
     public void setUsername(String username) {
@@ -138,6 +136,37 @@ public class User {
         return email;
     }
     
+    public void updateEmail(String username, String newEmail) {
+        File usersFile = new File("users.json");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        List<User> users;
+
+        try (FileReader reader = new FileReader(usersFile)) {
+            Type userListType = new TypeToken<List<User>>() {
+            }.getType();
+            users = gson.fromJson(reader, userListType);
+            if (users == null) {
+                users = new ArrayList<>();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                user.setEmail(newEmail);
+                break;
+            }
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(usersFile))) {
+            gson.toJson(users, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void setFName(String fName) {
         this.fName = fName;
     }
@@ -146,8 +175,74 @@ public class User {
         return fName;
     }
     
+    public void updateFName(String username, String newFName) {
+        File usersFile = new File("users.json");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        List<User> users;
+
+        try (FileReader reader = new FileReader(usersFile)) {
+            Type userListType = new TypeToken<List<User>>() {
+            }.getType();
+            users = gson.fromJson(reader, userListType);
+            if (users == null) {
+                users = new ArrayList<>();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                user.setFName(newFName);
+                break;
+            }
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(usersFile))) {
+            gson.toJson(users, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void setLName(String lName) {
         this.lName = lName;
+    }
+    
+    public String getLName() {
+        return lName;
+    }
+    
+    public void updateLName(String username, String newLName) {
+        File usersFile = new File("users.json");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        List<User> users;
+
+        try (FileReader reader = new FileReader(usersFile)) {
+            Type userListType = new TypeToken<List<User>>() {
+            }.getType();
+            users = gson.fromJson(reader, userListType);
+            if (users == null) {
+                users = new ArrayList<>();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                user.setLName(newLName);
+                break;
+            }
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(usersFile))) {
+            gson.toJson(users, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     public void setPassword(String password) {
@@ -156,6 +251,37 @@ public class User {
     
     public String getPassword() {
         return this.password;
+    }
+    
+    public void updatePassword(String username, String newPassword) {
+        File usersFile = new File("users.json");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        List<User> users;
+
+        try (FileReader reader = new FileReader(usersFile)) {
+            Type userListType = new TypeToken<List<User>>() {
+            }.getType();
+            users = gson.fromJson(reader, userListType);
+            if (users == null) {
+                users = new ArrayList<>();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                user.setPassword(newPassword);
+                break;
+            }
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(usersFile))) {
+            gson.toJson(users, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     private List<ProgressEntry> readProgress() {
@@ -204,16 +330,42 @@ public class User {
     
     public void saveProgressExerciseDistance(LocalDate date, String exerciseName, int exerciseRecordType, int exerciseMuscleType, int exerciseSetNum, double exerciseDistanceAmt, double exerciseDurationLen) {
         Exercise exercise = new Exercise(exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseDistanceAmt, exerciseDurationLen);
-        //to be implemented
+        List<ProgressEntry> progressEntries = readProgress();
+
+        ProgressEntry entry = progressEntries.stream()
+                .filter(e -> e.date.equals(date))
+                .findFirst()
+                .orElseGet(() -> {
+                    ProgressEntry newEntry = new ProgressEntry(date);
+                    progressEntries.add(newEntry);
+                    return newEntry;
+                });
+
+        entry.addExercise(exercise);
+        writeProgress(progressEntries);
     }
     
-    public void saveProgressFood(LocalDate date, String foodName, int foodCalorieAmt, int foodProteinAmt, int foodCarbsAmt) {
-        
+    public void saveProgressFood(LocalDate date, String foodName, int foodCalorieAmt, double foodProteinAmt, double foodCarbsAmt, double foodFatsAmt) {
+        Food food = new Food(foodName, foodCalorieAmt, foodProteinAmt, foodCarbsAmt, foodFatsAmt);
+        List<ProgressEntry> progressEntries = readProgress();
+
+        ProgressEntry entry = progressEntries.stream()
+                .filter(e -> e.date.equals(date))
+                .findFirst()
+                .orElseGet(() -> {
+                    ProgressEntry newEntry = new ProgressEntry(date);
+                    progressEntries.add(newEntry);
+                    return newEntry;
+                });
+
+        entry.addFood(food);
+        writeProgress(progressEntries);
     }
     
     private class ProgressEntry {
         private LocalDate date;
         private List<Exercise> exercises;
+        private List<Food> foods;
         
         public ProgressEntry(LocalDate date) {
             this.date = date;
@@ -222,6 +374,10 @@ public class User {
         
         public void addExercise(Exercise exercise) {
             exercises.add(exercise);
+        }
+        
+        public void addFood(Food food) {
+            foods.add(food);
         }
         
         public void setDate(LocalDate date) {
