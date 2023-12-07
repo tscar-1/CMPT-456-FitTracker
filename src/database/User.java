@@ -7,7 +7,7 @@ import utils.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.annotations.Expose;
@@ -98,7 +98,7 @@ public class User {
             }
         }
         
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).setPrettyPrinting().create();
         List<User> userList;
         try ( FileReader reader = new FileReader(usersFile)) {
             userList = gson.fromJson(reader, new TypeToken<List<User>>() {}.getType());
@@ -160,7 +160,7 @@ public class User {
     
     private List<ProgressEntry> readProgress() {
         File progressFile = new File(username + "_progress.json");
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
         if (!progressFile.exists()) {
             return new ArrayList<>();
         }
@@ -176,7 +176,7 @@ public class User {
     
     private void writeProgress(List<ProgressEntry> progressEntries) {
         File progressFile = new File(username + "_progress.json");
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).setPrettyPrinting().create();
 
         try (FileWriter writer = new FileWriter(progressFile)) {
             gson.toJson(progressEntries, writer);
@@ -186,7 +186,7 @@ public class User {
     }
     
     public void saveProgressExerciseWeight(LocalDate date, String exerciseName, int exerciseRecordType, int exerciseMuscleType, int exerciseSetNum, int exerciseWeightAmt, int exerciseRepsAmt) {
-        Exercise exercise = new Exercise(exerciseName, exerciseRecordType, exerciseMuscleType, exerciseWeightAmt, exerciseSetNum, exerciseRepsAmt);
+        Exercise exercise = new Exercise(exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseWeightAmt, exerciseRepsAmt);
         List<ProgressEntry> progressEntries = readProgress();
 
         ProgressEntry entry = progressEntries.stream()
@@ -230,6 +230,19 @@ public class User {
         
         public LocalDate getDate() {
             return date;
+        }
+    }
+
+    public class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
+
+        @Override
+        public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.toString()); // Convert LocalDate to JSON
+        }
+
+        @Override
+        public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+            return LocalDate.parse(json.getAsString()); // Convert JSON to LocalDate
         }
     }
 }
