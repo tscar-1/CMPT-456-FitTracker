@@ -139,6 +139,7 @@ public class MainWindow {
             notificationShow("Login Successful", "Actions.Red");
             currentUser = loggedInUser;
             mainWindowLogoutButton.setVisible(true);
+            populateProfilePage();
             window.getContentPane().remove(loginPanel);
             mainMenuPanel.setBounds(new Rectangle(new Point(0, 0), mainMenuPanel.getPreferredSize()));
             window.getContentPane().add(mainMenuPanel);
@@ -584,7 +585,7 @@ public class MainWindow {
             button.setHorizontalAlignment(SwingConstants.CENTER);
             button.setForeground(Color.white);
             button.setFont(button.getFont().deriveFont(button.getFont().getStyle() | Font.BOLD, button.getFont().getSize() + 10f));
-            button.addActionListener(e -> foodSelection(food));
+            button.addActionListener(e -> mealsFoodSelection(food));
             listPanel.add(button);
             totalHeight += 100;
         }
@@ -687,6 +688,18 @@ public class MainWindow {
                 break;
             }
         }
+
+        currentFood = food;
+        foodsFoodsFoodsPanel.setBounds(new Rectangle(new Point(6, 106), foodsFoodsFoodsPanel.getPreferredSize()));
+        foodsFoodsFoodsPanel.setVisible(true);
+        foodsFoodsFoodsTitleLabel.setText(food.getName());
+        foodsFoodsFoodsCaloriesLabel.setText(String.valueOf(food.getCalories()) + " kcal");
+        foodsFoodsFoodsProteinLabel.setText(String.valueOf(food.getProteins()) + " g");
+        foodsFoodsFoodsCarbsLabel.setText(String.valueOf(food.getCarbohydrates()) + " g");
+        foodsFoodsFoodsFatsLabel.setText(String.valueOf(food.getFats()) + " g");
+        mainMenuPanel.add(foodsFoodsFoodsPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
     }
     
     private void mealSelection(Meal meal) {
@@ -707,6 +720,32 @@ public class MainWindow {
         mainMenuPanel.add(mealsFoodsPanel, BorderLayout.CENTER);
         mainMenuPanel.revalidate();
         mainMenuPanel.repaint();
+    }
+    
+    private void mealsFoodSelection(Food food) {
+        Component[] components = mainMenuPanel.getComponents();
+
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        currentFood = food;
+        mealsFoodsFoodsPanel.setBounds(new Rectangle(new Point(6, 106), mealsFoodsFoodsPanel.getPreferredSize()));
+        mealsFoodsFoodsPanel.setVisible(true);
+        mealsFoodsFoodsTitleLabel.setText(food.getName());
+        mainMenuPanel.add(mealsFoodsFoodsPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void populateProfilePage() {
+        profileFieldsUsernameLabel.setText(currentUser.getUsername());
+        profileFieldsEmailField.setText(currentUser.getEmail());
+        profileFieldsFNameField.setText(currentUser.getFName());
+        profileFieldsLNameField.setText(currentUser.getLName());
     }
     
     //
@@ -1047,7 +1086,9 @@ public class MainWindow {
             
             try {
                 exerciseWeightAmt = Integer.parseInt(weightField.getText());
+                weightField.setText("");
                 exerciseRepAmt = Integer.parseInt(repsField.getText());
+                repsField.setText("");
             } catch (NumberFormatException ex) {
                 notificationShow("Invalid input in set " + i, "Button.focusedBorderColor");
                 return;
@@ -1134,9 +1175,9 @@ public class MainWindow {
 
     private void exercisesDistanceTopBarRec(ActionEvent e) {
 	Exercise exercise = currentExercise;
+        LocalDate date = LocalDate.now();
 
         for (int i = 1; i <= distanceSetRowCount; i++) {
-            LocalDate date = LocalDate.now();
             String exerciseName = exercise.getName();
             int exerciseRecordType = exercise.getRecordType();
             int exerciseMuscleType = exercise.getMuscleType();
@@ -1144,32 +1185,23 @@ public class MainWindow {
             double exerciseDistanceAmt = 0.0;
             double exerciseDurationLen = 0.0;
 
-            String[] componentsToRecord = {
-                "distanceSet" + i + "DistanceField",
-                "distanceSet" + i + "DurationField"
-            };
-
-            for (String name : componentsToRecord) {
-                for (Component comp : distanceSetsPanel.getComponents()) {
-                    if (name.equals(comp.getName()) && comp instanceof JTextField) {
-                        JTextField textField = (JTextField) comp;
-                        try {
-                            if (name.contains("DistanceField")) {
-                                exerciseDistanceAmt = Double.parseDouble(textField.getText());
-                            }
-                            else if (name.contains("DurationField")) {
-                                exerciseDurationLen = Double.parseDouble(textField.getText());
-                            }
-                        } catch (NumberFormatException ex) {
-                            notificationShow("Error", "Button.focusedBorderColor");
-                        }
-                    }
-                }
-            }
+            JTextField distanceField = (JTextField) findComponentByName(distanceSetsPanel, "distanceSet" + i + "DistanceField");
+            JTextField durationField = (JTextField) findComponentByName(distanceSetsPanel, "distanceSet" + i + "DurationField");
             
+            try {
+                exerciseDistanceAmt = Integer.parseInt(distanceField.getText());
+                distanceField.setText("");
+                exerciseDurationLen = Integer.parseInt(durationField.getText());
+                durationField.setText("");
+            } catch (NumberFormatException ex) {
+                notificationShow("Invalid input in set " + i, "Button.focusedBorderColor");
+                return;
+            }
+
             currentUser.saveProgressExerciseDistance(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseDistanceAmt, exerciseDurationLen);
-            notificationShow("Exercise Recorded", "Actions.Red");
         }
+        
+        notificationShow("Exercise Recorded", "Actions.Red");
     }
 
     private void exercisesDistanceTopBarBack(ActionEvent e) {
@@ -1423,7 +1455,9 @@ public class MainWindow {
             
             try {
                 exerciseWeightAmt = Integer.parseInt(weightField.getText());
+                weightField.setText("");
                 exerciseRepAmt = Integer.parseInt(repsField.getText());
+                repsField.setText("");
             } catch (NumberFormatException ex) {
                 notificationShow("Invalid input in set " + i, "Button.focusedBorderColor");
                 return;
@@ -1517,21 +1551,23 @@ public class MainWindow {
             int exerciseRecordType = exercise.getRecordType();
             int exerciseMuscleType = exercise.getMuscleType();
             int exerciseSetNum = i;
-            int exerciseWeightAmt = 0;
-            int exerciseRepAmt = 0;
+            double exerciseDistanceAmt = 0.0;
+            double exerciseDurationLen = 0.0;
 
-            JTextField weightField = (JTextField) findComponentByName(workoutsExerciseDistanceSetsPanel, "workoutsExerciseDistanceSet" + i + "WeightField");
-            JTextField repsField = (JTextField) findComponentByName(workoutsExerciseDistanceSetsPanel, "workoutsExerciseDistanceSet" + i + "RepsField");
+            JTextField distanceField = (JTextField) findComponentByName(workoutsExerciseDistanceSetsPanel, "workoutsExerciseDistanceSet" + i + "DistanceField");
+            JTextField durationField = (JTextField) findComponentByName(workoutsExerciseDistanceSetsPanel, "workoutsExerciseDistanceSet" + i + "DurationField");
             
             try {
-                exerciseWeightAmt = Integer.parseInt(weightField.getText());
-                exerciseRepAmt = Integer.parseInt(repsField.getText());
+                exerciseDistanceAmt = Integer.parseInt(distanceField.getText());
+                distanceField.setText("");
+                exerciseDurationLen = Integer.parseInt(durationField.getText());
+                durationField.setText("");
             } catch (NumberFormatException ex) {
                 notificationShow("Invalid input in set " + i, "Button.focusedBorderColor");
                 return;
             }
 
-            currentUser.saveProgressExerciseWeight(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseWeightAmt, exerciseRepAmt);
+            currentUser.saveProgressExerciseDistance(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseDistanceAmt, exerciseDurationLen);
         }
         
         notificationShow("Exercise Recorded", "Actions.Red");
@@ -1590,6 +1626,39 @@ public class MainWindow {
         mainMenuFoodsPanel.setVisible(true);
         mainMenuPanel.revalidate();
         mainMenuPanel.repaint();
+    }
+    
+    private void foodsFoodsFoodsTopBarBack(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        foodsPopulate(1);
+        foodsFoodsPanel.setBounds(new Rectangle(new Point(6, 106), foodsFoodsPanel.getPreferredSize()));
+        foodsFoodsPanel.setVisible(true);
+        mainMenuPanel.add(foodsFoodsPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+    
+    private void foodsFoodsFoodsTopBarRec(ActionEvent e) {
+        Food food = currentFood;
+        LocalDate date = LocalDate.now();
+
+        String foodName = food.getName();
+        int foodCalorieAmt = food.getCalories();
+        double foodProteinAmt = food.getProteins();
+        double foodCarbsAmt = food.getCarbohydrates();
+        double foodFatsAmt = food.getFats();
+
+        currentUser.saveProgressFood(date, foodName, foodCalorieAmt, foodProteinAmt, foodCarbsAmt, foodFatsAmt);
+
+        notificationShow("Food Recorded", "Actions.Red");
     }
     
     //
@@ -1657,6 +1726,188 @@ public class MainWindow {
         mealsMealsPanel.setVisible(true);
         mainMenuPanel.revalidate();
         mainMenuPanel.repaint();
+    }
+
+    private void mealsFoodsFoodsTopBarRec(ActionEvent e) {
+	Food food = currentFood;
+        LocalDate date = LocalDate.now();
+
+        String foodName = food.getName();
+        int foodCalorieAmt = food.getCalories();
+        double foodProteinAmt = food.getProteins();
+        double foodCarbsAmt = food.getCarbohydrates();
+        double foodFatsAmt = food.getFats();
+
+        currentUser.saveProgressFood(date, foodName, foodCalorieAmt, foodProteinAmt, foodCarbsAmt, foodFatsAmt);
+
+        notificationShow("Food Recorded", "Actions.Red");
+    }
+    
+    private void mealsFoodsFoodsTopBarBack(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mealsFoodsPanel.setBounds(new Rectangle(new Point(6, 106), mealsFoodsPanel.getPreferredSize()));
+        mainMenuPanel.add(mealsFoodsPanel);
+        mealsFoodsPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+    
+    //
+    // Profile Panel Buttons
+    //
+    private void profileFieldsEditEmail(ActionEvent e) {
+	profileFieldsEmailField.setEditable(true);
+        profileFieldsSaveEmailButton.setVisible(true);
+    }
+
+    private void profileFieldsEditFName(ActionEvent e) {
+	profileFieldsFNameField.setEditable(true);
+        profileFieldsSaveFNameButton.setVisible(true);
+    }
+
+    private void profileFieldsEditLName(ActionEvent e) {
+	profileFieldsLNameField.setEditable(true);
+        profileFieldsSaveLNameButton.setVisible(true);
+    }
+
+    private void profileFieldsEditPassword(ActionEvent e) {
+	profileFieldsPasswordField.setEditable(true);
+        profileFieldsSavePasswordButton.setVisible(true);
+        profileFieldsPasswordShowTButton.setVisible(true);
+        profileFieldPasswordConfirmLabel.setVisible(true);
+        profileFieldsPasswordConfirmField.setVisible(true);
+        profileFieldsPasswordConfirmField.setEditable(true);
+    }
+    
+    private void profileFieldsPasswordShowTButton(ActionEvent e) {
+	if (profileFieldsPasswordShowTButton.isSelected()) {
+            profileFieldsPasswordField.setEchoChar((char) 0);
+            profileFieldsPasswordConfirmField.setEchoChar((char) 0);
+        }
+        else {
+            profileFieldsPasswordField.setEchoChar('•');
+            profileFieldsPasswordConfirmField.setEchoChar('•');
+        }
+    }
+    
+    private void profileFieldsSaveEmail(ActionEvent e) {
+	String email = profileFieldsEmailField.getText();
+        
+        File usersFile = new File("users.json");
+        Gson gson = new Gson();
+        java.util.List<User> users;
+        try (FileReader reader = new FileReader(usersFile)) {
+            Type userListType = new TypeToken<ArrayList<User>>() {}.getType();
+            users = gson.fromJson(reader, userListType);
+        } catch (IOException ex) {
+            users = new ArrayList<>();
+        }
+        
+        boolean emailValid = emailValid(email);
+        boolean emailExists = users.stream().anyMatch(user -> user.getEmail().equals(email));
+        
+        if (!emailValid) {
+            profileFieldsEmailField.setText("Email invalid");
+            profileFieldsEmailField.setForeground(Color.RED);
+        }
+        else if (emailExists) {
+            profileFieldsEmailField.setText("Email already exists");
+            profileFieldsEmailField.setForeground(Color.RED);
+        }
+        else {
+            notificationShow("Email Changed", "Actions.Red");
+            currentUser.setEmail(email);
+            currentUser.updateEmail(currentUser.getUsername(), email);
+            profileFieldsEmailField.setEditable(false);
+            profileFieldsSaveEmailButton.setVisible(false);
+        }
+    }
+
+    private void profileFieldsSaveFName(ActionEvent e) {
+	String fName = profileFieldsFNameField.getText();
+        
+        File usersFile = new File("users.json");
+        Gson gson = new Gson();
+        java.util.List<User> users;
+        try (FileReader reader = new FileReader(usersFile)) {
+            Type userListType = new TypeToken<ArrayList<User>>() {}.getType();
+            users = gson.fromJson(reader, userListType);
+        } catch (IOException ex) {
+            users = new ArrayList<>();
+        }
+        
+        notificationShow("First Name Changed", "Actions.Red");
+        currentUser.setFName(fName);
+        currentUser.updateFName(currentUser.getUsername(), fName);
+        profileFieldsFNameField.setEditable(false);
+        profileFieldsSaveFNameButton.setVisible(false);
+    }
+
+    private void profileFieldsSaveLName(ActionEvent e) {
+	String lName = profileFieldsLNameField.getText();
+        
+        File usersFile = new File("users.json");
+        Gson gson = new Gson();
+        java.util.List<User> users;
+        try (FileReader reader = new FileReader(usersFile)) {
+            Type userListType = new TypeToken<ArrayList<User>>() {}.getType();
+            users = gson.fromJson(reader, userListType);
+        } catch (IOException ex) {
+            users = new ArrayList<>();
+        }
+        
+        notificationShow("Last Name Changed", "Actions.Red");
+        currentUser.setLName(lName);
+        currentUser.updateLName(currentUser.getUsername(), lName);
+        profileFieldsLNameField.setEditable(false);
+        profileFieldsSaveLNameButton.setVisible(false);
+    }
+
+    private void profileFieldsSavePassword(ActionEvent e) {
+	String password = profileFieldsPasswordField.getText();
+        String passwordConfirm = profileFieldsPasswordConfirmField.getText();
+        
+        File usersFile = new File("users.json");
+        Gson gson = new Gson();
+        java.util.List<User> users;
+        try (FileReader reader = new FileReader(usersFile)) {
+            Type userListType = new TypeToken<ArrayList<User>>() {}.getType();
+            users = gson.fromJson(reader, userListType);
+        } catch (IOException ex) {
+            users = new ArrayList<>();
+        }
+        
+        boolean passwordMatch = password.equals(passwordConfirm);
+        boolean passwordValid = passwordValid(password);
+        
+        if (!passwordMatch) {
+            profileFieldsPasswordConfirmField.setText("Password do not match");
+            profileFieldsPasswordConfirmField.setForeground(Color.RED);
+        }
+        if (!passwordValid) {
+            profileFieldsPasswordField.setText("Password Invalid");
+            profileFieldsPasswordField.setForeground(Color.RED);
+        }
+        if (passwordMatch && passwordValid) {
+            notificationShow("Password Changed", "Actions.Red");
+            currentUser.setPassword(password);
+            currentUser.updatePassword(currentUser.getUsername(), password);
+            profileFieldsPasswordField.setEditable(false);
+            profileFieldsSavePasswordButton.setVisible(false);
+            profileFieldsPasswordShowTButton.setVisible(false);
+            profileFieldPasswordConfirmLabel.setVisible(false);
+            profileFieldsPasswordConfirmField.setVisible(false);
+            profileFieldsPasswordConfirmField.setEditable(false);
+            profileFieldsPasswordShowTButton.setSelected(false);
+        }
     }
     
     //
@@ -1807,6 +2058,7 @@ public class MainWindow {
         return null;
     }
 
+
     private void initComponents() {
 	// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
 	// Generated using JFormDesigner Educational license - Thomas Scardino (THOMAS A SCARDINO)
@@ -1874,7 +2126,6 @@ public class MainWindow {
 	mealSelectButton = new JButton();
 	mealAddNewButton = new JButton();
 	mainMenuProgressPanel = new JPanel();
-	mainMenuProfilePanel = new JPanel();
 	exercisesExercisesPanel = new JPanel();
 	exercisesExercisesTopPanel = new JPanel();
 	exercisesExercisesTopBarBackButton = new JButton();
@@ -1990,6 +2241,57 @@ public class MainWindow {
 	workoutsExerciseDistanceSet1Label = new JLabel();
 	workoutsExerciseDistanceSet1DistanceField = new JTextField();
 	workoutsExerciseDistanceSet1DurationField = new JTextField();
+	mainMenuProfilePanel = new JPanel();
+	profileFieldsPanel = new JPanel();
+	label4 = new JLabel();
+	profileFieldsUsernameLabel = new JLabel();
+	label5 = new JLabel();
+	profileFieldsEmailField = new JTextField();
+	profileFieldsEditEmailButton = new JButton();
+	profileFieldsSaveEmailButton = new JButton();
+	label6 = new JLabel();
+	profileFieldsFNameField = new JTextField();
+	profileFieldsEditFNameButton = new JButton();
+	profileFieldsSaveFNameButton = new JButton();
+	label7 = new JLabel();
+	profileFieldsLNameField = new JTextField();
+	profileFieldsEditLNameButton = new JButton();
+	profileFieldsSaveLNameButton = new JButton();
+	label8 = new JLabel();
+	profileFieldsPasswordField = new JPasswordField();
+	profileFieldsPasswordShowTButton = new JToggleButton();
+	profileFieldsEditPasswordButton = new JButton();
+	profileFieldsSavePasswordButton = new JButton();
+	profileFieldPasswordConfirmLabel = new JLabel();
+	profileFieldsPasswordConfirmField = new JPasswordField();
+	foodsFoodsFoodsPanel = new JPanel();
+	foodsFoodsFoodsTopPanel = new JPanel();
+	foodsFoodsFoodsTopBarBackButton = new JButton();
+	foodsFoodsFoodsTopBarRecButton = new JButton();
+	foodsFoodsFoodsTitleLabel = new JLabel();
+	foodsFoodsFoodsInfoPanel = new JPanel();
+	label23 = new JLabel();
+	foodsFoodsFoodsCaloriesLabel = new JLabel();
+	label24 = new JLabel();
+	foodsFoodsFoodsProteinLabel = new JLabel();
+	label25 = new JLabel();
+	foodsFoodsFoodsCarbsLabel = new JLabel();
+	label32 = new JLabel();
+	foodsFoodsFoodsFatsLabel = new JLabel();
+	mealsFoodsFoodsPanel = new JPanel();
+	mealsFoodsFoodsTopPanel = new JPanel();
+	mealsFoodsFoodsTopBarBackButton = new JButton();
+	mealsFoodsFoodsTopBarRecButton = new JButton();
+	mealsFoodsFoodsTitleLabel = new JLabel();
+	mealsFoodsFoodsInfoPanel = new JPanel();
+	label33 = new JLabel();
+	mealsFoodsFoodsCaloriesLabel = new JLabel();
+	label34 = new JLabel();
+	mealsFoodsFoodsProteinLabel = new JLabel();
+	label35 = new JLabel();
+	mealsFoodsFoodsCarbsLabel = new JLabel();
+	label36 = new JLabel();
+	mealsFoodsFoodsFatsLabel = new JLabel();
 
 	//======== window ========
 	{
@@ -2712,31 +3014,6 @@ public class MainWindow {
 		"[fill]" +
 		"[fill]",
 		// rows
-		"[]" +
-		"[]" +
-		"[]" +
-		"[]" +
-		"[]" +
-		"[]" +
-		"[]"));
-	}
-
-	//======== mainMenuProfilePanel ========
-	{
-	    mainMenuProfilePanel.setPreferredSize(new Dimension(988, 638));
-	    mainMenuProfilePanel.setLayout(new MigLayout(
-		"fill,hidemode 3",
-		// columns
-		"[fill]" +
-		"[fill]" +
-		"[fill]" +
-		"[fill]" +
-		"[fill]" +
-		"[fill]" +
-		"[fill]" +
-		"[fill]",
-		// rows
-		"[]" +
 		"[]" +
 		"[]" +
 		"[]" +
@@ -3722,6 +3999,434 @@ public class MainWindow {
 	    workoutsExerciseDistancePanel.add(workoutsExerciseDistanceSetsPanel, "cell 0 3");
 	}
 
+	//======== mainMenuProfilePanel ========
+	{
+	    mainMenuProfilePanel.setPreferredSize(new Dimension(988, 638));
+	    mainMenuProfilePanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]",
+		// rows
+		"[grow,fill]"));
+
+	    //======== profileFieldsPanel ========
+	    {
+		profileFieldsPanel.setLayout(new MigLayout(
+		    "fill,insets 0,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[right]" +
+		    "[right]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[]" +
+		    "[fill]"));
+
+		//---- label4 ----
+		label4.setIcon(new ImageIcon(getClass().getResource("/assets/profilePicture.png")));
+		label4.setHorizontalAlignment(SwingConstants.CENTER);
+		profileFieldsPanel.add(label4, "cell 1 1");
+
+		//---- profileFieldsUsernameLabel ----
+		profileFieldsUsernameLabel.setText("Username");
+		profileFieldsUsernameLabel.setForeground(Color.white);
+		profileFieldsUsernameLabel.setFont(profileFieldsUsernameLabel.getFont().deriveFont(profileFieldsUsernameLabel.getFont().getStyle() | Font.BOLD, profileFieldsUsernameLabel.getFont().getSize() + 10f));
+		profileFieldsPanel.add(profileFieldsUsernameLabel, "cell 2 1 3 1");
+
+		//---- label5 ----
+		label5.setText("Email:");
+		label5.setHorizontalAlignment(SwingConstants.CENTER);
+		label5.setFont(label5.getFont().deriveFont(label5.getFont().getStyle() | Font.BOLD, label5.getFont().getSize() + 2f));
+		profileFieldsPanel.add(label5, "cell 1 2");
+
+		//---- profileFieldsEmailField ----
+		profileFieldsEmailField.setEditable(false);
+		profileFieldsEmailField.addFocusListener(new FocusAdapter() {
+		    @Override
+		    public void focusGained(FocusEvent e) {
+			registerTextFieldFocusGained(e);
+		    }
+		});
+		profileFieldsPanel.add(profileFieldsEmailField, "cell 2 2 4 1,height 40:40:40");
+
+		//---- profileFieldsEditEmailButton ----
+		profileFieldsEditEmailButton.setText("EDIT");
+		profileFieldsEditEmailButton.setFont(profileFieldsEditEmailButton.getFont().deriveFont(profileFieldsEditEmailButton.getFont().getStyle() | Font.BOLD));
+		profileFieldsEditEmailButton.setForeground(Color.white);
+		profileFieldsEditEmailButton.addActionListener(e -> profileFieldsEditEmail(e));
+		profileFieldsPanel.add(profileFieldsEditEmailButton, "cell 7 2,alignx center,growx 0");
+
+		//---- profileFieldsSaveEmailButton ----
+		profileFieldsSaveEmailButton.setText("SAVE");
+		profileFieldsSaveEmailButton.setFont(profileFieldsSaveEmailButton.getFont().deriveFont(profileFieldsSaveEmailButton.getFont().getStyle() | Font.BOLD));
+		profileFieldsSaveEmailButton.setForeground(Color.white);
+		profileFieldsSaveEmailButton.setVisible(false);
+		profileFieldsSaveEmailButton.addActionListener(e -> profileFieldsSaveEmail(e));
+		profileFieldsPanel.add(profileFieldsSaveEmailButton, "cell 8 2,alignx center,growx 0");
+
+		//---- label6 ----
+		label6.setText("First Name:");
+		label6.setFont(label6.getFont().deriveFont(label6.getFont().getStyle() | Font.BOLD, label6.getFont().getSize() + 2f));
+		label6.setHorizontalAlignment(SwingConstants.CENTER);
+		profileFieldsPanel.add(label6, "cell 1 3");
+
+		//---- profileFieldsFNameField ----
+		profileFieldsFNameField.setEditable(false);
+		profileFieldsPanel.add(profileFieldsFNameField, "cell 2 3 4 1,height 40:40:40");
+
+		//---- profileFieldsEditFNameButton ----
+		profileFieldsEditFNameButton.setText("EDIT");
+		profileFieldsEditFNameButton.setFont(profileFieldsEditFNameButton.getFont().deriveFont(profileFieldsEditFNameButton.getFont().getStyle() | Font.BOLD));
+		profileFieldsEditFNameButton.setForeground(Color.white);
+		profileFieldsEditFNameButton.addActionListener(e -> profileFieldsEditFName(e));
+		profileFieldsPanel.add(profileFieldsEditFNameButton, "cell 7 3,alignx center,growx 0");
+
+		//---- profileFieldsSaveFNameButton ----
+		profileFieldsSaveFNameButton.setText("SAVE");
+		profileFieldsSaveFNameButton.setFont(profileFieldsSaveFNameButton.getFont().deriveFont(profileFieldsSaveFNameButton.getFont().getStyle() | Font.BOLD));
+		profileFieldsSaveFNameButton.setForeground(Color.white);
+		profileFieldsSaveFNameButton.setVisible(false);
+		profileFieldsSaveFNameButton.addActionListener(e -> profileFieldsSaveFName(e));
+		profileFieldsPanel.add(profileFieldsSaveFNameButton, "cell 8 3,alignx center,growx 0");
+
+		//---- label7 ----
+		label7.setText("Last Name:");
+		label7.setFont(label7.getFont().deriveFont(label7.getFont().getStyle() | Font.BOLD, label7.getFont().getSize() + 2f));
+		label7.setHorizontalAlignment(SwingConstants.CENTER);
+		profileFieldsPanel.add(label7, "cell 1 4");
+
+		//---- profileFieldsLNameField ----
+		profileFieldsLNameField.setEditable(false);
+		profileFieldsPanel.add(profileFieldsLNameField, "cell 2 4 4 1,height 40:40:40");
+
+		//---- profileFieldsEditLNameButton ----
+		profileFieldsEditLNameButton.setText("EDIT");
+		profileFieldsEditLNameButton.setFont(profileFieldsEditLNameButton.getFont().deriveFont(profileFieldsEditLNameButton.getFont().getStyle() | Font.BOLD));
+		profileFieldsEditLNameButton.setForeground(Color.white);
+		profileFieldsEditLNameButton.addActionListener(e -> profileFieldsEditLName(e));
+		profileFieldsPanel.add(profileFieldsEditLNameButton, "cell 7 4,alignx center,growx 0");
+
+		//---- profileFieldsSaveLNameButton ----
+		profileFieldsSaveLNameButton.setText("SAVE");
+		profileFieldsSaveLNameButton.setFont(profileFieldsSaveLNameButton.getFont().deriveFont(profileFieldsSaveLNameButton.getFont().getStyle() | Font.BOLD));
+		profileFieldsSaveLNameButton.setForeground(Color.white);
+		profileFieldsSaveLNameButton.setVisible(false);
+		profileFieldsSaveLNameButton.addActionListener(e -> profileFieldsSaveLName(e));
+		profileFieldsPanel.add(profileFieldsSaveLNameButton, "cell 8 4,alignx center,growx 0");
+
+		//---- label8 ----
+		label8.setText("Password:");
+		label8.setFont(label8.getFont().deriveFont(label8.getFont().getStyle() | Font.BOLD, label8.getFont().getSize() + 2f));
+		label8.setHorizontalAlignment(SwingConstants.CENTER);
+		profileFieldsPanel.add(label8, "cell 1 5");
+
+		//---- profileFieldsPasswordField ----
+		profileFieldsPasswordField.setEditable(false);
+		profileFieldsPasswordField.addFocusListener(new FocusAdapter() {
+		    @Override
+		    public void focusGained(FocusEvent e) {
+			registerTextFieldFocusGained(e);
+		    }
+		});
+		profileFieldsPanel.add(profileFieldsPasswordField, "cell 2 5 4 1,height 40:40:40");
+
+		//---- profileFieldsPasswordShowTButton ----
+		profileFieldsPasswordShowTButton.setIcon(UIManager.getIcon("PasswordField.revealIcon"));
+		profileFieldsPasswordShowTButton.setBorder(null);
+		profileFieldsPasswordShowTButton.setBorderPainted(false);
+		profileFieldsPasswordShowTButton.setContentAreaFilled(false);
+		profileFieldsPasswordShowTButton.setVisible(false);
+		profileFieldsPasswordShowTButton.addActionListener(e -> profileFieldsPasswordShowTButton(e));
+		profileFieldsPanel.add(profileFieldsPasswordShowTButton, "cell 6 5,alignx left,growx 0");
+
+		//---- profileFieldsEditPasswordButton ----
+		profileFieldsEditPasswordButton.setText("EDIT");
+		profileFieldsEditPasswordButton.setFont(profileFieldsEditPasswordButton.getFont().deriveFont(profileFieldsEditPasswordButton.getFont().getStyle() | Font.BOLD));
+		profileFieldsEditPasswordButton.setForeground(Color.white);
+		profileFieldsEditPasswordButton.addActionListener(e -> profileFieldsEditPassword(e));
+		profileFieldsPanel.add(profileFieldsEditPasswordButton, "cell 7 5,alignx center,growx 0");
+
+		//---- profileFieldsSavePasswordButton ----
+		profileFieldsSavePasswordButton.setText("SAVE");
+		profileFieldsSavePasswordButton.setFont(profileFieldsSavePasswordButton.getFont().deriveFont(profileFieldsSavePasswordButton.getFont().getStyle() | Font.BOLD));
+		profileFieldsSavePasswordButton.setForeground(Color.white);
+		profileFieldsSavePasswordButton.setVisible(false);
+		profileFieldsSavePasswordButton.addActionListener(e -> profileFieldsSavePassword(e));
+		profileFieldsPanel.add(profileFieldsSavePasswordButton, "cell 8 5,alignx center,growx 0");
+
+		//---- profileFieldPasswordConfirmLabel ----
+		profileFieldPasswordConfirmLabel.setText("Confirm Password:");
+		profileFieldPasswordConfirmLabel.setFont(profileFieldPasswordConfirmLabel.getFont().deriveFont(profileFieldPasswordConfirmLabel.getFont().getStyle() | Font.BOLD, profileFieldPasswordConfirmLabel.getFont().getSize() + 2f));
+		profileFieldPasswordConfirmLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		profileFieldPasswordConfirmLabel.setVisible(false);
+		profileFieldsPanel.add(profileFieldPasswordConfirmLabel, "cell 1 6");
+
+		//---- profileFieldsPasswordConfirmField ----
+		profileFieldsPasswordConfirmField.setEditable(false);
+		profileFieldsPasswordConfirmField.setVisible(false);
+		profileFieldsPasswordConfirmField.addFocusListener(new FocusAdapter() {
+		    @Override
+		    public void focusGained(FocusEvent e) {
+			registerTextFieldFocusGained(e);
+		    }
+		});
+		profileFieldsPanel.add(profileFieldsPasswordConfirmField, "cell 2 6 4 1,height 40:40:40");
+	    }
+	    mainMenuProfilePanel.add(profileFieldsPanel, "cell 0 0");
+	}
+
+	//======== foodsFoodsFoodsPanel ========
+	{
+	    foodsFoodsFoodsPanel.setPreferredSize(new Dimension(988, 638));
+	    foodsFoodsFoodsPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]",
+		// rows
+		"[37,top]" +
+		"[]" +
+		"[]" +
+		"[grow,fill]"));
+
+	    //======== foodsFoodsFoodsTopPanel ========
+	    {
+		foodsFoodsFoodsTopPanel.setBackground(new Color(0x1e2428));
+		foodsFoodsFoodsTopPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[]"));
+
+		//---- foodsFoodsFoodsTopBarBackButton ----
+		foodsFoodsFoodsTopBarBackButton.setText("BACK");
+		foodsFoodsFoodsTopBarBackButton.setForeground(Color.white);
+		foodsFoodsFoodsTopBarBackButton.setFont(foodsFoodsFoodsTopBarBackButton.getFont().deriveFont(foodsFoodsFoodsTopBarBackButton.getFont().getStyle() | Font.BOLD));
+		foodsFoodsFoodsTopBarBackButton.addActionListener(e -> foodsFoodsFoodsTopBarBack(e));
+		foodsFoodsFoodsTopPanel.add(foodsFoodsFoodsTopBarBackButton, "cell 0 0,alignx left,growx 0");
+
+		//---- foodsFoodsFoodsTopBarRecButton ----
+		foodsFoodsFoodsTopBarRecButton.setText("RECORD FOOD");
+		foodsFoodsFoodsTopBarRecButton.setForeground(Color.white);
+		foodsFoodsFoodsTopBarRecButton.setFont(foodsFoodsFoodsTopBarRecButton.getFont().deriveFont(foodsFoodsFoodsTopBarRecButton.getFont().getStyle() | Font.BOLD));
+		foodsFoodsFoodsTopBarRecButton.addActionListener(e -> foodsFoodsFoodsTopBarRec(e));
+		foodsFoodsFoodsTopPanel.add(foodsFoodsFoodsTopBarRecButton, "cell 4 0");
+	    }
+	    foodsFoodsFoodsPanel.add(foodsFoodsFoodsTopPanel, "cell 0 0");
+
+	    //---- foodsFoodsFoodsTitleLabel ----
+	    foodsFoodsFoodsTitleLabel.setText("Food");
+	    foodsFoodsFoodsTitleLabel.setFont(foodsFoodsFoodsTitleLabel.getFont().deriveFont(foodsFoodsFoodsTitleLabel.getFont().getStyle() | Font.BOLD, foodsFoodsFoodsTitleLabel.getFont().getSize() + 10f));
+	    foodsFoodsFoodsTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    foodsFoodsFoodsTitleLabel.setForeground(Color.white);
+	    foodsFoodsFoodsPanel.add(foodsFoodsFoodsTitleLabel, "cell 0 2");
+
+	    //======== foodsFoodsFoodsInfoPanel ========
+	    {
+		foodsFoodsFoodsInfoPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[center]" +
+		    "[center]" +
+		    "[center]" +
+		    "[center]"));
+
+		//---- label23 ----
+		label23.setText("Calories");
+		label23.setHorizontalAlignment(SwingConstants.CENTER);
+		label23.setForeground(UIManager.getColor("#545556"));
+		label23.setFont(label23.getFont().deriveFont(label23.getFont().getStyle() | Font.BOLD, label23.getFont().getSize() + 5f));
+		foodsFoodsFoodsInfoPanel.add(label23, "cell 1 0");
+
+		//---- foodsFoodsFoodsCaloriesLabel ----
+		foodsFoodsFoodsCaloriesLabel.setText("text");
+		foodsFoodsFoodsCaloriesLabel.setFont(foodsFoodsFoodsCaloriesLabel.getFont().deriveFont(foodsFoodsFoodsCaloriesLabel.getFont().getSize() + 5f));
+		foodsFoodsFoodsCaloriesLabel.setForeground(Color.white);
+		foodsFoodsFoodsInfoPanel.add(foodsFoodsFoodsCaloriesLabel, "cell 2 0,alignx center,growx 0");
+
+		//---- label24 ----
+		label24.setText("Protein");
+		label24.setHorizontalAlignment(SwingConstants.CENTER);
+		label24.setForeground(UIManager.getColor("#545556"));
+		label24.setFont(label24.getFont().deriveFont(label24.getFont().getStyle() | Font.BOLD, label24.getFont().getSize() + 5f));
+		foodsFoodsFoodsInfoPanel.add(label24, "cell 1 1");
+
+		//---- foodsFoodsFoodsProteinLabel ----
+		foodsFoodsFoodsProteinLabel.setText("text");
+		foodsFoodsFoodsProteinLabel.setFont(foodsFoodsFoodsProteinLabel.getFont().deriveFont(foodsFoodsFoodsProteinLabel.getFont().getSize() + 5f));
+		foodsFoodsFoodsProteinLabel.setForeground(Color.white);
+		foodsFoodsFoodsInfoPanel.add(foodsFoodsFoodsProteinLabel, "cell 2 1,alignx center,growx 0");
+
+		//---- label25 ----
+		label25.setText("Carbohydrates");
+		label25.setHorizontalAlignment(SwingConstants.CENTER);
+		label25.setForeground(UIManager.getColor("#545556"));
+		label25.setFont(label25.getFont().deriveFont(label25.getFont().getStyle() | Font.BOLD, label25.getFont().getSize() + 5f));
+		foodsFoodsFoodsInfoPanel.add(label25, "cell 1 2");
+
+		//---- foodsFoodsFoodsCarbsLabel ----
+		foodsFoodsFoodsCarbsLabel.setText("text");
+		foodsFoodsFoodsCarbsLabel.setFont(foodsFoodsFoodsCarbsLabel.getFont().deriveFont(foodsFoodsFoodsCarbsLabel.getFont().getSize() + 5f));
+		foodsFoodsFoodsCarbsLabel.setForeground(Color.white);
+		foodsFoodsFoodsInfoPanel.add(foodsFoodsFoodsCarbsLabel, "cell 2 2,alignx center,growx 0");
+
+		//---- label32 ----
+		label32.setText("Fats");
+		label32.setHorizontalAlignment(SwingConstants.CENTER);
+		label32.setForeground(UIManager.getColor("#545556"));
+		label32.setFont(label32.getFont().deriveFont(label32.getFont().getStyle() | Font.BOLD, label32.getFont().getSize() + 5f));
+		foodsFoodsFoodsInfoPanel.add(label32, "cell 1 3");
+
+		//---- foodsFoodsFoodsFatsLabel ----
+		foodsFoodsFoodsFatsLabel.setText("text");
+		foodsFoodsFoodsFatsLabel.setFont(foodsFoodsFoodsFatsLabel.getFont().deriveFont(foodsFoodsFoodsFatsLabel.getFont().getSize() + 5f));
+		foodsFoodsFoodsFatsLabel.setForeground(Color.white);
+		foodsFoodsFoodsInfoPanel.add(foodsFoodsFoodsFatsLabel, "cell 2 3,alignx center,growx 0");
+	    }
+	    foodsFoodsFoodsPanel.add(foodsFoodsFoodsInfoPanel, "cell 0 3");
+	}
+
+	//======== mealsFoodsFoodsPanel ========
+	{
+	    mealsFoodsFoodsPanel.setPreferredSize(new Dimension(988, 638));
+	    mealsFoodsFoodsPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]",
+		// rows
+		"[37,top]" +
+		"[]" +
+		"[]" +
+		"[grow,fill]"));
+
+	    //======== mealsFoodsFoodsTopPanel ========
+	    {
+		mealsFoodsFoodsTopPanel.setBackground(new Color(0x1e2428));
+		mealsFoodsFoodsTopPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[]"));
+
+		//---- mealsFoodsFoodsTopBarBackButton ----
+		mealsFoodsFoodsTopBarBackButton.setText("BACK");
+		mealsFoodsFoodsTopBarBackButton.setForeground(Color.white);
+		mealsFoodsFoodsTopBarBackButton.setFont(mealsFoodsFoodsTopBarBackButton.getFont().deriveFont(mealsFoodsFoodsTopBarBackButton.getFont().getStyle() | Font.BOLD));
+		mealsFoodsFoodsTopBarBackButton.addActionListener(e -> mealsFoodsFoodsTopBarBack(e));
+		mealsFoodsFoodsTopPanel.add(mealsFoodsFoodsTopBarBackButton, "cell 0 0,alignx left,growx 0");
+
+		//---- mealsFoodsFoodsTopBarRecButton ----
+		mealsFoodsFoodsTopBarRecButton.setText("RECORD FOOD");
+		mealsFoodsFoodsTopBarRecButton.setForeground(Color.white);
+		mealsFoodsFoodsTopBarRecButton.setFont(mealsFoodsFoodsTopBarRecButton.getFont().deriveFont(mealsFoodsFoodsTopBarRecButton.getFont().getStyle() | Font.BOLD));
+		mealsFoodsFoodsTopBarRecButton.addActionListener(e -> mealsFoodsFoodsTopBarRec(e));
+		mealsFoodsFoodsTopPanel.add(mealsFoodsFoodsTopBarRecButton, "cell 4 0");
+	    }
+	    mealsFoodsFoodsPanel.add(mealsFoodsFoodsTopPanel, "cell 0 0");
+
+	    //---- mealsFoodsFoodsTitleLabel ----
+	    mealsFoodsFoodsTitleLabel.setText("Food");
+	    mealsFoodsFoodsTitleLabel.setFont(mealsFoodsFoodsTitleLabel.getFont().deriveFont(mealsFoodsFoodsTitleLabel.getFont().getStyle() | Font.BOLD, mealsFoodsFoodsTitleLabel.getFont().getSize() + 10f));
+	    mealsFoodsFoodsTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    mealsFoodsFoodsTitleLabel.setForeground(Color.white);
+	    mealsFoodsFoodsPanel.add(mealsFoodsFoodsTitleLabel, "cell 0 2");
+
+	    //======== mealsFoodsFoodsInfoPanel ========
+	    {
+		mealsFoodsFoodsInfoPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[center]" +
+		    "[center]" +
+		    "[center]" +
+		    "[center]"));
+
+		//---- label33 ----
+		label33.setText("Calories");
+		label33.setHorizontalAlignment(SwingConstants.CENTER);
+		label33.setForeground(UIManager.getColor("#545556"));
+		label33.setFont(label33.getFont().deriveFont(label33.getFont().getStyle() | Font.BOLD, label33.getFont().getSize() + 5f));
+		mealsFoodsFoodsInfoPanel.add(label33, "cell 1 0");
+
+		//---- mealsFoodsFoodsCaloriesLabel ----
+		mealsFoodsFoodsCaloriesLabel.setText("text");
+		mealsFoodsFoodsCaloriesLabel.setFont(mealsFoodsFoodsCaloriesLabel.getFont().deriveFont(mealsFoodsFoodsCaloriesLabel.getFont().getSize() + 5f));
+		mealsFoodsFoodsCaloriesLabel.setForeground(Color.white);
+		mealsFoodsFoodsInfoPanel.add(mealsFoodsFoodsCaloriesLabel, "cell 2 0,alignx center,growx 0");
+
+		//---- label34 ----
+		label34.setText("Protein");
+		label34.setHorizontalAlignment(SwingConstants.CENTER);
+		label34.setForeground(UIManager.getColor("#545556"));
+		label34.setFont(label34.getFont().deriveFont(label34.getFont().getStyle() | Font.BOLD, label34.getFont().getSize() + 5f));
+		mealsFoodsFoodsInfoPanel.add(label34, "cell 1 1");
+
+		//---- mealsFoodsFoodsProteinLabel ----
+		mealsFoodsFoodsProteinLabel.setText("text");
+		mealsFoodsFoodsProteinLabel.setFont(mealsFoodsFoodsProteinLabel.getFont().deriveFont(mealsFoodsFoodsProteinLabel.getFont().getSize() + 5f));
+		mealsFoodsFoodsProteinLabel.setForeground(Color.white);
+		mealsFoodsFoodsInfoPanel.add(mealsFoodsFoodsProteinLabel, "cell 2 1,alignx center,growx 0");
+
+		//---- label35 ----
+		label35.setText("Carbohydrates");
+		label35.setHorizontalAlignment(SwingConstants.CENTER);
+		label35.setForeground(UIManager.getColor("#545556"));
+		label35.setFont(label35.getFont().deriveFont(label35.getFont().getStyle() | Font.BOLD, label35.getFont().getSize() + 5f));
+		mealsFoodsFoodsInfoPanel.add(label35, "cell 1 2");
+
+		//---- mealsFoodsFoodsCarbsLabel ----
+		mealsFoodsFoodsCarbsLabel.setText("text");
+		mealsFoodsFoodsCarbsLabel.setFont(mealsFoodsFoodsCarbsLabel.getFont().deriveFont(mealsFoodsFoodsCarbsLabel.getFont().getSize() + 5f));
+		mealsFoodsFoodsCarbsLabel.setForeground(Color.white);
+		mealsFoodsFoodsInfoPanel.add(mealsFoodsFoodsCarbsLabel, "cell 2 2,alignx center,growx 0");
+
+		//---- label36 ----
+		label36.setText("Fats");
+		label36.setHorizontalAlignment(SwingConstants.CENTER);
+		label36.setForeground(UIManager.getColor("#545556"));
+		label36.setFont(label36.getFont().deriveFont(label36.getFont().getStyle() | Font.BOLD, label36.getFont().getSize() + 5f));
+		mealsFoodsFoodsInfoPanel.add(label36, "cell 1 3");
+
+		//---- mealsFoodsFoodsFatsLabel ----
+		mealsFoodsFoodsFatsLabel.setText("text");
+		mealsFoodsFoodsFatsLabel.setFont(mealsFoodsFoodsFatsLabel.getFont().deriveFont(mealsFoodsFoodsFatsLabel.getFont().getSize() + 5f));
+		mealsFoodsFoodsFatsLabel.setForeground(Color.white);
+		mealsFoodsFoodsInfoPanel.add(mealsFoodsFoodsFatsLabel, "cell 2 3,alignx center,growx 0");
+	    }
+	    mealsFoodsFoodsPanel.add(mealsFoodsFoodsInfoPanel, "cell 0 3");
+	}
+
 	//---- buttonGroup1 ----
 	var buttonGroup1 = new ButtonGroup();
 	buttonGroup1.add(exerciseCustomWeightRButton);
@@ -3809,7 +4514,6 @@ public class MainWindow {
     private JButton mealSelectButton;
     private JButton mealAddNewButton;
     private JPanel mainMenuProgressPanel;
-    private JPanel mainMenuProfilePanel;
     private JPanel exercisesExercisesPanel;
     private JPanel exercisesExercisesTopPanel;
     private JButton exercisesExercisesTopBarBackButton;
@@ -3925,5 +4629,56 @@ public class MainWindow {
     private JLabel workoutsExerciseDistanceSet1Label;
     private JTextField workoutsExerciseDistanceSet1DistanceField;
     private JTextField workoutsExerciseDistanceSet1DurationField;
+    private JPanel mainMenuProfilePanel;
+    private JPanel profileFieldsPanel;
+    private JLabel label4;
+    private JLabel profileFieldsUsernameLabel;
+    private JLabel label5;
+    private JTextField profileFieldsEmailField;
+    private JButton profileFieldsEditEmailButton;
+    private JButton profileFieldsSaveEmailButton;
+    private JLabel label6;
+    private JTextField profileFieldsFNameField;
+    private JButton profileFieldsEditFNameButton;
+    private JButton profileFieldsSaveFNameButton;
+    private JLabel label7;
+    private JTextField profileFieldsLNameField;
+    private JButton profileFieldsEditLNameButton;
+    private JButton profileFieldsSaveLNameButton;
+    private JLabel label8;
+    private JPasswordField profileFieldsPasswordField;
+    private JToggleButton profileFieldsPasswordShowTButton;
+    private JButton profileFieldsEditPasswordButton;
+    private JButton profileFieldsSavePasswordButton;
+    private JLabel profileFieldPasswordConfirmLabel;
+    private JPasswordField profileFieldsPasswordConfirmField;
+    private JPanel foodsFoodsFoodsPanel;
+    private JPanel foodsFoodsFoodsTopPanel;
+    private JButton foodsFoodsFoodsTopBarBackButton;
+    private JButton foodsFoodsFoodsTopBarRecButton;
+    private JLabel foodsFoodsFoodsTitleLabel;
+    private JPanel foodsFoodsFoodsInfoPanel;
+    private JLabel label23;
+    private JLabel foodsFoodsFoodsCaloriesLabel;
+    private JLabel label24;
+    private JLabel foodsFoodsFoodsProteinLabel;
+    private JLabel label25;
+    private JLabel foodsFoodsFoodsCarbsLabel;
+    private JLabel label32;
+    private JLabel foodsFoodsFoodsFatsLabel;
+    private JPanel mealsFoodsFoodsPanel;
+    private JPanel mealsFoodsFoodsTopPanel;
+    private JButton mealsFoodsFoodsTopBarBackButton;
+    private JButton mealsFoodsFoodsTopBarRecButton;
+    private JLabel mealsFoodsFoodsTitleLabel;
+    private JPanel mealsFoodsFoodsInfoPanel;
+    private JLabel label33;
+    private JLabel mealsFoodsFoodsCaloriesLabel;
+    private JLabel label34;
+    private JLabel mealsFoodsFoodsProteinLabel;
+    private JLabel label35;
+    private JLabel mealsFoodsFoodsCarbsLabel;
+    private JLabel label36;
+    private JLabel mealsFoodsFoodsFatsLabel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
