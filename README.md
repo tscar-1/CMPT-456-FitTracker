@@ -24,6 +24,13 @@ The program should be compiled through NetBeans, version 14 or later.
 
 Create a Java with Ant project in NetBeans (we recommend naming it "FitTracker").
 
+## Testing
+
+This repo comes with a premade user for testing purposes. The user's credentials are:
+
+Username: tester
+Password: abcABC123
+
 ## Dependencies
 
 FitTracker requires Gson (https://github.com/google/gson), FlatLaf Themes (https://github.com/JFormDesigner/FlatLaf), and FlatLaf IntelliJ Themes (https://github.com/JFormDesigner/FlatLaf/tree/main/flatlaf-intellij-themes)
