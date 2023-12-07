@@ -1,35 +1,29 @@
 package core;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 
 public class Meal {
-
-
     private String name;
-    
-    private List<Food> meal;
+    private List<Food> foods;
 
-    public Meal(String name, List<Food> meal) {
+    public Meal(String name) {
         this.name = name;
-        this.meal = meal;
-    }
-
-    public String getName() {
-        return name;
+        this.foods = new ArrayList<>();
     }
 
     public void setName(String name) {
         this.name = name;
     }
-
-    public List<Food> getMeal() {
-        return meal;
+    
+    public String getName() {
+        return name;
     }
-
-    public void setMeal(List<Food> meal) {
-        this.meal = meal;
+    
+    public void addFood(Food food) {
+        foods.add(food);
     }
-
-
+    
+    public List<Food> getFoods() {
+        return foods;
+    }
 }
