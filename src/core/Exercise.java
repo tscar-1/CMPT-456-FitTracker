@@ -5,7 +5,7 @@ public class Exercise {
     private int recordType; //1 weight-based, 2 distance-based
     private int muscleType; //1 triceps, 2 chest, 3 shoulders, 4 biceps, 5 core, 6 back, 7 forearms, 8 upper legs, 9 glutes, 10 cardio, 11 lower legs
     private int weight;
-    private int sets;
+    private int set;
     private int reps;
     private double distance;
     private double duration;
@@ -18,21 +18,21 @@ public class Exercise {
     }
     
     //Weight-based Constructor
-    public Exercise(String name, int recordType, int muscleType, int sets, int weight, int reps) {
+    public Exercise(String name, int recordType, int muscleType, int set, int weight, int reps) {
         this.name = name;
         this.recordType = recordType;
         this.muscleType = muscleType;
-        this.sets = sets;
+        this.set = set;
         this.weight = weight;
         this.reps = reps;
     }
     
     //Distance-based Constructor
-    public Exercise(String name, int recordType, int muscleType, int sets, double distance, double duration) {
+    public Exercise(String name, int recordType, int muscleType, int set, double distance, double duration) {
         this.name = name;
         this.recordType = recordType;
         this.muscleType = muscleType;
-        this.sets = sets;
+        this.set = set;
         this.distance = distance;
         this.duration = duration;
     }
@@ -70,12 +70,12 @@ public class Exercise {
         return weight;
     }
     
-    public void setSets(int sets) {
-        this.sets = sets;
+    public void setSet(int set) {
+        this.set = set;
     }
     
-    public int getSets() {
-        return sets;
+    public int getSet() {
+        return set;
     }
     
     public void setReps(int reps) {
