@@ -6,11 +6,11 @@ public class Food {
     private String name;
     private int Calories;
     private double proteins;
-    private int carbohydrates;
+    private double carbohydrates;
 
     private double fats;
 
-    public Food(String name, int calories, double proteins, int carbohydrates, double fats) {
+    public Food(String name, int calories, double proteins, double carbohydrates, double fats) {
         this.name = name;
         Calories = calories;
         this.proteins = proteins;
@@ -42,7 +42,7 @@ public class Food {
         this.proteins = proteins;
     }
 
-    public int getCarbohydrates() {
+    public double getCarbohydrates() {
         return carbohydrates;
     }
 
