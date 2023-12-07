@@ -859,11 +859,10 @@ public class MainWindow {
             notificationShow("Cannot remove last set", "Button.focusedBorderColor");
         }
     }
-
+    
     private void exercisesWeightTopBarRec(ActionEvent e) {
         Exercise exercise = currentExercise;
         LocalDate date = LocalDate.now();
-        String dateString = date.toString();
 
         for (int i = 1; i <= weightSetRowCount; i++) {
             String exerciseName = exercise.getName();
@@ -873,32 +872,20 @@ public class MainWindow {
             int exerciseWeightAmt = 0;
             int exerciseRepAmt = 0;
 
-            String[] componentsToRecord = {
-                "weightSet" + i + "WeightField",
-                "weightSet" + i + "RepsField"
-            };
-
-            for (String name : componentsToRecord) {
-                for (Component comp : weightSetsPanel.getComponents()) {
-                    if (name.equals(comp.getName()) && comp instanceof JTextField) {
-                        JTextField textField = (JTextField) comp;
-                        try {
-                            if (name.contains("WeightField")) {
-                                exerciseWeightAmt = Integer.parseInt(textField.getText());
-                            }
-                            else if (name.contains("RepsField")) {
-                                exerciseRepAmt = Integer.parseInt(textField.getText());
-                            }
-                        } catch (NumberFormatException ex) {
-                            notificationShow("Error", "Button.focusedBorderColor");
-                        }
-                    }
-                }
-            }
+            JTextField weightField = (JTextField) findComponentByName(weightSetsPanel, "weightSet" + i + "WeightField");
+            JTextField repsField = (JTextField) findComponentByName(weightSetsPanel, "weightSet" + i + "RepsField");
             
+            try {
+                exerciseWeightAmt = Integer.parseInt(weightField.getText());
+                exerciseRepAmt = Integer.parseInt(repsField.getText());
+            } catch (NumberFormatException ex) {
+                notificationShow("Invalid input in set " + i, "Button.focusedBorderColor");
+                return;
+            }
+
             currentUser.saveProgressExerciseWeight(date, exerciseName, exerciseRecordType, exerciseMuscleType, exerciseSetNum, exerciseWeightAmt, exerciseRepAmt);
-            notificationShow("Exercise Recorded", "Actions.Red");
         }
+        notificationShow("Exercise Recorded", "Actions.Red");
     }
 
     private void exercisesWeightTopBarBack(ActionEvent e) {
@@ -1047,6 +1034,15 @@ public class MainWindow {
         mainMenuExercisesPanel.setVisible(true);
         mainMenuPanel.revalidate();
         mainMenuPanel.repaint();
+    }
+    
+    private Component findComponentByName(Container container, String name) {
+        for (Component comp : container.getComponents()) {
+            if (name.equals(comp.getName())) {
+                return comp;
+            }
+        }
+        return null;
     }
 
     private void initComponents() {
@@ -2107,6 +2103,7 @@ public class MainWindow {
 		weightSet1WeightField.setHorizontalAlignment(SwingConstants.CENTER);
 		weightSet1WeightField.setFont(weightSet1WeightField.getFont().deriveFont(weightSet1WeightField.getFont().getStyle() | Font.BOLD, weightSet1WeightField.getFont().getSize() + 5f));
 		weightSet1WeightField.setForeground(Color.white);
+		weightSet1WeightField.setName("weightSet1WeightField");
 		weightSetsPanel.add(weightSet1WeightField, "cell 1 1,alignx center,growx 0");
 
 		//---- weightSet1XLabel ----
@@ -2119,6 +2116,7 @@ public class MainWindow {
 		weightSet1RepsField.setHorizontalAlignment(SwingConstants.CENTER);
 		weightSet1RepsField.setFont(weightSet1RepsField.getFont().deriveFont(weightSet1RepsField.getFont().getStyle() | Font.BOLD, weightSet1RepsField.getFont().getSize() + 5f));
 		weightSet1RepsField.setForeground(Color.white);
+		weightSet1RepsField.setName("weightSet1RepsField");
 		weightSetsPanel.add(weightSet1RepsField, "cell 3 1,alignx center,growx 0");
 	    }
 	    exercisesWeightPanel.add(weightSetsPanel, "cell 0 3");
