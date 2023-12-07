@@ -27,6 +27,8 @@ public class MainWindow {
     private int currentMuscleType;
     private Exercise currentExercise;
     private Workout currentWorkout;
+    private Food currentFood;
+    private Meal currentMeal;
     private int weightSetRowCount = 1;
     private int distanceSetRowCount = 1;
 
@@ -39,6 +41,9 @@ public class MainWindow {
         window.setVisible(true);
     }
 
+    //
+    // Main Bottom Bar Buttons
+    //
     private void logout(ActionEvent e) {
         currentUser = new User();
         loginPasswordField.setText("");
@@ -63,6 +68,9 @@ public class MainWindow {
         System.exit(0);
     }
 
+    //
+    // Start Panel Buttons
+    //
     private void startLogin(ActionEvent e) {
         window.getContentPane().remove(startPanel);
         loginPanel.setBounds(new Rectangle(new Point(124, 48), loginPanel.getPreferredSize()));
@@ -81,6 +89,9 @@ public class MainWindow {
         window.repaint();
     }
 
+    //
+    // Login Panel Buttons
+    //
     private void loginBack(ActionEvent e) {
         loginUsernameField.setText("");
         loginPasswordField.setText("");
@@ -135,6 +146,9 @@ public class MainWindow {
         
     }
 
+    //
+    // Register Panel Buttons
+    //
     private void registerBack(ActionEvent e) {
         registerUsernameField.setText("");
         registerEmailField.setText("");
@@ -205,142 +219,9 @@ public class MainWindow {
         }
     }
 
-    private boolean usernameValid(String username) {
-        if (username.length() < 4 || username.length() > 16) {
-            return false;
-        }
-
-        boolean hasSpecial = true;
-        for (char c : username.toCharArray()) {
-            if (!Character.isLetterOrDigit(c)) {
-                hasSpecial = false;
-            }
-        }
-
-        return hasSpecial;
-    }
-
-    private boolean emailValid(String email) {
-        if (email.length() < 7) {
-            return false;
-        }
-
-        if (!email.contains("@")) {
-            return false;
-        }
-
-        String[] parts = email.split("@");
-        if (parts.length != 2 || parts[0].length() == 0 || parts[1].length() == 0) {
-            return false;
-        }
-
-        if (parts[1].indexOf('.') == 0 || parts[1].lastIndexOf('.') == parts[1].length() - 1) {
-            return false;
-        }
-
-        String domain = parts[1].substring(parts[1].lastIndexOf('.') + 1);
-        if (domain.length() < 2 || domain.length() > 4) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean passwordValid(String password) {
-        if (password.length() < 8 && password.length() > 16) {
-            return false;
-        }
-
-        boolean hasUpper = false;
-        boolean hasLower = false;
-        boolean hasDigit = false;
-        for (char c : password.toCharArray()) {
-            if (Character.isUpperCase(c)) {
-                hasUpper = true;
-            } else if (Character.isLowerCase(c)) {
-                hasLower = true;
-            } else if (Character.isDigit(c)) {
-                hasDigit = true;
-            }
-        }
-
-        return hasUpper && hasLower && hasDigit;
-    }
-
-    private void registerTextFieldFocusGained(FocusEvent e) {
-        JTextField source = (JTextField) e.getSource();
-        if (source.getForeground().equals(Color.RED)) {
-            source.setText("");
-            source.setForeground(Color.WHITE);
-        }
-    }
-
-    private void notificationShow(String message, String color) {
-        JLabel messageLabel = new JLabel(message);
-        messageLabel.setForeground(new Color(0x2b3036));
-        messageLabel.setFont(messageLabel.getFont().deriveFont(Font.BOLD));
-        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPanel notificationPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(getBackground());
-                g.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
-            }
-        };
-        notificationPanel.setOpaque(false);
-        notificationPanel.setLayout(new BoxLayout(notificationPanel, BoxLayout.PAGE_AXIS));
-
-        int offset = 15;
-        notificationPanel.add(Box.createRigidArea(new Dimension(0, offset)));
-        notificationPanel.add(messageLabel);
-
-        notificationPanel.setBackground(UIManager.getColor(color));
-
-        int panelWidth = window.getWidth() / 5;
-        int panelHeight = 80;
-        int xPosStart = (window.getWidth() - panelWidth) / 2;
-        notificationPanel.setBounds(xPosStart, window.getHeight(), panelWidth, panelHeight);
-        window.getContentPane().add(notificationPanel);
-        window.getContentPane().setComponentZOrder(notificationPanel, 0);
-        window.getContentPane().repaint();
-
-        javax.swing.Timer slideUpTimer = new javax.swing.Timer(5, new ActionListener() {
-            int yPos = window.getHeight();
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (yPos > window.getHeight() - panelHeight) {
-                    yPos -= 1;
-                    notificationPanel.setBounds(xPosStart, yPos, panelWidth, panelHeight);
-                } else {
-                    ((javax.swing.Timer) e.getSource()).stop();
-                    new javax.swing.Timer(2000, ev -> {
-                        javax.swing.Timer slideDownTimer = new javax.swing.Timer(5, new ActionListener() {
-                            int yPosDown = window.getHeight() - panelHeight;
-
-                            @Override
-                            public void actionPerformed(ActionEvent evt) {
-                                if (yPosDown < window.getHeight()) {
-                                    yPosDown += 1;
-                                    notificationPanel.setBounds(xPosStart, yPosDown, panelWidth, panelHeight);
-                                } else {
-                                    ((javax.swing.Timer) evt.getSource()).stop();
-                                    window.getContentPane().remove(notificationPanel);
-                                    window.getContentPane().revalidate();
-                                    window.getContentPane().repaint();
-                                }
-                            }
-                        });
-                        slideDownTimer.start();
-                    }).start();
-                }
-            }
-        });
-        slideUpTimer.start();
-    }
-
+    //
+    // Main Menu Top Bar Buttons
+    //
     private void mainMenuLogo(ActionEvent e) {
 	Component[] components = mainMenuPanel.getComponents();
         
@@ -460,6 +341,9 @@ public class MainWindow {
         mainMenuPanel.repaint();
     }
     
+    //
+    // Read/Populate/Select Methods
+    //
     private java.util.List<Exercise> exercisesRead(String filePath) {
         File ftExercisesFile = new File(filePath);
         Gson gson = new Gson();
@@ -500,6 +384,21 @@ public class MainWindow {
             e.printStackTrace();
         }
         return foods;
+    }
+    
+    private java.util.List<Meal> mealsRead(String filePath) {
+        File ftWorkoutsFile = new File(filePath);
+        Gson gson = new Gson();
+        java.util.List<Meal> meals = new ArrayList<>();
+        try (FileReader reader = new FileReader(ftWorkoutsFile)) {
+            Type mealListType = new TypeToken<ArrayList<Meal>>() {
+            }.getType();
+            meals = gson.fromJson(reader, mealListType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return meals;
     }
     
     private void exercisesPopulate(int source, int muscleType) {
@@ -574,6 +473,31 @@ public class MainWindow {
         workoutsWorkoutsScrollPanel.repaint();
     }
     
+    private void workoutsExercisesPopulate() {
+        java.util.List<Exercise> exercises = currentWorkout.getExercises();
+
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+
+        int totalHeight = 0;
+        for (Exercise exercise : exercises) {
+            JButton button = new JButton(exercise.getName());
+            button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+            button.setHorizontalAlignment(SwingConstants.CENTER);
+            button.setForeground(Color.white);
+            button.setFont(button.getFont().deriveFont(button.getFont().getStyle() | Font.BOLD, button.getFont().getSize() + 10f));
+            button.addActionListener(e -> exerciseSelection(exercise));
+            listPanel.add(button);
+            totalHeight += 100;
+        }
+
+        listPanel.setPreferredSize(new Dimension(workoutsExercisesScrollPanel.getViewport().getWidth(), totalHeight));
+
+        workoutsExercisesScrollPanel.setViewportView(listPanel);
+        workoutsExercisesScrollPanel.revalidate();
+        workoutsExercisesScrollPanel.repaint();
+    }
+    
     private void foodsPopulate(int source) {
         java.util.List<Food> foods;
 
@@ -607,32 +531,66 @@ public class MainWindow {
         foodsFoodsScrollPanel.setViewportView(listPanel);
         foodsFoodsScrollPanel.revalidate();
         foodsFoodsScrollPanel.repaint();
-
     }
     
-    private void workoutsExercisesPopulate() {
-        java.util.List<Exercise> exercises = currentWorkout.getExercises();
+    private void mealsPopulate(int source) {
+        java.util.List<Meal> meals;
+        
+        if(source == 1) {
+            meals = Stream.concat(mealsRead("fittracker_meals.json").stream(),mealsRead(currentUser.getUsername() + "_meals.json").stream()).collect(Collectors.toList());
+        }
+        else if (source == 2) {
+            meals = mealsRead("fittracker_meals.json");
+        }
+        else {
+            meals = mealsRead(currentUser.getUsername() + "_meals.json");
+        }
+        
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        
+        int totalHeight = 0;
+        for (Meal meal : meals) {
+            JButton button = new JButton(meal.getName());
+            button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+            button.setHorizontalAlignment(SwingConstants.CENTER);
+            button.setForeground(Color.white);
+	    button.setFont(button.getFont().deriveFont(button.getFont().getStyle() | Font.BOLD, button.getFont().getSize() + 10f));
+            button.addActionListener(e -> mealSelection(meal));
+            listPanel.add(button);
+            totalHeight += 100;
+        }
+        
+        listPanel.setPreferredSize(new Dimension(workoutsWorkoutsScrollPanel.getViewport().getWidth(),totalHeight));
+        
+        mealsMealsScrollPanel.setViewportView(listPanel);
+        mealsMealsScrollPanel.revalidate();
+        mealsMealsScrollPanel.repaint();
+    }
+    
+    private void mealsFoodsPopulate() {
+        java.util.List<Food> foods = currentMeal.getFoods();
 
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 
         int totalHeight = 0;
-        for (Exercise exercise : exercises) {
-            JButton button = new JButton(exercise.getName());
+        for (Food food : foods) {
+            JButton button = new JButton(food.getName());
             button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
             button.setHorizontalAlignment(SwingConstants.CENTER);
             button.setForeground(Color.white);
             button.setFont(button.getFont().deriveFont(button.getFont().getStyle() | Font.BOLD, button.getFont().getSize() + 10f));
-            button.addActionListener(e -> exerciseSelection(exercise));
+            button.addActionListener(e -> foodSelection(food));
             listPanel.add(button);
             totalHeight += 100;
         }
 
-        listPanel.setPreferredSize(new Dimension(workoutsExercisesScrollPanel.getViewport().getWidth(), totalHeight));
+        listPanel.setPreferredSize(new Dimension(mealsFoodsScrollPanel.getViewport().getWidth(), totalHeight));
 
-        workoutsExercisesScrollPanel.setViewportView(listPanel);
-        workoutsExercisesScrollPanel.revalidate();
-        workoutsExercisesScrollPanel.repaint();
+        mealsFoodsScrollPanel.setViewportView(listPanel);
+        mealsFoodsScrollPanel.revalidate();
+        mealsFoodsScrollPanel.repaint();
     }
     
     private void exerciseSelection(Exercise exercise) {
@@ -697,7 +655,7 @@ public class MainWindow {
         }
     }
     
-    private void listofFoods(ActionEvent e) {
+    private void mealSelection(Meal meal) {
         Component[] components = mainMenuPanel.getComponents();
 
         for (Component comp : components) {
@@ -707,14 +665,19 @@ public class MainWindow {
             }
         }
 
-        foodsPopulate(1);
-        foodsFoodsScrollPanel.setBounds(new Rectangle(new Point(6, 106), foodsFoodsScrollPanel.getPreferredSize()));
-        foodsFoodsScrollPanel.setVisible(true);
-        mainMenuPanel.add(foodsFoodsScrollPanel, BorderLayout.CENTER);
+        currentMeal = meal;
+        mealsFoodsPanel.setBounds(new Rectangle(new Point(6, 106), mealsFoodsPanel.getPreferredSize()));
+        mealsFoodsPanel.setVisible(true);
+        mealsMealTitleLabel.setText(meal.getName());
+        mealsFoodsPopulate();
+        mainMenuPanel.add(mealsFoodsPanel, BorderLayout.CENTER);
         mainMenuPanel.revalidate();
         mainMenuPanel.repaint();
     }
     
+    //
+    // Exercises Panels Buttons
+    //
     private void exercisesExercisesTopBarAll(ActionEvent e) {
 	exercisesPopulate(1, currentMuscleType);
     }
@@ -970,7 +933,6 @@ public class MainWindow {
         mainMenuPanel.repaint();
     }
 
-
     private void exercisesWeightTopBarAdd(ActionEvent e) {
         weightSetRowCount++;
         
@@ -1211,15 +1173,9 @@ public class MainWindow {
         mainMenuPanel.repaint();
     }
     
-    private Component findComponentByName(Container container, String name) {
-        for (Component comp : container.getComponents()) {
-            if (name.equals(comp.getName())) {
-                return comp;
-            }
-        }
-        return null;
-    }
-
+    //
+    // Workouts Panels Buttons
+    //
     private void workoutSelect(ActionEvent e) {
 	Component[] components = mainMenuPanel.getComponents();
         
@@ -1283,7 +1239,10 @@ public class MainWindow {
         mainMenuPanel.revalidate();
         mainMenuPanel.repaint();
     }
-
+    
+    //
+    // Foods Panels Buttons
+    //
     private void foodSelect(ActionEvent e) {
 	Component[] components = mainMenuPanel.getComponents();
         
@@ -1317,6 +1276,221 @@ public class MainWindow {
         mainMenuFoodsPanel.setVisible(true);
         mainMenuPanel.revalidate();
         mainMenuPanel.repaint();
+    }
+    
+    //
+    // Meals Panels Buttons
+    //
+    private void mealSelect(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mealsPopulate(1);
+        mealsMealsPanel.setBounds(new Rectangle(new Point(6, 106), mealsMealsPanel.getPreferredSize()));
+        mealsMealsPanel.setVisible(true);
+        mainMenuPanel.add(mealsMealsPanel, BorderLayout.CENTER);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+    
+    private void mealsMealsTopBarAll(ActionEvent e) {
+	mealsPopulate(1);
+    }
+
+    private void mealsMealsTopBarFT(ActionEvent e) {
+	mealsPopulate(2);
+    }
+
+    private void mealsMealsTopBarCus(ActionEvent e) {
+	mealsPopulate(3);
+    }
+    
+    private void mealsMealsTopBarBack(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainMenuMealsPanel.setBounds(new Rectangle(new Point(6, 106), mainMenuMealsPanel.getPreferredSize()));
+        mainMenuPanel.add(mainMenuMealsPanel);
+        mainMenuMealsPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+
+    private void mealsFoodsTopBarBack(ActionEvent e) {
+	Component[] components = mainMenuPanel.getComponents();
+        
+        for (Component comp : components) {
+            if (comp instanceof JPanel && comp != mainMenuButtonPanel) {
+                mainMenuPanel.remove(comp);
+                break;
+            }
+        }
+
+        mealsMealsPanel.setBounds(new Rectangle(new Point(6, 106), mealsMealsPanel.getPreferredSize()));
+        mainMenuPanel.add(mealsMealsPanel);
+        mealsMealsPanel.setVisible(true);
+        mainMenuPanel.revalidate();
+        mainMenuPanel.repaint();
+    }
+    
+    //
+    // Utility & Validation Methods
+    //
+    private boolean usernameValid(String username) {
+        if (username.length() < 4 || username.length() > 16) {
+            return false;
+        }
+
+        boolean hasSpecial = true;
+        for (char c : username.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) {
+                hasSpecial = false;
+            }
+        }
+
+        return hasSpecial;
+    }
+
+    private boolean emailValid(String email) {
+        if (email.length() < 7) {
+            return false;
+        }
+
+        if (!email.contains("@")) {
+            return false;
+        }
+
+        String[] parts = email.split("@");
+        if (parts.length != 2 || parts[0].length() == 0 || parts[1].length() == 0) {
+            return false;
+        }
+
+        if (parts[1].indexOf('.') == 0 || parts[1].lastIndexOf('.') == parts[1].length() - 1) {
+            return false;
+        }
+
+        String domain = parts[1].substring(parts[1].lastIndexOf('.') + 1);
+        if (domain.length() < 2 || domain.length() > 4) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean passwordValid(String password) {
+        if (password.length() < 8 && password.length() > 16) {
+            return false;
+        }
+
+        boolean hasUpper = false;
+        boolean hasLower = false;
+        boolean hasDigit = false;
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                hasUpper = true;
+            } else if (Character.isLowerCase(c)) {
+                hasLower = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            }
+        }
+
+        return hasUpper && hasLower && hasDigit;
+    }
+    
+    private void registerTextFieldFocusGained(FocusEvent e) {
+        JTextField source = (JTextField) e.getSource();
+        if (source.getForeground().equals(Color.RED)) {
+            source.setText("");
+            source.setForeground(Color.WHITE);
+        }
+    }
+
+    private void notificationShow(String message, String color) {
+        JLabel messageLabel = new JLabel(message);
+        messageLabel.setForeground(new Color(0x2b3036));
+        messageLabel.setFont(messageLabel.getFont().deriveFont(Font.BOLD));
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel notificationPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(getBackground());
+                g.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+            }
+        };
+        notificationPanel.setOpaque(false);
+        notificationPanel.setLayout(new BoxLayout(notificationPanel, BoxLayout.PAGE_AXIS));
+
+        int offset = 15;
+        notificationPanel.add(Box.createRigidArea(new Dimension(0, offset)));
+        notificationPanel.add(messageLabel);
+
+        notificationPanel.setBackground(UIManager.getColor(color));
+
+        int panelWidth = window.getWidth() / 5;
+        int panelHeight = 80;
+        int xPosStart = (window.getWidth() - panelWidth) / 2;
+        notificationPanel.setBounds(xPosStart, window.getHeight(), panelWidth, panelHeight);
+        window.getContentPane().add(notificationPanel);
+        window.getContentPane().setComponentZOrder(notificationPanel, 0);
+        window.getContentPane().repaint();
+
+        javax.swing.Timer slideUpTimer = new javax.swing.Timer(5, new ActionListener() {
+            int yPos = window.getHeight();
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (yPos > window.getHeight() - panelHeight) {
+                    yPos -= 1;
+                    notificationPanel.setBounds(xPosStart, yPos, panelWidth, panelHeight);
+                } else {
+                    ((javax.swing.Timer) e.getSource()).stop();
+                    new javax.swing.Timer(2000, ev -> {
+                        javax.swing.Timer slideDownTimer = new javax.swing.Timer(5, new ActionListener() {
+                            int yPosDown = window.getHeight() - panelHeight;
+
+                            @Override
+                            public void actionPerformed(ActionEvent evt) {
+                                if (yPosDown < window.getHeight()) {
+                                    yPosDown += 1;
+                                    notificationPanel.setBounds(xPosStart, yPosDown, panelWidth, panelHeight);
+                                } else {
+                                    ((javax.swing.Timer) evt.getSource()).stop();
+                                    window.getContentPane().remove(notificationPanel);
+                                    window.getContentPane().revalidate();
+                                    window.getContentPane().repaint();
+                                }
+                            }
+                        });
+                        slideDownTimer.start();
+                    }).start();
+                }
+            }
+        });
+        slideUpTimer.start();
+    }
+    
+    private Component findComponentByName(Container container, String name) {
+        for (Component comp : container.getComponents()) {
+            if (name.equals(comp.getName())) {
+                return comp;
+            }
+        }
+        return null;
     }
 
     private void initComponents() {
@@ -1461,6 +1635,18 @@ public class MainWindow {
 	foodsFoodsTopPanel = new JPanel();
 	foodsFoodsTopBarBackButton = new JButton();
 	foodsFoodsScrollPanel = new JScrollPane();
+	mealsMealsPanel = new JPanel();
+	mealsMealsTopPanel = new JPanel();
+	mealsMealsTopBarBackButton = new JButton();
+	mealsMealsTopBarAllButton = new JButton();
+	mealsMealsTopBarFTButton = new JButton();
+	mealsMealsTopBarCusButton = new JButton();
+	mealsMealsScrollPanel = new JScrollPane();
+	mealsFoodsPanel = new JPanel();
+	mealsFoodsTopPanel = new JPanel();
+	mealsFoodsTopBarBackButton = new JButton();
+	mealsMealTitleLabel = new JLabel();
+	mealsFoodsScrollPanel = new JScrollPane();
 
 	//======== window ========
 	{
@@ -2158,6 +2344,7 @@ public class MainWindow {
 	    mealSelectButton.setText("Select Meal");
 	    mealSelectButton.setFont(mealSelectButton.getFont().deriveFont(mealSelectButton.getFont().getStyle() | Font.BOLD, mealSelectButton.getFont().getSize() + 5f));
 	    mealSelectButton.setForeground(Color.white);
+	    mealSelectButton.addActionListener(e -> mealSelect(e));
 	    mainMenuMealsPanel.add(mealSelectButton, "cell 2 3,height 100:100:100");
 
 	    //---- mealAddNewButton ----
@@ -2825,6 +3012,113 @@ public class MainWindow {
 	    }
 	    foodsFoodsPanel.add(foodsFoodsScrollPanel, "cell 0 1");
 	}
+
+	//======== mealsMealsPanel ========
+	{
+	    mealsMealsPanel.setPreferredSize(new Dimension(988, 638));
+	    mealsMealsPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]",
+		// rows
+		"[37,top]" +
+		"[grow,fill]"));
+
+	    //======== mealsMealsTopPanel ========
+	    {
+		mealsMealsTopPanel.setBackground(new Color(0x1e2428));
+		mealsMealsTopPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[left]" +
+		    "[fill]" +
+		    "[fill]" +
+		    "[fill]",
+		    // rows
+		    "[]"));
+
+		//---- mealsMealsTopBarBackButton ----
+		mealsMealsTopBarBackButton.setText("BACK");
+		mealsMealsTopBarBackButton.setFont(mealsMealsTopBarBackButton.getFont().deriveFont(mealsMealsTopBarBackButton.getFont().getStyle() | Font.BOLD));
+		mealsMealsTopBarBackButton.setForeground(Color.white);
+		mealsMealsTopBarBackButton.addActionListener(e -> mealsMealsTopBarBack(e));
+		mealsMealsTopPanel.add(mealsMealsTopBarBackButton, "cell 0 0");
+
+		//---- mealsMealsTopBarAllButton ----
+		mealsMealsTopBarAllButton.setText("ALL MEALS");
+		mealsMealsTopBarAllButton.setForeground(Color.white);
+		mealsMealsTopBarAllButton.setFont(mealsMealsTopBarAllButton.getFont().deriveFont(mealsMealsTopBarAllButton.getFont().getStyle() | Font.BOLD));
+		mealsMealsTopBarAllButton.addActionListener(e -> mealsMealsTopBarAll(e));
+		mealsMealsTopPanel.add(mealsMealsTopBarAllButton, "cell 1 0");
+
+		//---- mealsMealsTopBarFTButton ----
+		mealsMealsTopBarFTButton.setText("FITTRACKER MEALS");
+		mealsMealsTopBarFTButton.setForeground(Color.white);
+		mealsMealsTopBarFTButton.setFont(mealsMealsTopBarFTButton.getFont().deriveFont(mealsMealsTopBarFTButton.getFont().getStyle() | Font.BOLD));
+		mealsMealsTopBarFTButton.addActionListener(e -> mealsMealsTopBarFT(e));
+		mealsMealsTopPanel.add(mealsMealsTopBarFTButton, "cell 2 0");
+
+		//---- mealsMealsTopBarCusButton ----
+		mealsMealsTopBarCusButton.setText("CUSTOM MEALS");
+		mealsMealsTopBarCusButton.setForeground(Color.white);
+		mealsMealsTopBarCusButton.setFont(mealsMealsTopBarCusButton.getFont().deriveFont(mealsMealsTopBarCusButton.getFont().getStyle() | Font.BOLD));
+		mealsMealsTopBarCusButton.addActionListener(e -> mealsMealsTopBarCus(e));
+		mealsMealsTopPanel.add(mealsMealsTopBarCusButton, "cell 3 0");
+	    }
+	    mealsMealsPanel.add(mealsMealsTopPanel, "cell 0 0");
+
+	    //======== mealsMealsScrollPanel ========
+	    {
+		mealsMealsScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+	    }
+	    mealsMealsPanel.add(mealsMealsScrollPanel, "cell 0 1");
+	}
+
+	//======== mealsFoodsPanel ========
+	{
+	    mealsFoodsPanel.setPreferredSize(new Dimension(988, 638));
+	    mealsFoodsPanel.setLayout(new MigLayout(
+		"fill,hidemode 3",
+		// columns
+		"[fill]",
+		// rows
+		"[37,top]" +
+		"[grow,fill]"));
+
+	    //======== mealsFoodsTopPanel ========
+	    {
+		mealsFoodsTopPanel.setBackground(new Color(0x1e2428));
+		mealsFoodsTopPanel.setLayout(new MigLayout(
+		    "fill,hidemode 3",
+		    // columns
+		    "[left]" +
+		    "[right]" +
+		    "[center]" +
+		    "[right]",
+		    // rows
+		    "[]"));
+
+		//---- mealsFoodsTopBarBackButton ----
+		mealsFoodsTopBarBackButton.setText("BACK");
+		mealsFoodsTopBarBackButton.setFont(mealsFoodsTopBarBackButton.getFont().deriveFont(mealsFoodsTopBarBackButton.getFont().getStyle() | Font.BOLD));
+		mealsFoodsTopBarBackButton.setForeground(Color.white);
+		mealsFoodsTopBarBackButton.addActionListener(e -> mealsFoodsTopBarBack(e));
+		mealsFoodsTopPanel.add(mealsFoodsTopBarBackButton, "cell 0 0");
+
+		//---- mealsMealTitleLabel ----
+		mealsMealTitleLabel.setText("Meal");
+		mealsMealTitleLabel.setFont(mealsMealTitleLabel.getFont().deriveFont(mealsMealTitleLabel.getFont().getStyle() | Font.BOLD, mealsMealTitleLabel.getFont().getSize() + 5f));
+		mealsMealTitleLabel.setForeground(Color.white);
+		mealsFoodsTopPanel.add(mealsMealTitleLabel, "cell 1 0");
+	    }
+	    mealsFoodsPanel.add(mealsFoodsTopPanel, "cell 0 0");
+
+	    //======== mealsFoodsScrollPanel ========
+	    {
+		mealsFoodsScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+	    }
+	    mealsFoodsPanel.add(mealsFoodsScrollPanel, "cell 0 1");
+	}
 	// JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -2969,5 +3263,17 @@ public class MainWindow {
     private JPanel foodsFoodsTopPanel;
     private JButton foodsFoodsTopBarBackButton;
     private JScrollPane foodsFoodsScrollPanel;
+    private JPanel mealsMealsPanel;
+    private JPanel mealsMealsTopPanel;
+    private JButton mealsMealsTopBarBackButton;
+    private JButton mealsMealsTopBarAllButton;
+    private JButton mealsMealsTopBarFTButton;
+    private JButton mealsMealsTopBarCusButton;
+    private JScrollPane mealsMealsScrollPanel;
+    private JPanel mealsFoodsPanel;
+    private JPanel mealsFoodsTopPanel;
+    private JButton mealsFoodsTopBarBackButton;
+    private JLabel mealsMealTitleLabel;
+    private JScrollPane mealsFoodsScrollPanel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
